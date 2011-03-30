@@ -1,3 +1,9 @@
+ice (2.0.0) natty; urgency=low
+
+  * Added functionality to remove SSBs.
+
+ -- Kendall Weaver <kendalltweaver@gmail.com.  30 Mar 2011 16:47:31 -0400
+
 ice (1.0.3) lucid; urgency=low
 
   * Updated .py file for Python best practices.
