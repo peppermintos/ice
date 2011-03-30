@@ -1,0 +1,14 @@
+Source: ice
+Section: net
+Priority: optional
+Maintainer: Kendall Weaver <kendalltweaver@gmail.com>
+Build-Depends: debhelper (>= 5.0.0)
+Standards-Version: 3.8.4
+
+Package: ice
+Depends:  chromium-browser
+Architecture: all 
+Description:  Webapp integration with Peppermint Ice
+ Front end for building single site browsers using
+ chromium-browser as a backend, allowing custom menu
+ integration. 

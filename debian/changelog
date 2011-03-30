@@ -1,0 +1,25 @@
+ice (1.0.3) lucid; urgency=low
+
+  * Updated .py file for Python best practices.
+
+ -- Kendall Weaver <kendalltweaver@gmail.com>  18 Feb 2011 01:08:43 -0500
+
+ice (1.0.2) lucid; urgency=low
+
+  * Now checks for proper path to icons.
+
+ -- Kendall Weaver <kendalltweaver@gmail.com>  16 Feb 2011 14:56:38 -0500
+
+ice (1.0.1) lucid; urgency=low
+
+  * Now requests complete URL
+
+ -- Kendall Weaver <kendalltweaver@gmail.com>  01 Sep 2010 02:10:22 -0400
+
+ice (1.0.0) lucid; urgency=low
+
+  * Initial release
+  * Forked from peppermint-prism-frontend
+
+ -- Kendall Weaver <kendalltweaver@gmail.com>  18 Jun 2010 20:08:33 -0400
+
