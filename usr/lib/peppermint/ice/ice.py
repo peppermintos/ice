@@ -18,13 +18,13 @@ class IconSel(gtk.FileSelection):
         iconplace = str(self.filew.get_filename())
         print iconplace
         self.filew.destroy()
-		
+
     def __init__(self):
         self.filew = gtk.FileSelection("File selection")
         self.filew.ok_button.connect("clicked", self.file_ok_sel)
         self.filew.cancel_button.connect("clicked",
                                          lambda w: self.filew.destroy())
-	    
+
         self.filew.set_filename("/usr/share/pixmaps/ice.png")
 
         self.filew.show()
