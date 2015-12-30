@@ -6,7 +6,8 @@ Build-Depends: debhelper (>= 5.0.0)
 Standards-Version: 3.8.4
 
 Package: ice
-Depends:  chromium-browser
+Depends: python3, python3-gi, python3-requests, python3-bs4
+Recommends: chromium-browser
 Architecture: all 
 Description:  Webapp integration with Peppermint Ice
  Front end for building single site browsers using

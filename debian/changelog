@@ -1,8 +1,136 @@
+ice (5.1.4) trusty; urgency=low
+
+  * Change "chrome.set_active" to "firefox.set_active" in
+  * /usr/bin/ice line 538 to allow ice to work when Firefox
+  * is the only browser installed.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  03 Oct 2015 21:43:00 +0000
+
+ice (5.1.3) trusty; urgency=low
+
+  * Fix profile directory depth bug for firefox SSB's
+  * modify IceFirefox= .desktop entry to fix https profile cleanup
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  03 Sep 2015 18:35:00 +0000
+
+ice (5.1.2+peppermint3) trusty; urgency=low
+
+  * Add margin-bottom CSS rule to remove dead space
+    between the title bar and the content
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  30 Aug 2015 02:30:00 +0000
+
+ice (5.1.2+peppermint2) trusty; urgency=low
+
+  * Add new CSS rule to change hidden nav-bar height
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  29 Aug 2015 15:00:00 +0000
+
+ice (5.1.2+peppermint1) trusty; urgency=low
+
+  * Delete <profile-dir>/cache2 directory when SSB closes.
+  * nav-bar hidden instead of removed (for page back/forward navigation)
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  28 Aug 2015 16:55:00 +0000
+
+ice (5.1.2) trusty; urgency=low
+
+  * Fixed https SSB cleanup bug for Firefox apps.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  24 Aug 2015 18:47:00 -0400
+
+ice (5.1.1) trusty; urgency=low
+
+  * Fixed Firefox profile persistency bug.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  13 Aug 2015 21:44:00 -0400
+
+ice (5.1.0) trusty: urgency=low
+
+  * Added initial Firefox support.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  12 Aug 2015 00:51:00 -0400
+
+ice (5.0.1) trusty; urgency=low
+
+  * No longer fails to open for icon related purposes.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  03 Jun 2014 16:04:00 -0400
+
+ice (5.0.0) trusty; urgency=low
+
+  * Complete rewrite.
+  * Added error handling and revamped file handling.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  31 May 2014 14:31:00 -0400
+
+ice (4.1.0) trusty; urgency=low
+
+  * Added code from pyfav to improve favicon handling.
+  * Added python3-requests and python3-bs4 as dependencies.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  28 May 2014 17:28:00 -0400
+
+ice (4.0.0) trusty; urgency=low
+
+  * Ported to Python 3 and GTK+3.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  07 Apr 2014 13:52:00 -0400
+
+ice (3.1.0) raring; urgency=low
+
+  * Fixed icon parser.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  29 Apr 2013 13:44:00 -0400
+
+ice (3.0.1) precise; urgency=low
+
+  * Moved directory checks earlier in the script.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  11 May 2012 23:11:00 -0400
+
+ice (3.0.0) natty; urgency=low
+
+  * Rewrite to include translation support and
+    take more advantage of Python's native
+    fuctionality.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  14 Sep 2011 15:53:12 -0400
+
+ice (2.0.4) natty; urgency=low
+
+  * Added "Programming" as a category.
+  * Added test for favicon size to ensure it's > 0.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  12 Jul 2011 17:05:08 -0400
+
+ice (2.0.3) natty; urgency=low
+
+  * No longer errors out for unrecognized icon paths.
+  * Added python as a dependency.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  12 Jul 2011 02:10:38 -0400
+
+ice (2.0.2) natty; urgency=low
+
+  * Now parses .desktop file for icon and name.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  28 Jun 2011 15:44:20 -0400
+
+ice (2.0.1) natty; urgency=low
+
+  * Now checks for all proper directories.
+  * Converts dashes to underlines in .desktop file names.
+
+ -- Kendall Weaver <kendall@peppermintos.com>  24 May 2011 16:35:40 -0400
+
 ice (2.0.0) natty; urgency=low
 
-  * Added functionality to remove SSBs.
+  * Rewrite to include functionality for removing SSBs.
+  * Changed to use gtk.FileChooserDialog because it's prettier.
+  * Removed from excess code left over from peppermint-prism-frontend.
 
- -- Kendall Weaver <kendalltweaver@gmail.com>  30 Mar 2011 16:47:31 -0400
+ -- Kendall Weaver <kendalltweaver@gmail.com>  11 May 2011 14:14:02 -0400
 
 ice (1.0.3) lucid; urgency=low
 
