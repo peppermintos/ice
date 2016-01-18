@@ -23,8 +23,14 @@ from gi.repository.GdkPixbuf import Pixbuf
 from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup
 
-if not os.path.exists(os.path.expanduser('~/.local/share/applications/')):
-    os.system("mkdir -p $HOME/.local/share/applications")
+
+_HOME = os.getenv("HOME")
+_APPS_DIR = "{0}/.local/share/applications".format(_HOME)
+_ICE_ICON = "/usr/share/pixmaps/ice.png"
+
+
+if not os.path.exists(_APPS_DIR):
+    os.system("mkdir -p {0}".format(_APPS_DIR))
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) \
@@ -53,7 +59,7 @@ def get_details(app):
             try:
                 pixbuf = Pixbuf.new_from_file_at_size(iconline, 16, 16)
             except:
-                pixbuf = Pixbuf.new_from_file_at_size("/usr/share/pixmaps/ice.png", 16, 16)
+                pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON, 16, 16)
         elif "StartupWMClass=Chromium" in line:
             is_ice = True
 
@@ -83,16 +89,16 @@ def download_favicon(url, file_prefix='', target_dir='/tmp'):
     parsed_site_uri = urlparse(url)
 
     if not parsed_site_uri.scheme:
-        url = 'http://' + url
+        url = 'http://{0}'.format(url)
         parsed_site_uri = urlparse(url)
 
     if not parsed_site_uri.scheme or not parsed_site_uri.netloc:
-        raise Exception("Unable to parse URL, %s" % url)
+        raise Exception("Unable to parse URL, {0}".format(url))
 
     favicon_url = get_favicon_url(url)
 
     if not favicon_url:
-        raise Exception("Unable to find favicon for, %s" % url)
+        raise Exception("Unable to find favicon for, {0}".format(url))
 
     response = requests.get(favicon_url, headers=headers)
     if response.status_code == requests.codes.ok:
@@ -127,16 +133,15 @@ def parse_markup_for_favicon(markup, url):
 
         if favicon_url.startswith('//'):
             parsed_uri = urlparse(url)
-            favicon_url = parsed_uri.scheme + ':' + favicon_url
+            favicon_url = "{0}:{1}".format(parsed_uri.scheme, favicon_url)
 
         elif favicon_url.startswith('/'):
-            favicon_url = parsed_site_uri.scheme + '://' + \
-                parsed_site_uri.netloc + favicon_url
+            favicon_url = "{0}://{1}{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc, favicon_url)
 
         elif not favicon_url.startswith('http'):
             path, filename = os.path.split(parsed_site_uri.path)
-            favicon_url = parsed_site_uri.scheme + '://' + \
-                parsed_site_uri.netloc + '/' + os.path.join(path, favicon_url)
+            favicon_url = "{0}://{1}/{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc,
+                                                 os.path.join(path, favicon_url))
 
         return favicon_url
 
@@ -149,7 +154,7 @@ def get_favicon_url(url):
     try:
         response = requests.get(url, headers=headers)
     except:
-        raise Exception("Unable to find URL. Is it valid? %s" % url)
+        raise Exception("Unable to find URL. Is it valid? {0}".format(url))
 
     if response.status_code == requests.codes.ok:
         favicon_url = parse_markup_for_favicon(response.content, url)
@@ -198,7 +203,7 @@ def applicate():
     iconname = iconpath.replace("/", " ").split()[-1]
     iconext = iconname.replace(".", " ").split()[-1]
 
-    if os.path.exists(os.path.expanduser("~/.local/share/applications/" + formatted + ".desktop")):
+    if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, formatted)):
         DuplicateError(title, formatted, address, iconext, location)
     else:
         writefile(title, formatted, address, iconext, location)
@@ -206,9 +211,9 @@ def applicate():
 
 def writefile(title, formatted, address, iconext, location):
     global iconpath
-    os.system("cp --force " + iconpath + " $HOME/.local/share/ice/" + formatted + "." + iconext)
-    appfile = os.path.expanduser("~/.local/share/applications/" + formatted + ".desktop")
-    os.system("touch " + appfile)
+    os.system("cp --force {0} {1}/.local/share/ice/{2}.{3}".format(iconpath, _HOME, formatted, iconext))
+    appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR, formatted))
+    os.system("touch {0}".format(appfile))
     if chrome.get_active() == True:
         browser = "google-chrome"
     elif chromium.get_active() == True:
@@ -223,18 +228,18 @@ def writefile(title, formatted, address, iconext, location):
         appfile1.truncate()
         appfile1.write("[Desktop Entry]\n")
         appfile1.write("Version=1.0\n")
-        appfile1.write("Name=" + title + "\n")
+        appfile1.write("Name={0}\n".format(title))
 
         if (browser == "ice-firefox"):
-            appfile1.write("Exec=" + browser + " " + address + "\n")
+            appfile1.write("Exec={0} {1}\n".format(browser, address))
         else:
-            appfile1.write("Exec=" + browser + " --app=" + address + "\n")
+            appfile1.write("Exec={0} --app={1}\n".format(browser, address))
 
         appfile1.write("Terminal=false\n")
         appfile1.write("X-MultipleArgs=false\n")
         appfile1.write("Type=Application\n")
-        appfile1.write("Icon=" + os.path.expanduser("~/.local/share/ice/") + formatted + "." + iconext + "\n")
-        appfile1.write("Categories=GTK;" + location + "\n")
+        appfile1.write("Icon={0}.local/share/ice/{1}.{2}\n".format(_HOME, formatted, iconext))
+        appfile1.write("Categories=GTK;{0}\n".format(location))
         appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
         appfile1.write("StartupWMClass=Chromium\n")
         appfile1.write("StartupNotify=true\n")
@@ -243,11 +248,11 @@ def writefile(title, formatted, address, iconext, location):
             address1 = str.replace(address, 'http://', '')
             address2 = str.replace(address1, 'https://', '')
             address3 = str.replace(address2, '/', '_')
-            appfile1.write("IceFirefox=" + address3)
+            appfile1.write("IceFirefox={0}".format(address3))
 
     name.set_text("")
     url.set_text("")
-    iconpath = "/usr/share/pixmaps/ice.png"
+    iconpath = _ICE_ICON
     new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
     icon.set_from_pixbuf(new_icon)
     iconline, pixbuf = get_details(appfile)
@@ -267,7 +272,7 @@ def delete(button):
         semiformatted = semiformatted + obj
 
     formatted = semiformatted.lower()
-    appfile = os.path.expanduser("~/.local/share/applications/" + formatted + ".desktop")
+    appfile = "{0}/{1}.desktop".format(_APPS_DIR, formatted)
 
     appfileopen = open(appfile, 'r')
     appfilelines = appfileopen.readlines()
@@ -276,13 +281,13 @@ def delete(button):
     for line in appfilelines:
         if "IceFirefox=" in line:
             profile = str.replace(line, 'IceFirefox=', '')
-            directory = os.path.expanduser('~/.local/share/ice/firefox')
+            directory = os.path.expanduser('{0}.local/share/ice/firefox'.format(_HOME))
 
             for profiles in os.listdir(directory):
                 if profile in profiles:
-                    os.system("rm -rf " + directory + "/" + profile)
+                    os.system("rm -rf {0}/{1}".format(directory, profile))
 
-    os.system("rm " + appfile)
+    os.system("rm {0}".format(appfile))
 
 
 class IconSel(Gtk.FileChooserDialog):
@@ -306,7 +311,7 @@ class IconSel(Gtk.FileChooserDialog):
             None,
             Gtk.FileChooserAction.OPEN,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        filew.set_filename("/usr/share/pixmaps/ice.png")
+        filew.set_filename(_ICE_ICON)
 
         filter1 = Gtk.FileFilter()
         filter1.set_name("Icons")
@@ -343,7 +348,7 @@ class NoBrowserError(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Browser Error")
         self.set_size_request(250, 130)
-        self.set_icon_from_file("/usr/share/pixmaps/ice.png")
+        self.set_icon_from_file(_ICE_ICON)
 
         print("test")
 
@@ -396,7 +401,7 @@ class DuplicateError(Gtk.Window):
     def __init__(self, title, formatted, address, iconext, location):
         Gtk.Window.__init__(self, title="Duplication Error")
         self.set_size_request(250, 130)
-        self.set_icon_from_file("/usr/share/pixmaps/ice.png")
+        self.set_icon_from_file(_ICE_ICON)
 
         main_lab = Gtk.Label()
         main_lab.set_markup("<b>Warning: File Duplication Error</b>")
@@ -435,7 +440,7 @@ class AddressError(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Address Error")
         self.set_size_request(250, 130)
-        self.set_icon_from_file("/usr/share/pixmaps/ice.png")
+        self.set_icon_from_file(_ICE_ICON)
 
         main_lab = Gtk.Label()
         main_lab.set_markup("<b>Warning: HTTP or URL Error</b>")
@@ -490,19 +495,19 @@ class Ice(Gtk.Window):
             addr0 = get_favicon_url(appurl)
             addr1 = addr0.replace('/', ' ')
             addr2 = addr1.split()[-1]
-            iconpath = "/tmp/" + addr2
+            iconpath = "/tmp/{0}".format(addr2)
             new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
             icon.set_from_pixbuf(new_icon)
         except:
-            iconpath = "/usr/share/pixmaps/ice.png"
+            iconpath = _ICE_ICON
             new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
             icon.set_from_pixbuf(new_icon)
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
-        self.current_directory = os.path.realpath(os.path.expanduser('~') + "/.local/share/applications/")
+        self.current_directory = os.path.realpath(_APPS_DIR)
         self.set_size_request(460, 350)
-        self.set_icon_from_file("/usr/share/pixmaps/ice.png")
+        self.set_icon_from_file(_ICE_ICON)
 
         ######################
         #   'Create' page.   #
@@ -534,7 +539,7 @@ class Ice(Gtk.Window):
         where_box.pack_start(where, True, True, 0)
 
         global iconpath
-        iconpath = "/usr/share/pixmaps/ice.png"
+        iconpath = _ICE_ICON
         icon_pixbuf = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
         global icon
         icon = Gtk.Image()
@@ -624,8 +629,8 @@ class Ice(Gtk.Window):
         global liststore
         liststore = Gtk.ListStore(Pixbuf, str)
 
-        for fl in os.listdir(os.path.expanduser("~/.local/share/applications")):
-            a = os.path.expanduser("~/.local/share/applications") + '/' + fl
+        for fl in os.listdir(_APPS_DIR):
+            a = "{0}/{1}".format(_APPS_DIR, fl)
             if not os.path.isdir(a):
                 nameline, pixbuf = get_details(a)
                 if nameline is not None and pixbuf is not None:
