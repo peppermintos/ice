@@ -1,3 +1,10 @@
+ice (5.1.7) xenial; urgency=low
+
+  *  Moved Close/Remove buttons on the Remove tab down 17px to match...
+  *  the button placement on the Create tab.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  08 Feb 2016 16:30:00 +0000
+
 ice (5.1.6) xenial; urgency=low
 
   *  Close button moved to the left of Apply/Remove buttons to standardise…
