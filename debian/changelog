@@ -1,3 +1,10 @@
+ice (5.1.8) xenial; urgency=low
+
+  * Set variables for string references and use them.
+
+ -- Brian Tomlinson (darthlukan) <brian@peppermintos.com> 08 Feb 2016 18:03:45
+ +0100
+
 ice (5.1.7) xenial; urgency=low
 
   *  Moved Close/Remove buttons on the Remove tab down 17px to match...
