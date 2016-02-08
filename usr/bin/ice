@@ -663,7 +663,7 @@ class Ice(Gtk.Window):
 
         remove_vbox = Gtk.VBox()
         remove_vbox.pack_start(scroll, True, True, 10)
-        remove_vbox.pack_start(buttons, False, False, 17)
+        remove_vbox.pack_start(buttons, False, False, 0)
 
         remove_hbox = Gtk.HBox()
         remove_hbox.pack_start(remove_vbox, True, True, 20)
