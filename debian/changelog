@@ -1,3 +1,18 @@
+ice (5.1.6) xenial; urgency=low
+
+  *  Close button moved to the left of Apply/Remove buttons to standardise…
+  *  button placement with other apps
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  08 Feb 2016 14:03:00 +0000
+
+ice (5.1.5) xenial; urgency=low
+
+  * Code cleanup
+  * Added create ~/.local/share/ice directory if not present
+  * Packaged for Peppermint 7
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  07 Feb 2016 14:30:00 +0000
+
 ice (5.1.4) trusty; urgency=low
 
   * Change "chrome.set_active" to "firefox.set_active" in
