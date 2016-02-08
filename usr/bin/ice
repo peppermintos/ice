@@ -28,6 +28,9 @@ _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
 _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
+_CHROME_BIN = "/usr/bin/google-chrome"
+_CHROMIUM_BIN = "/usr/bin/chromium-browser"
+_FIREFOX_BIN = "/usr/bin/firefox"
 
 
 # Requisite dirs
@@ -216,7 +219,7 @@ def applicate():
 
 def writefile(title, formatted, address, iconext, location):
     global iconpath
-    os.system("cp --force {0} {1}/.local/share/ice/{2}.{3}".format(iconpath, _HOME, formatted, iconext))
+    os.system("cp --force {0} {1}/{2}.{3}".format(iconpath, _ICE_DIR, formatted, iconext))
     appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR, formatted))
     os.system("touch {0}".format(appfile))
     if chrome.get_active() == True:
@@ -286,7 +289,7 @@ def delete(button):
     for line in appfilelines:
         if "IceFirefox=" in line:
             profile = str.replace(line, 'IceFirefox=', '')
-            directory = os.path.expanduser('{0}.local/share/ice/firefox'.format(_HOME))
+            directory = os.path.expanduser('{0}/firefox'.format(_ICE_DIR))
 
             for profiles in os.listdir(directory):
                 if profile in profiles:
@@ -570,36 +573,36 @@ class Ice(Gtk.Window):
         global firefox
         firefox = Gtk.RadioButton.new_with_label_from_widget(None, "Firefox")
 
-        if not os.path.exists("/usr/bin/firefox"):
+        if not os.path.exists(_FIREFOX_BIN):
             firefox.set_sensitive(False)
 
-        if not os.path.exists("/usr/bin/chromium-browser") and not \
-                os.path.exists("/usr/bin/google-chrome") and \
-                os.path.exists("/usr/bin/firefox"):
+        if not os.path.exists(_CHROMIUM_BIN) and not \
+                os.path.exists(_CHROME_BIN) and \
+                os.path.exists(_FIREFOX_BIN):
             firefox.set_active(True)
 
         global chrome
         chrome = Gtk.RadioButton.new_from_widget(firefox)
         chrome.set_label("Chrome")
 
-        if not os.path.exists("/usr/bin/google-chrome"):
+        if not os.path.exists(_CHROME_BIN):
             chrome.set_sensitive(False)
 
-        if not os.path.exists("/usr/bin/chromium-browser") and not \
-                os.path.exists("/usr/bin/firefox") and \
-                os.path.exists("/usr/bin/google-chrome"):
+        if not os.path.exists(_CHROMIUM_BIN) and not \
+                os.path.exists(_FIREFOX_BIN) and \
+                os.path.exists(_CHROME_BIN):
             chrome.set_active(True)
 
         global chromium
         chromium = Gtk.RadioButton.new_from_widget(chrome)
         chromium.set_label("Chromium")
 
-        if not os.path.exists("/usr/bin/chromium-browser"):
+        if not os.path.exists(_CHROMIUM_BIN):
             chromium.set_sensitive(False)
 
-        if not os.path.exists("/usr/bin/google-chrome") and not \
-                os.path.exists("/usr/bin/firefox") and \
-                os.path.exists("/usr/bin/chromium-browser"):
+        if not os.path.exists(_CHROME_BIN) and not \
+                os.path.exists(_FIREFOX_BIN) and \
+                os.path.exists(_CHROMIUM_BIN):
             chromium.set_active(True)
 
         apply_button = Gtk.Button.new_from_stock(Gtk.STOCK_APPLY)
@@ -684,9 +687,9 @@ class Ice(Gtk.Window):
         self.add(main_hbox)
         self.show_all()
 
-        if not os.path.exists("/usr/bin/google-chrome") and not \
-                os.path.exists("/usr/bin/chromium-browser") and not \
-                os.path.exists("/usr/bin/firefox"):
+        if not os.path.exists(_CHROME_BIN) and not \
+                os.path.exists(_CHROMIUM_BIN) and not \
+                os.path.exists(_FIREFOX_BIN):
             apply_button.set_sensitive(False)
             NoBrowserError()
 
