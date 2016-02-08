@@ -246,7 +246,7 @@ def writefile(title, formatted, address, iconext, location):
         appfile1.write("Terminal=false\n")
         appfile1.write("X-MultipleArgs=false\n")
         appfile1.write("Type=Application\n")
-        appfile1.write("Icon={0}.local/share/ice/{1}.{2}\n".format(_HOME, formatted, iconext))
+        appfile1.write("Icon={0}/.local/share/ice/{1}.{2}\n".format(_HOME, formatted, iconext))
         appfile1.write("Categories=GTK;{0}\n".format(location))
         appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
         appfile1.write("StartupWMClass=Chromium\n")
