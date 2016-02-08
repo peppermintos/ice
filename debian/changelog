@@ -1,9 +1,9 @@
 ice (5.1.8) xenial; urgency=low
 
-  * Set variables for string references and use them.
+  * Set variables for string references and use them. (Brian)
+  * Fixed icon path. (Mark)
 
- -- Brian Tomlinson (darthlukan) <brian@peppermintos.com> 08 Feb 2016 18:03:45
- +0100
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  08 Feb 2016 18:31:00 +0000
 
 ice (5.1.7) xenial; urgency=low
 
