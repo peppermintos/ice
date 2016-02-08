@@ -612,8 +612,8 @@ class Ice(Gtk.Window):
         button_box.pack_start(chromium, False, False, 10)
         button_box.pack_start(firefox, False, False, 0)
         button_box.pack_start(button_void, True, True, 0)
-        button_box.pack_start(apply_button, False, False, 20)
-        button_box.pack_start(close_button, False, False, 0)
+        button_box.pack_start(close_button, False, False, 20)
+        button_box.pack_start(apply_button, False, False, 0)
 
         create_vbox = Gtk.VBox()
         create_vbox.pack_start(welcome, False, False, 15)
@@ -658,8 +658,8 @@ class Ice(Gtk.Window):
         void = Gtk.Label()
         buttons = Gtk.HBox()
         buttons.pack_start(void, True, True, 0)
-        buttons.pack_start(remove, False, False, 20)
-        buttons.pack_start(close, False, False, 0)
+        buttons.pack_start(close, False, False, 20)
+        buttons.pack_start(remove, False, False, 0)
 
         remove_vbox = Gtk.VBox()
         remove_vbox.pack_start(scroll, True, True, 10)
