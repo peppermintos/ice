@@ -11,5 +11,5 @@ Recommends: chromium-browser
 Architecture: all 
 Description:  Webapp integration with Peppermint Ice
  Front end for building single site browsers using
- chromium-browser as a backend, allowing custom menu
+ Chromium, Chrome, or Firefox as a backend, allowing custom menu
  integration. 
