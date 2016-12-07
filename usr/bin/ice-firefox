@@ -8,6 +8,7 @@ profileid1 = str.replace(sys.argv[1], 'http://', '')
 profileid2 = str.replace(profileid1, 'https://', '')
 profileid = str.replace(profileid2, '/', '_')
 
+profilepath = os.path.expanduser('~/.local/share/ice/firefox/' + str(profileid))
 chromepath = os.path.expanduser('~/.local/share/ice/firefox/' + str(profileid) + '/chrome')
 path = os.path.dirname(chromepath)
 
@@ -15,5 +16,13 @@ execute = 'firefox -profile ' + path + ' -no-remote -new-instance' + ' ' + sys.a
 
 os.system('mkdir -p ' + chromepath)
 os.system('echo "#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; } #TabsToolbar { display: none !important; }" > ' + chromepath + '/userChrome.css')
+os.system('echo "user_pref(\\"browser.cache.disk.enable\\", false);" > ' + profilepath + '/user.js')
+os.system('echo "user_pref(\\"browser.cache.disk.capacity\\", 0);" >> ' + profilepath + '/user.js')
+os.system('echo "user_pref(\\"browser.cache.disk.filesystem_reported\\", 1);" >> ' + profilepath + '/user.js')
+os.system('echo "user_pref(\\"browser.cache.disk.smart_size.enabled\\", false);" >> ' + profilepath + '/user.js')
+os.system('echo "user_pref(\\"browser.cache.disk.smart_size.first_run\\", false);" >> ' + profilepath + '/user.js')
+os.system('echo "user_pref(\\"browser.cache.disk.smart_size.use_old_max\\", false);" >> ' + profilepath + '/user.js')
+os.system('echo "user_pref(\\"browser.ctrlTab.previews\\", true);" >> ' + profilepath + '/user.js')
 os.system(execute)
 os.system('rm -rf ' + path + '/cache2')
+

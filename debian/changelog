@@ -1,3 +1,35 @@
+ice (5.2.3) xenial; urgency=low
+
+  * Comment suffix changed from "(WebApp)" to "(Ice SSB)"
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  07 Dec 2016 17:40:00 +0000
+
+ice (5.2.2) xenial; urgency=low
+
+  * Added 'Comment=NAME (WebApp)' line to created SSB's
+  * to display a working tooltip in whiskermenu 1.6.1
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  07 Dec 2016 13:25:00 +0000
+
+ice (5.2.1) xenial; urgency=low
+
+  * Completely disable disk caches for Firefox SSB's
+  * Add Ctrl+Tab tab navigation for Firefox SSB's
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  14 May 2016 00:40:00 +0000
+
+ice (5.2.0) xenial; urgency=low
+
+  * fix rules
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  29 Apr 2016 23:29:00 +0000
+
+ice (5.1.9) xenial; urgency=low
+
+  * updated icon for Peppermint 7
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  29 Apr 2016 22:40:00 +0000
+
 ice (5.1.8) xenial; urgency=low
 
   * Set variables for string references and use them. (Brian)

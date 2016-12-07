@@ -237,6 +237,7 @@ def writefile(title, formatted, address, iconext, location):
         appfile1.write("[Desktop Entry]\n")
         appfile1.write("Version=1.0\n")
         appfile1.write("Name={0}\n".format(title))
+        appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
         if (browser == "ice-firefox"):
             appfile1.write("Exec={0} {1}\n".format(browser, address))
