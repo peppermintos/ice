@@ -23,6 +23,7 @@ os.system('echo "user_pref(\\"browser.cache.disk.smart_size.enabled\\", false);"
 os.system('echo "user_pref(\\"browser.cache.disk.smart_size.first_run\\", false);" >> ' + profilepath + '/user.js')
 os.system('echo "user_pref(\\"browser.cache.disk.smart_size.use_old_max\\", false);" >> ' + profilepath + '/user.js')
 os.system('echo "user_pref(\\"browser.ctrlTab.previews\\", true);" >> ' + profilepath + '/user.js')
+os.system('cp /usr/lib/peppermint/ice/search.json.mozlz4 ' + profilepath + '/search.json.mozlz4')
 os.system(execute)
 os.system('rm -rf ' + path + '/cache2')
 

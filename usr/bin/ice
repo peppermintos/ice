@@ -2,6 +2,7 @@
 #
 # by Kendall Weaver <kendall@peppermintos.com>
 # for Peppermint OS
+# modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
 # Chrome specifically intended to integrate with the LXDE menu system.
@@ -9,6 +10,7 @@
 # to remove SSBs, validate addresses, and prevent overwriting existing
 # SSBs. Special thanks to Matt Phillips <labratmatt@gmail.com> for the
 # excellent pyfav library that is integrated into this application.
+# ADDENDUM: Added support for Firefox (via "ice-firefox") and Vivaldi.
 
 import os
 import sys
@@ -18,6 +20,8 @@ import urllib.parse
 import urllib.error
 import os.path
 import string
+import gi  ## added by MG ##
+gi.require_version('Gtk','3.0') ## added by MG ##
 from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 from urllib.parse import urlparse, urlunparse
@@ -30,6 +34,7 @@ _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
+_VIVALDI_BIN = "/usr/bin/vivaldi"
 _FIREFOX_BIN = "/usr/bin/firefox"
 
 
@@ -132,7 +137,8 @@ def download_favicon(url, file_prefix='', target_dir='/tmp'):
 def parse_markup_for_favicon(markup, url):
     parsed_site_uri = urlparse(url)
 
-    soup = BeautifulSoup(markup)
+#    soup = BeautifulSoup(markup)
+    soup = BeautifulSoup(markup, "lxml") ## edited by MG ##
 
     icon_link = soup.find('link', rel='icon')
     if icon_link and icon_link.has_attr('href'):
@@ -226,6 +232,8 @@ def writefile(title, formatted, address, iconext, location):
         browser = "google-chrome"
     elif chromium.get_active() == True:
         browser = "chromium-browser"
+    elif vivaldi.get_active() == True:
+        browser = "vivaldi"
     elif firefox.get_active() == True:
         browser = "ice-firefox"
     else:
@@ -578,7 +586,8 @@ class Ice(Gtk.Window):
             firefox.set_sensitive(False)
 
         if not os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_CHROME_BIN) and \
+                os.path.exists(_CHROME_BIN) and not \
+                os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_FIREFOX_BIN):
             firefox.set_active(True)
 
@@ -590,9 +599,23 @@ class Ice(Gtk.Window):
             chrome.set_sensitive(False)
 
         if not os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_FIREFOX_BIN) and \
+                os.path.exists(_FIREFOX_BIN) and not \
+                os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROME_BIN):
             chrome.set_active(True)
+
+        global vivaldi
+        vivaldi = Gtk.RadioButton.new_from_widget(chrome)
+        vivaldi.set_label("Vivaldi")
+
+        if not os.path.exists(_VIVALDI_BIN):
+            vivaldi.set_sensitive(False)
+
+        if not os.path.exists(_CHROMIUM_BIN) and not \
+                os.path.exists(_FIREFOX_BIN) and not \
+                os.path.exists(_CHROME_BIN) and \
+                os.path.exists(_VIVALDI_BIN):
+            vivaldi.set_active(True)
 
         global chromium
         chromium = Gtk.RadioButton.new_from_widget(chrome)
@@ -602,7 +625,8 @@ class Ice(Gtk.Window):
             chromium.set_sensitive(False)
 
         if not os.path.exists(_CHROME_BIN) and not \
-                os.path.exists(_FIREFOX_BIN) and \
+                os.path.exists(_FIREFOX_BIN) and not \
+                os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROMIUM_BIN):
             chromium.set_active(True)
 
@@ -612,8 +636,9 @@ class Ice(Gtk.Window):
         close_button.connect("clicked", self.destroy)
         button_void = Gtk.Label()
         button_box = Gtk.HBox()
-        button_box.pack_start(chrome, False, False, 0)
-        button_box.pack_start(chromium, False, False, 10)
+        button_box.pack_start(chrome, False, False, 10)
+        button_box.pack_start(chromium, False, False, 0)
+        button_box.pack_start(vivaldi, False, False, 10)
         button_box.pack_start(firefox, False, False, 0)
         button_box.pack_start(button_void, True, True, 0)
         button_box.pack_start(close_button, False, False, 20)
@@ -690,6 +715,7 @@ class Ice(Gtk.Window):
 
         if not os.path.exists(_CHROME_BIN) and not \
                 os.path.exists(_CHROMIUM_BIN) and not \
+                os.path.exists(_VIVALDI_BIN) and not \
                 os.path.exists(_FIREFOX_BIN):
             apply_button.set_sensitive(False)
             NoBrowserError()

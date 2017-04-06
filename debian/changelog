@@ -1,3 +1,15 @@
+ice (5.2.5) xenial; urgency=low
+
+  * Set default search engine to DuckDuckGo
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  06 Apr 2017 17:50:00 +0000
+
+ice (5.2.4) xenial; urgency=low
+
+  * Added support for Vivaldi SSB's
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  11 Feb 2017 12:52:00 +0000
+
 ice (5.2.3) xenial; urgency=low
 
   * Comment suffix changed from "(WebApp)" to "(Ice SSB)"
