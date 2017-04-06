@@ -1,3 +1,15 @@
+ice (5.2.7) xenial; urgency=low
+
+  * Added --no-clobber switch to search.json.mozlz4 copy.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  06 Apr 2017 20:25:00 +0000
+
+ice (5.2.6) xenial; urgency=low
+
+  * Updated search.json.mozlz4
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  06 Apr 2017 19:52:00 +0000
+
 ice (5.2.5) xenial; urgency=low
 
   * Set default search engine to DuckDuckGo
