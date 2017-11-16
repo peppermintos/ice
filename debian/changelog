@@ -1,3 +1,10 @@
+ice (5.2.8) xenial; urgency=low
+
+  * Added browser.tabs.warnOnClose = false user_pref to ice-firefox.
+  * Added plugin.state.flash = 2 user_pref to ice-firefox.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  16 Nov 2017 12:12:00 +0000
+
 ice (5.2.7) xenial; urgency=low
 
   * Added --no-clobber switch to search.json.mozlz4 copy.
