@@ -27,6 +27,8 @@ from gi.repository.GdkPixbuf import Pixbuf
 from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup
 
+import gettext
+import locale
 
 _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
@@ -37,6 +39,8 @@ _CHROMIUM_BIN = "/usr/bin/chromium-browser"
 _VIVALDI_BIN = "/usr/bin/vivaldi"
 _FIREFOX_BIN = "/usr/bin/firefox"
 
+
+gettext.install('messages', '../share/ice/locale/')
 
 # Requisite dirs
 if not os.path.exists(_ICE_DIR):
@@ -237,7 +241,7 @@ def writefile(title, formatted, address, iconext, location):
     elif firefox.get_active() == True:
         browser = "ice-firefox"
     else:
-        print("ERROR: An unknown browser selection error has occurred.")
+        print(_("ERROR: An unknown browser selection error has occurred."))
         sys.exit(1)
 
     with open(appfile, 'w') as appfile1:
@@ -324,7 +328,7 @@ class IconSel(Gtk.FileChooserDialog):
             dialog.set_preview_widget_active(valid_preview)
 
         filew = Gtk.FileChooserDialog(
-            "Please choose an icon.",
+            _("Please choose an icon."),
             None,
             Gtk.FileChooserAction.OPEN,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -367,12 +371,12 @@ class NoBrowserError(Gtk.Window):
         self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
 
-        print("test")
+        print(_("test"))
 
         main_lab = Gtk.Label()
-        main_lab.set_markup("<b>Warning: No Suitable Browser Detected</b>")
-        text_lab = Gtk.Label("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?")
-        text_lab = Gtk.Label("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs.")
+        main_lab.set_markup(_("<b>Warning: No Suitable Browser Detected</b>"))
+        text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
+        text_lab = Gtk.Label(_("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs."))
 
         close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
         close.connect("clicked", self.destroy)
@@ -421,8 +425,8 @@ class DuplicateError(Gtk.Window):
         self.set_icon_from_file(_ICE_ICON)
 
         main_lab = Gtk.Label()
-        main_lab.set_markup("<b>Warning: File Duplication Error</b>")
-        text_lab = Gtk.Label("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?")
+        main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
+        text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
 
         okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
         okay.connect("clicked", self.okay_clicked, title, formatted, address, iconext, location)
@@ -460,8 +464,8 @@ class AddressError(Gtk.Window):
         self.set_icon_from_file(_ICE_ICON)
 
         main_lab = Gtk.Label()
-        main_lab.set_markup("<b>Warning: HTTP or URL Error</b>")
-        text_lab = Gtk.Label("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?")
+        main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
+        text_lab = Gtk.Label(_("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?"))
 
         okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
         okay.connect("clicked", self.okay_clicked)
@@ -498,10 +502,10 @@ class Ice(Gtk.Window):
         elif errortest(normalize(url.get_text())) is False:
             AddressError()
         elif errortest(normalize(url.get_text())) is None:
-            print("ERROR: An address error has occurred.")
+            print(_("ERROR: An address error has occurred."))
             sys.exit(1)
         else:
-            print("ERROR: An unknown error has occurred.")
+            print(_("ERROR: An unknown error has occurred."))
             sys.exit(1)
 
     def icon_download(self, button):
@@ -531,17 +535,17 @@ class Ice(Gtk.Window):
         ######################
 
         welcome = Gtk.Label()
-        welcome.set_markup("<b>Welcome to Ice, a simple SSB manager.</b>")
+        welcome.set_markup(_("<b>Welcome to Ice, a simple SSB manager.</b>"))
         global name
         name = Gtk.Entry()
-        name.set_placeholder_text("Name the application")
+        name.set_placeholder_text(_("Name the application"))
         global url
         url = Gtk.Entry()
-        url.set_placeholder_text("Enter web address")
+        url.set_placeholder_text(_("Enter web address"))
 
         where_store = ["Accessories", "Games", "Graphics", "Internet",
                        "Office", "Programming", "Sound & Video", "System Tools"]
-        where_lab = Gtk.Label("Where in the menu?")
+        where_lab = Gtk.Label(_("Where in the menu?"))
         global where
         where = Gtk.ComboBoxText()
         where.set_entry_text_column(0)
@@ -567,9 +571,9 @@ class Ice(Gtk.Window):
         icon_box.pack_start(icon, False, False, 10)
         icon_box.pack_start(icon_void, False, False, 10)
 
-        choose_icon = Gtk.Button("Select an icon")
+        choose_icon = Gtk.Button(_("Select an icon"))
         choose_icon.connect("clicked", self.icon_select)
-        download_icon = Gtk.Button("Use site favicon")
+        download_icon = Gtk.Button(_("Use site favicon"))
         download_icon.connect("clicked", self.icon_download)
 
         icon_vbox = Gtk.VBox()
@@ -654,7 +658,7 @@ class Ice(Gtk.Window):
 
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
-        create_lab = Gtk.Label("Create")
+        create_lab = Gtk.Label(_("Create"))
 
         ######################
         #   'Remove' page.   #
@@ -696,7 +700,7 @@ class Ice(Gtk.Window):
 
         remove_hbox = Gtk.HBox()
         remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label("Remove")
+        remove_lab = Gtk.Label(_("Remove"))
 
         ##########################
         #   Main window stuff.   #

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 22:36+0900\n"
+"POT-Creation-Date: 2018-01-04 22:49+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,75 +17,87 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ice:248
+#: ice:244
 msgid "ERROR: An unknown browser selection error has occurred."
-msgstr ""
+msgstr "エラー:不明なブラウザが選択された"
 
-#: ice:335
+#: ice:331
 msgid "Please choose an icon."
-msgstr ""
+msgstr "アイコンを選択"
 
-#: ice:378
+#: ice:374
 msgid "test"
 msgstr ""
 
-#: ice:381
+#: ice:377
 msgid "<b>Warning: No Suitable Browser Detected</b>"
-msgstr ""
+msgstr "<b>警告:適合するブラウザが見つからない</b>"
 
-#: ice:382 ice:433
+#: ice:378 ice:429
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
 "the name. Continue anyway?"
 msgstr ""
 
-#: ice:383
+#: ice:379
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
 "install at least one in order to create SSBs."
 msgstr ""
 
-#: ice:432
+#: ice:428
 msgid "<b>Warning: File Duplication Error</b>"
-msgstr ""
+msgstr "<b>警告:ファイル重複エラー</b>"
 
-#: ice:471
+#: ice:467
 msgid "<b>Warning: HTTP or URL Error</b>"
-msgstr ""
+msgstr "<b>警告:HTTPもしくはURLのエラー</b>"
 
-#: ice:472
+#: ice:468
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
 "right now. Continue anyway?"
 msgstr ""
 
-#: ice:512
+#: ice:505
+msgid "ERROR: An address error has occurred."
+msgstr "エラー:アドレスエラーが発生した"
+
+#: ice:508
 msgid "ERROR: An unknown error has occurred."
-msgstr ""
+msgstr "エラー:不明なエラーが発生した"
 
-#: ice:542
+#: ice:538
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
-msgstr ""
+msgstr "<b>ICE SSBマネージャーへようこそ</b>"
 
-#: ice:545
+#: ice:541
 msgid "Name the application"
-msgstr ""
+msgstr "アプリケーション名"
+
+#: ice:544
+msgid "Enter web address"
+msgstr "Webアドレス"
 
 #: ice:548
-msgid "Enter web address"
-msgstr ""
-
-#: ice:552
 msgid "Where in the menu?"
-msgstr ""
+msgstr "メニュー内の場所"
 
-#: ice:665
+#: ice:574
+msgid "Select an icon"
+msgstr "アイコンを選択"
+
+#: ice:576
+msgid "Use site favicon"
+msgstr "サイトのfaviconを使用"
+
+#: ice:661
 msgid "Create"
-msgstr ""
+msgstr "追加"
 
-#: ice:707
+#: ice:703
 msgid "Remove"
-msgstr ""
+msgstr "削除"
