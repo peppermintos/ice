@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 22:59+0900\n"
+"POT-Creation-Date: 2018-01-05 00:20+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ice:203 ice:546
+msgid "Accessories"
+msgstr ""
+
+#: ice:205 ice:546
+msgid "Games"
+msgstr ""
+
+#: ice:207 ice:546
+msgid "Graphics"
+msgstr ""
+
+#: ice:209 ice:546
+msgid "Internet"
+msgstr ""
+
+#: ice:211 ice:547
+msgid "Office"
+msgstr ""
+
+#: ice:213 ice:547
+msgid "Programming"
+msgstr ""
+
+#: ice:215 ice:547
+msgid "Sound & Video"
+msgstr ""
+
+#: ice:217 ice:547
+msgid "System Tools"
+msgstr ""
+
 #: ice:244
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr ""
 
 #: ice:331
 msgid "Please choose an icon."
+msgstr ""
+
+#: ice:370
+msgid "Browser Error"
 msgstr ""
 
 #: ice:374
@@ -47,8 +83,16 @@ msgid ""
 "install at least one in order to create SSBs."
 msgstr ""
 
+#: ice:423
+msgid "Duplication Error"
+msgstr ""
+
 #: ice:428
 msgid "<b>Warning: File Duplication Error</b>"
+msgstr ""
+
+#: ice:462
+msgid "Address Error"
 msgstr ""
 
 #: ice:467

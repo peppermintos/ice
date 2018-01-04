@@ -17,6 +17,38 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ice:203 ice:546
+msgid "Accessories"
+msgstr "アクセサリ"
+
+#: ice:205 ice:546
+msgid "Games"
+msgstr "ゲーム"
+
+#: ice:207 ice:546
+msgid "Graphics"
+msgstr "グラフィックス"
+
+#: ice:209 ice:546
+msgid "Internet"
+msgstr "インターネット"
+
+#: ice:211 ice:547
+msgid "Office"
+msgstr "オフィス"
+
+#: ice:213 ice:547
+msgid "Programming"
+msgstr "プログラミング"
+
+#: ice:215 ice:547
+msgid "Sound & Video"
+msgstr "サウンドとビデオ"
+
+#: ice:217 ice:547
+msgid "System Tools"
+msgstr "システムツール"
+
 #: ice:244
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "エラー:不明なブラウザが選択された"
@@ -25,9 +57,13 @@ msgstr "エラー:不明なブラウザが選択された"
 msgid "Please choose an icon."
 msgstr "アイコンを選択"
 
+#: ice:370
+msgid "Browser Error"
+msgstr "ブラウザエラー"
+
 #: ice:374
 msgid "test"
-msgstr ""
+msgstr "テスト"
 
 #: ice:377
 msgid "<b>Warning: No Suitable Browser Detected</b>"
@@ -39,6 +75,9 @@ msgid ""
 "be overwritten. To prevent this, change a letter in\n"
 "the name. Continue anyway?"
 msgstr ""
+"その名前のSSBが既にあるので、上書きされます。\n"
+"これを防止するには、名前を変更してください。\n"
+"上書きしますか？"
 
 #: ice:379
 msgid ""
@@ -46,10 +85,20 @@ msgid ""
 "Chrome or Chromium in order to function. Please\n"
 "install at least one in order to create SSBs."
 msgstr ""
+"Iceの機能を使うにはGoogle ChromeかChromiumのインストールが必要です。\n"
+"SSBを作成するには、少なくともどちらかをインストールしてください。"
+
+#: ice:423
+msgid "Duplication Error"
+msgstr "重複エラー"
 
 #: ice:428
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>警告:ファイル重複エラー</b>"
+
+#: ice:462
+msgid "Address Error"
+msgstr "アドレスエラー"
 
 #: ice:467
 msgid "<b>Warning: HTTP or URL Error</b>"
@@ -61,6 +110,9 @@ msgid ""
 "This is possibly the site being down or unavailable\n"
 "right now. Continue anyway?"
 msgstr ""
+"Webアドレスのエラーが発生しました。\n"
+"サイトがダウンしているか、現在利用できなくなっている可能性があります。\n"
+"それでも続行しますか?"
 
 #: ice:505
 msgid "ERROR: An address error has occurred."

@@ -200,21 +200,21 @@ def applicate():
     formatted = semiformatted.lower()
 
     loc = where.get_active_text()
-    if loc == "Accessories":
+    if loc == _("Accessories"):
         location = "Utility;"
-    elif loc == "Games":
+    elif loc == _("Games"):
         location = "Game;"
-    elif loc == "Graphics":
+    elif loc == _("Graphics"):
         location = "Graphics;"
-    elif loc == "Internet":
+    elif loc == _("Internet"):
         location = "Network;"
-    elif loc == "Office":
+    elif loc == _("Office"):
         location = "Office;"
-    elif loc == "Programming":
+    elif loc == _("Programming"):
         location = "Development;"
-    elif loc == "Sound & Video":
+    elif loc == _("Sound & Video"):
         location = "AudioVideo;"
-    elif loc == "System Tools":
+    elif loc == _("System Tools"):
         location = "System;"
 
     global iconpath
@@ -367,7 +367,7 @@ class NoBrowserError(Gtk.Window):
         self.close()
 
     def __init__(self):
-        Gtk.Window.__init__(self, title="Browser Error")
+        Gtk.Window.__init__(self, title=_("Browser Error"))
         self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
 
@@ -420,7 +420,7 @@ class DuplicateError(Gtk.Window):
         self.close()
 
     def __init__(self, title, formatted, address, iconext, location):
-        Gtk.Window.__init__(self, title="Duplication Error")
+        Gtk.Window.__init__(self, title=_("Duplication Error"))
         self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
 
@@ -459,7 +459,7 @@ class AddressError(Gtk.Window):
         self.close()
 
     def __init__(self):
-        Gtk.Window.__init__(self, title="Address Error")
+        Gtk.Window.__init__(self, title=_("Address Error"))
         self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
 
@@ -543,8 +543,8 @@ class Ice(Gtk.Window):
         url = Gtk.Entry()
         url.set_placeholder_text(_("Enter web address"))
 
-        where_store = ["Accessories", "Games", "Graphics", "Internet",
-                       "Office", "Programming", "Sound & Video", "System Tools"]
+        where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
+                       _("Office"), _("Programming"), _("Sound & Video"), _("System Tools")]
         where_lab = Gtk.Label(_("Where in the menu?"))
         global where
         where = Gtk.ComboBoxText()
