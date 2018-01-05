@@ -1,0 +1,162 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-05 12:53+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ice:113
+#, python-brace-format
+msgid "Unable to parse URL, {0}"
+msgstr ""
+
+#: ice:118
+#, python-brace-format
+msgid "Unable to find favicon for, {0}"
+msgstr ""
+
+#: ice:175
+#, python-brace-format
+msgid "Unable to find URL. Is it valid? {0}"
+msgstr ""
+
+#: ice:203 ice:546
+msgid "Accessories"
+msgstr ""
+
+#: ice:205 ice:546
+msgid "Games"
+msgstr ""
+
+#: ice:207 ice:546
+msgid "Graphics"
+msgstr ""
+
+#: ice:209 ice:546
+msgid "Internet"
+msgstr ""
+
+#: ice:211 ice:547
+msgid "Office"
+msgstr ""
+
+#: ice:213 ice:547
+msgid "Programming"
+msgstr ""
+
+#: ice:215 ice:547
+msgid "Sound & Video"
+msgstr ""
+
+#: ice:217 ice:547
+msgid "System Tools"
+msgstr ""
+
+#: ice:244
+msgid "ERROR: An unknown browser selection error has occurred."
+msgstr ""
+
+#: ice:331
+msgid "Please choose an icon."
+msgstr ""
+
+#: ice:370
+msgid "Browser Error"
+msgstr ""
+
+#: ice:374
+msgid "test"
+msgstr ""
+
+#: ice:377
+msgid "<b>Warning: No Suitable Browser Detected</b>"
+msgstr ""
+
+#: ice:378 ice:429
+msgid ""
+"The name of the SSB will cause an existing SSB to\n"
+"be overwritten. To prevent this, change a letter in\n"
+"the name. Continue anyway?"
+msgstr ""
+
+#: ice:379
+msgid ""
+"Ice requires a system installation of either Google\n"
+"Chrome or Chromium in order to function. Please\n"
+"install at least one in order to create SSBs."
+msgstr ""
+
+#: ice:423
+msgid "Duplication Error"
+msgstr ""
+
+#: ice:428
+msgid "<b>Warning: File Duplication Error</b>"
+msgstr ""
+
+#: ice:462
+msgid "Address Error"
+msgstr ""
+
+#: ice:467
+msgid "<b>Warning: HTTP or URL Error</b>"
+msgstr ""
+
+#: ice:468
+msgid ""
+"An error with the web address has been detected.\n"
+"This is possibly the site being down or unavailable\n"
+"right now. Continue anyway?"
+msgstr ""
+
+#: ice:505
+msgid "ERROR: An address error has occurred."
+msgstr ""
+
+#: ice:508
+msgid "ERROR: An unknown error has occurred."
+msgstr ""
+
+#: ice:538
+msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
+msgstr ""
+
+#: ice:541
+msgid "Name the application"
+msgstr ""
+
+#: ice:544
+msgid "Enter web address"
+msgstr ""
+
+#: ice:548
+msgid "Where in the menu?"
+msgstr ""
+
+#: ice:574
+msgid "Select an icon"
+msgstr ""
+
+#: ice:576
+msgid "Use site favicon"
+msgstr ""
+
+#: ice:661
+msgid "Create"
+msgstr ""
+
+#: ice:703
+msgid "Remove"
+msgstr ""
