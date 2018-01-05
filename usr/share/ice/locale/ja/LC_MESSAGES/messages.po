@@ -17,6 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ice:113
+#, python-brace-format
+msgid "Unable to parse URL, {0}"
+msgstr "{0}というURLを解釈できません"
+
+#: ice:118
+#, python-brace-format
+msgid "Unable to find favicon for, {0}"
+msgstr "{0}のfaviconが見つかりません"
+
+#: ice:175
+#, python-brace-format
+msgid "Unable to find URL. Is it valid? {0}"
+msgstr "{0}というURLが見つかりません。URLが正しいですか?"
+
+
 #: ice:203 ice:546
 msgid "Accessories"
 msgstr "アクセサリ"

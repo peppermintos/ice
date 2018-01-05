@@ -14,75 +14,75 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ice:113
 #, python-brace-format
 msgid "Unable to parse URL, {0}"
-msgstr ""
+msgstr "Impossible d'analyser l'URL, {0}"
 
 #: ice:118
 #, python-brace-format
 msgid "Unable to find favicon for, {0}"
-msgstr ""
+msgstr "Impossible de trouver la favicon pour, {0}"
 
 #: ice:175
 #, python-brace-format
 msgid "Unable to find URL. Is it valid? {0}"
-msgstr ""
+msgstr "Impossible de trouver l'URL. Est-elle correcte? {0}"
 
 #: ice:203 ice:546
 msgid "Accessories"
-msgstr ""
+msgstr "Accessories"
 
 #: ice:205 ice:546
 msgid "Games"
-msgstr ""
+msgstr "Jeux"
 
 #: ice:207 ice:546
 msgid "Graphics"
-msgstr ""
+msgstr "Graphisme"
 
 #: ice:209 ice:546
 msgid "Internet"
-msgstr ""
+msgstr "Internet"
 
 #: ice:211 ice:547
 msgid "Office"
-msgstr ""
+msgstr "Bureautique"
 
 #: ice:213 ice:547
 msgid "Programming"
-msgstr ""
+msgstr "Programmation"
 
 #: ice:215 ice:547
 msgid "Sound & Video"
-msgstr ""
+msgstr "Son et vidéo"
 
 #: ice:217 ice:547
 msgid "System Tools"
-msgstr ""
+msgstr "Outils systèm"
 
 #: ice:244
 msgid "ERROR: An unknown browser selection error has occurred."
-msgstr ""
+msgstr "ERREUR: Une erreur de sélection de navigateur inconnue s'est produite."
 
 #: ice:331
 msgid "Please choose an icon."
-msgstr ""
+msgstr "Please choose an icon."
 
 #: ice:370
 msgid "Browser Error"
-msgstr ""
+msgstr "Erreur de navigateur"
 
 #: ice:374
 msgid "test"
-msgstr ""
+msgstr "test"
 
 #: ice:377
 msgid "<b>Warning: No Suitable Browser Detected</b>"
-msgstr ""
+msgstr "<b>Alerte: Aucun navigateur compatible détecté</b>"
 
 #: ice:378 ice:429
 msgid ""
@@ -90,6 +90,9 @@ msgid ""
 "be overwritten. To prevent this, change a letter in\n"
 "the name. Continue anyway?"
 msgstr ""
+"Donner ce nom au SSB supprimera un SSB existant.\n"
+"Pour éviter cela, modifiez une lettre dans le nom.\n"
+"Continuer quand même?"
 
 #: ice:379
 msgid ""
@@ -97,22 +100,25 @@ msgid ""
 "Chrome or Chromium in order to function. Please\n"
 "install at least one in order to create SSBs."
 msgstr ""
+"Ice nécessite l'installation d'un système Google Chrome,\n"
+"Chromium, Firefox ou Vivaldi pour fonctionner.\n"
+"Veuillez en installer au moins un pour créer des SSB."
 
 #: ice:423
 msgid "Duplication Error"
-msgstr ""
+msgstr "Erreur de duplication"
 
 #: ice:428
 msgid "<b>Warning: File Duplication Error</b>"
-msgstr ""
+msgstr "<b>Attention: Erreur de duplication du fichier</b>"
 
 #: ice:462
 msgid "Address Error"
-msgstr ""
+msgstr "Erreur d'adresse"
 
 #: ice:467
 msgid "<b>Warning: HTTP or URL Error</b>"
-msgstr ""
+msgstr "<b>Alerte: Erreur HTTP ou URL</b>"
 
 #: ice:468
 msgid ""
@@ -120,43 +126,46 @@ msgid ""
 "This is possibly the site being down or unavailable\n"
 "right now. Continue anyway?"
 msgstr ""
+"Une erreur avec l'adresse web a été détectée.\n"
+"C'est probablement le site qui est actuellement indisponible.\n"
+"Continuer quand même?"
 
 #: ice:505
 msgid "ERROR: An address error has occurred."
-msgstr ""
+msgstr "ERREUR: Une erreur d'adresse s'est produite."
 
 #: ice:508
 msgid "ERROR: An unknown error has occurred."
-msgstr ""
+msgstr "ERREUR: Une erreur inconnue s'est produite."
 
 #: ice:538
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
-msgstr ""
+msgstr "<b>Bienvenue sur Ice, un gestionnaire SSB simple</b>"
 
 #: ice:541
 msgid "Name the application"
-msgstr ""
+msgstr "Nommer l'application"
 
 #: ice:544
 msgid "Enter web address"
-msgstr ""
+msgstr "Entrez l'adresse Web"
 
 #: ice:548
 msgid "Where in the menu?"
-msgstr ""
+msgstr "Où dans le menu?"
 
 #: ice:574
 msgid "Select an icon"
-msgstr ""
+msgstr "Sélectionnez une icône"
 
 #: ice:576
 msgid "Use site favicon"
-msgstr ""
+msgstr "Utiliser la favicon du site"
 
 #: ice:661
 msgid "Create"
-msgstr ""
+msgstr "Créer"
 
 #: ice:703
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
