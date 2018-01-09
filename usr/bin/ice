@@ -39,7 +39,7 @@ _CHROMIUM_BIN = "/usr/bin/chromium-browser"
 _VIVALDI_BIN = "/usr/bin/vivaldi"
 _FIREFOX_BIN = "/usr/bin/firefox"
 
-gettext.bindtextdomain('messages', '../share/ice/locale/')
+gettext.bindtextdomain('messages', os.path.dirname(__file__)+ '/../share/ice/locale/')
 gettext.textdomain('messages')
 _ = gettext.gettext
 
