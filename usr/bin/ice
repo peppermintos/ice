@@ -3,6 +3,7 @@
 # by Kendall Weaver <kendall@peppermintos.com>
 # for Peppermint OS
 # modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
+# internationalization (i18n)/gettext support by Kiyohito AOKI
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
 # Chrome specifically intended to integrate with the LXDE menu system.
