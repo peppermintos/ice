@@ -114,7 +114,7 @@ msgstr "<b>Uwaga: Błąd podwojenia pliku</b>"
 
 #: ice:462
 msgid "Address Error"
-msgstr Adres błędu"
+msgstr "Adres błędu"
 
 #: ice:467
 msgid "<b>Warning: HTTP or URL Error</b>"
@@ -168,4 +168,4 @@ msgstr "Stwórz"
 
 #: ice:703
 msgid "Remove"
-msgstr "Usuń
+msgstr "Usuń"
