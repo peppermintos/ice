@@ -1,0 +1,171 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-05 12:53+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: pshem <ppikula@rocketmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ice:113
+#, python-brace-format
+msgid "Unable to parse URL, {0}"
+msgstr "Nie udało się przetworzyć URL, {0}"
+
+#: ice:118
+#, python-brace-format
+msgid "Unable to find favicon for, {0}"
+msgstr "Nie znaleziono ikony dla {0}"
+
+#: ice:175
+#, python-brace-format
+msgid "Unable to find URL. Is it valid? {0}"
+msgstr "URL niedostępny. Czy jest poprawny? {0}"
+
+#: ice:203 ice:546
+msgid "Accessories"
+msgstr "Akcesoria"
+
+#: ice:205 ice:546
+msgid "Games"
+msgstr "Gry"
+
+#: ice:207 ice:546
+msgid "Graphics"
+msgstr "Grafika"
+
+#: ice:209 ice:546
+msgid "Internet"
+msgstr "Internet"
+
+#: ice:211 ice:547
+msgid "Office"
+msgstr "Biuro"
+
+#: ice:213 ice:547
+msgid "Programming"
+msgstr "Programowanie"
+
+#: ice:215 ice:547
+msgid "Sound & Video"
+msgstr "Audio i Wideo"
+
+#: ice:217 ice:547
+msgid "System Tools"
+msgstr "Narzędzia systemowe"
+
+#: ice:244
+msgid "ERROR: An unknown browser selection error has occurred."
+msgstr "BŁĄD: Nastąpił nieznany błąd wyboru przeglądarki."
+
+#: ice:331
+msgid "Please choose an icon."
+msgstr "Prosze wybierz ikonę."
+
+#: ice:370
+msgid "Browser Error"
+msgstr "Błąd przeglądarki"
+
+#: ice:374
+msgid "test"
+msgstr "test"
+
+#: ice:377
+msgid "<b>Warning: No Suitable Browser Detected</b>"
+msgstr "<b>Uwaga: Brak kompatybilnych przeglądarek</b>"
+
+#: ice:378 ice:429
+msgid ""
+"The name of the SSB will cause an existing SSB to\n"
+"be overwritten. To prevent this, change a letter in\n"
+"the name. Continue anyway?"
+msgstr ""
+"Tworząc nową przeglądarkę o tej samej nazwie nadpiszesz.\n"
+"istniejącą. Aby temu zapobiec, zmień literę w nazwie.\n"
+"Kontynuuj mimo to?"
+
+#: ice:379
+msgid ""
+"Ice requires a system installation of either Google\n"
+"Chrome or Chromium in order to function. Please\n"
+"install at least one in order to create SSBs."
+msgstr ""
+"Ice wymaga zainstalowanego w systemie Google Chrome,\n"
+"Chromium, Firefoxa lub Vivaldi by działać. Zainstaluj \n"
+"przynajmniej jedną z nich by tworzyć SSB."
+
+#: ice:423
+msgid "Duplication Error"
+msgstr "Błąd podwojenia"
+
+#: ice:428
+msgid "<b>Warning: File Duplication Error</b>"
+msgstr "<b>Uwaga: Błąd podwojenia pliku</b>"
+
+#: ice:462
+msgid "Address Error"
+msgstr "Adres błędu"
+
+#: ice:467
+msgid "<b>Warning: HTTP or URL Error</b>"
+msgstr "<b>Uwaga: Błąd HTTP lub URL</b>"
+
+#: ice:468
+msgid ""
+"An error with the web address has been detected.\n"
+"This is possibly the site being down or unavailable\n"
+"right now. Continue anyway?"
+msgstr ""
+"Wystąpił błąd połączenia z tym adresem URL.\n"
+"Prawdopodobnie strona jest niedostępna lub zamknięta\n"
+"Kontynuuj mimo to?"
+
+#: ice:505
+msgid "ERROR: An address error has occurred."
+msgstr "BŁĄD: Wystąpił błąd w adresie."
+
+#: ice:508
+msgid "ERROR: An unknown error has occurred."
+msgstr "BŁĄD: Wystąpił nieznany błąd."
+
+#: ice:538
+msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
+msgstr "<b>Witamy w Ice, menadżeże SSB(Przeglądarek Jednej Strony)</b>"
+
+#: ice:541
+msgid "Name the application"
+msgstr "Nazwij aplikację"
+
+#: ice:544
+msgid "Enter web address"
+msgstr "Wprowadź adres sieciowy"
+
+#: ice:548
+msgid "Where in the menu?"
+msgstr "Gdzie umieścić w menu?"
+
+#: ice:574
+msgid "Select an icon"
+msgstr "Wybierz ikonę"
+
+#: ice:576
+msgid "Use site favicon"
+msgstr "Użyj ikony ze strony"
+
+#: ice:661
+msgid "Create"
+msgstr "Stwórz"
+
+#: ice:703
+msgid "Remove"
+msgstr "Usuń"
