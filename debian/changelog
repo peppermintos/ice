@@ -4,6 +4,7 @@ ice (5.3.0) xenial; urgency=low
   * Add pl translation (by pshem)
   * Add pt_BR translation (by christianvl)
   * Add pt_PT translation (by pin)
+  * Add sv translation (by pin)
   * Standards-Version = 3.9.7
 
  -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  22 Jan 2018 17:18:00 +0000

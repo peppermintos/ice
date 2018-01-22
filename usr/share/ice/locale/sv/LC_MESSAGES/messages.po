@@ -1,0 +1,173 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-22 18:31+0000\n"
+"PO-Revision-Date: 2018-01-22 19:21+0000\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: pin\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: sv\n"
+
+#: ice:113
+#, python-brace-format
+msgid "Unable to parse URL, {0}"
+msgstr "Kan inte analysera webbadressen, {0}"
+
+#: ice:118
+#, python-brace-format
+msgid "Unable to find favicon for, {0}"
+msgstr "Kan inte hitta ikonen för, {0}"
+
+#: ice:175
+#, python-brace-format
+msgid "Unable to find URL. Is it valid? {0}"
+msgstr "Kan inte hitta webbadressen. Är den rätt? {0}"
+
+#: ice:203 ice:546
+msgid "Accessories"
+msgstr "Tillbehör"
+
+#: ice:205 ice:546
+msgid "Games"
+msgstr "Spel"
+
+#: ice:207 ice:546
+msgid "Graphics"
+msgstr "Grafik"
+
+#: ice:209 ice:546
+msgid "Internet"
+msgstr "Internet"
+
+#: ice:211 ice:547
+msgid "Office"
+msgstr "Kontor"
+
+#: ice:213 ice:547
+msgid "Programming"
+msgstr "Programmering"
+
+#: ice:215 ice:547
+msgid "Sound & Video"
+msgstr "Ljud och video"
+
+#: ice:217 ice:547
+msgid "System Tools"
+msgstr "Systemverktyg"
+
+#: ice:244
+msgid "ERROR: An unknown browser selection error has occurred."
+msgstr "FEL: Ett okänt val av webbläsare har uppstått."
+
+#: ice:331
+msgid "Please choose an icon."
+msgstr "Var god välj en ikon."
+
+#: ice:370
+msgid "Browser Error"
+msgstr "Webbläsarefel"
+
+#: ice:374
+msgid "test"
+msgstr "test"
+
+#: ice:377
+msgid "<b>Warning: No Suitable Browser Detected</b>"
+msgstr "<b>Varning: Ingen lämpligt webbläsare hittades</b>"
+
+#: ice:378 ice:429
+msgid ""
+"The name of the SSB will cause an existing SSB to\n"
+"be overwritten. To prevent this, change a letter in\n"
+"the name. Continue anyway?"
+msgstr ""
+"Namnet på SSB kommer att orsaka att en existerande\n"
+"SSB skrivs över. För att förhindra detta, ändra en bokstav\n"
+"i namnet. Fortsätt ändå?"
+
+#: ice:379
+msgid ""
+"Ice requires a system installation of either Google\n"
+"Chrome or Chromium in order to function. Please\n"
+"install at least one in order to create SSBs."
+msgstr ""
+"Ice kräver att antingen Google Chrome, Chromium, Firefox,\n"
+"eller Vivaldi är installerat för att fungera. Var god installera\n"
+"minst ett för att kunna skapa SSBs."
+
+#: ice:423
+msgid "Duplication Error"
+msgstr "Dupliceringsfel"
+
+#: ice:428
+msgid "<b>Warning: File Duplication Error</b>"
+msgstr "<b>Varning: Fil Dupliceringsfel</b>"
+
+#: ice:462
+msgid "Address Error"
+msgstr "Adress fel"
+
+#: ice:467
+msgid "<b>Warning: HTTP or URL Error</b>"
+msgstr "<b>Varning: HTTP eller URL Fel</b>"
+
+#: ice:468
+msgid ""
+"An error with the web address has been detected.\n"
+"This is possibly the site being down or unavailable\n"
+"right now. Continue anyway?"
+msgstr ""
+"Ett fel med webbadressen har hittats. Detta är möjligen\n"
+"på grund av att platsen är nere eller inte tillgängligt just nu.\n"
+"Fortsätt ändå?"
+
+#: ice:505
+msgid "ERROR: An address error has occurred."
+msgstr "FEL: Ett adress fel har uppstått."
+
+#: ice:508
+msgid "ERROR: An unknown error has occurred."
+msgstr "FEL: Ett okänt fel har uppstått."
+
+#: ice:538
+msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
+msgstr "<b>Välkommen till Ice, en enkel SSB hanterare.</b>"
+
+#: ice:541
+msgid "Name the application"
+msgstr "Namnge appen"
+
+#: ice:544
+msgid "Enter web address"
+msgstr "Ange webbadress"
+
+#: ice:548
+msgid "Where in the menu?"
+msgstr "Var i menyn?"
+
+#: ice:574
+msgid "Select an icon"
+msgstr "Välj en ikon"
+
+#: ice:576
+msgid "Use site favicon"
+msgstr "Använd webbplatsikon"
+
+#: ice:661
+msgid "Create"
+msgstr "Skapa"
+
+#: ice:703
+msgid "Remove"
+msgstr "Ta bort"
