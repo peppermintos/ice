@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Mark Greaves (PCNeSpec) <mark@pcnetspec.co.uk>
 Build-Depends: debhelper (>= 5.0.0)
-Standards-Version: 3.9.5
+Standards-Version: 3.9.7
 
 Package: ice
 Depends: ${misc:Depends}, python3, python3-gi, python3-requests, python3-bs4
@@ -11,5 +11,5 @@ Recommends: chromium-browser
 Architecture: all 
 Description:  Webapp integration with Peppermint Ice
  Front end for building single site browsers using
- Chromium, Chrome, or Firefox as a backend, allowing
- custom menu integration. 
+ Chromium, Chrome, Vivaldi, or Firefox as a backend,
+ allowing custom menu integration. 
