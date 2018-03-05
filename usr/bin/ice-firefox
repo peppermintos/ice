@@ -12,7 +12,7 @@ profilepath = os.path.expanduser('~/.local/share/ice/firefox/' + str(profileid))
 chromepath = os.path.expanduser('~/.local/share/ice/firefox/' + str(profileid) + '/chrome')
 path = os.path.dirname(chromepath)
 
-execute = 'firefox -profile ' + path + ' -no-remote -new-instance' + ' ' + sys.argv[1]
+execute = 'firefox --class=' + profileid + ' -profile ' + path + ' -no-remote -new-instance' + ' ' + sys.argv[1]
 
 os.system('mkdir -p ' + chromepath)
 os.system('echo "#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; } #TabsToolbar { display: none !important; }" > ' + chromepath + '/userChrome.css')
