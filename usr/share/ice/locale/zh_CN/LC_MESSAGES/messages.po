@@ -1,0 +1,172 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-05 12:53+0900\n"
+"PO-Revision-Date: 2018-06-28 19:22+0800\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.8\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+
+#: ice:113
+#, python-brace-format
+msgid "Unable to parse URL, {0}"
+msgstr "无法解析 URL，{0}"
+
+#: ice:118
+#, python-brace-format
+msgid "Unable to find favicon for, {0}"
+msgstr "无法找到图标，{0}"
+
+#: ice:175
+#, python-brace-format
+msgid "Unable to find URL. Is it valid? {0}"
+msgstr "无法找到 URL。URL 有效吗？{0}"
+
+#: ice:203 ice:546
+msgid "Accessories"
+msgstr "附件"
+
+#: ice:205 ice:546
+msgid "Games"
+msgstr "游戏"
+
+#: ice:207 ice:546
+msgid "Graphics"
+msgstr "图形"
+
+#: ice:209 ice:546
+msgid "Internet"
+msgstr "互联网"
+
+#: ice:211 ice:547
+msgid "Office"
+msgstr "办公"
+
+#: ice:213 ice:547
+msgid "Programming"
+msgstr "开发"
+
+#: ice:215 ice:547
+msgid "Sound & Video"
+msgstr "多媒体"
+
+#: ice:217 ice:547
+msgid "System Tools"
+msgstr "系统"
+
+#: ice:244
+msgid "ERROR: An unknown browser selection error has occurred."
+msgstr "ERROR：发生了一个未知浏览器选择错误。"
+
+#: ice:331
+msgid "Please choose an icon."
+msgstr "请选择一个图标。"
+
+#: ice:370
+msgid "Browser Error"
+msgstr "浏览器错误"
+
+#: ice:374
+msgid "test"
+msgstr "测试"
+
+#: ice:377
+msgid "<b>Warning: No Suitable Browser Detected</b>"
+msgstr "<b>警告：没有检测到可用的浏览器</b>"
+
+#: ice:378 ice:429
+msgid ""
+"The name of the SSB will cause an existing SSB to\n"
+"be overwritten. To prevent this, change a letter in\n"
+"the name. Continue anyway?"
+msgstr ""
+"以此命名的 SSB 将覆盖已存在的 SSB。\n"
+"为避免覆盖发生，请修改一下名字。\n"
+"仍要继续吗？"
+
+#: ice:379
+msgid ""
+"Ice requires a system installation of either Google\n"
+"Chrome or Chromium in order to function. Please\n"
+"install at least one in order to create SSBs."
+msgstr ""
+"Ice 需要系统内已安装 Google Chrome 或\n"
+"Chromium 或 Vivaldi 或 Firefox，\n"
+"安装至少其中一个以创建 SSB。"
+
+#: ice:423
+msgid "Duplication Error"
+msgstr "重名错误"
+
+#: ice:428
+msgid "<b>Warning: File Duplication Error</b>"
+msgstr "<b>警告：文件重名错误</b>"
+
+#: ice:462
+msgid "Address Error"
+msgstr "地址错误"
+
+#: ice:467
+msgid "<b>Warning: HTTP or URL Error</b>"
+msgstr "<b>警告：HTTP 或者 URL 错误</b>"
+
+#: ice:468
+msgid ""
+"An error with the web address has been detected.\n"
+"This is possibly the site being down or unavailable\n"
+"right now. Continue anyway?"
+msgstr ""
+"检测到网址错误。\n"
+"站点可能故障或不存在。\n"
+"仍要继续吗？"
+
+#: ice:505
+msgid "ERROR: An address error has occurred."
+msgstr "ERROR：发生了一个地址错误。"
+
+#: ice:508
+msgid "ERROR: An unknown error has occurred."
+msgstr "ERROR：发生了一个未知错误。"
+
+#: ice:538
+msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
+msgstr "<b>欢迎使用 Ice，一个简洁的 SSB 管理程序</b>"
+
+#: ice:541
+msgid "Name the application"
+msgstr "为应用程序命名"
+
+#: ice:544
+msgid "Enter web address"
+msgstr "输入网址"
+
+#: ice:548
+msgid "Where in the menu?"
+msgstr "菜单中的什么位置？"
+
+#: ice:574
+msgid "Select an icon"
+msgstr "选择一个图标"
+
+#: ice:576
+msgid "Use site favicon"
+msgstr "使用网站的图标"
+
+#: ice:661
+msgid "Create"
+msgstr "创建"
+
+#: ice:703
+msgid "Remove"
+msgstr "移除"
