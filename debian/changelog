@@ -1,3 +1,22 @@
+ice (5.3.4) bionic; urgency=low
+
+  * Added simplified Chinese translation.
+  * Thanks boltomli.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  01 Jul 2018 20:55:00 +0000
+
+ice (5.3.3) bionic; urgency=low
+
+  * Edited line 311 of /usr/bin/ice
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  20 Jun 2018 12:32:00 +0000
+
+ice (5.3.2) bionic; urgency=low
+
+  * Fix deletion of IceFirefox directories.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  19 Jun 2018 20:32:00 +0000
+
 ice (5.3.1) xenial; urgency=low
 
   * Added:- #identity-box { display: none !important; }

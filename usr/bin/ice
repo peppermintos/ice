@@ -308,7 +308,7 @@ def delete(button):
             directory = os.path.expanduser('{0}/firefox'.format(_ICE_DIR))
 
             for profiles in os.listdir(directory):
-                if profile in profiles:
+#                if profile in profiles:## edited by MG ##
                     os.system("rm -rf {0}/{1}".format(directory, profile))
 
     os.system("rm {0}".format(appfile))
