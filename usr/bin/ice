@@ -82,6 +82,9 @@ def get_details(app):
             except:
                 pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON, 16, 16)
         elif "StartupWMClass=Chromium" in line:
+            # for legacy apps
+            is_ice = True
+        elif "StartupWMClass=ICE-SSB" in line:
             is_ice = True
 
     if nameline is not None and iconline is not None and is_ice is True:
@@ -249,30 +252,35 @@ def writefile(title, formatted, address, iconext, location):
 
     with open(appfile, 'w') as appfile1:
         appfile1.truncate()
+        address1 = str.replace(address, 'http://', '')
+        address2 = str.replace(address1, 'https://', '')
+        address3 = str.replace(address2, '/', '_')
+
         appfile1.write("[Desktop Entry]\n")
         appfile1.write("Version=1.0\n")
         appfile1.write("Name={0}\n".format(title))
         appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
+        global isolate_profile
+        profile_path_argument = ""
+        if isolate_profile == True:
+            profile_path_argument = " --user-data-dir={0}/profiles/{1}".format(_ICE_DIR, formatted)
+            appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
+
         if (browser == "ice-firefox"):
-            appfile1.write("Exec={0} {1}\n".format(browser, address))
+            appfile1.write("Exec={0} {1} ICE-SSB-{2}\n".format(browser, address, formatted))
+            appfile1.write("IceFirefox={0}\n".format(address3))
         else:
-            appfile1.write("Exec={0} --app={1}\n".format(browser, address))
+            appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}{3}\n".format(browser, address, formatted, profile_path_argument))
 
         appfile1.write("Terminal=false\n")
         appfile1.write("X-MultipleArgs=false\n")
         appfile1.write("Type=Application\n")
-        appfile1.write("Icon={0}/.local/share/ice/{1}.{2}\n".format(_HOME, formatted, iconext))
+        appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR, formatted, iconext))
         appfile1.write("Categories=GTK;{0}\n".format(location))
         appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
-        appfile1.write("StartupWMClass=Chromium\n")
+        appfile1.write("StartupWMClass=ICE-SSB-{0}\n".format(formatted))
         appfile1.write("StartupNotify=true\n")
-
-        if (browser == "ice-firefox"):
-            address1 = str.replace(address, 'http://', '')
-            address2 = str.replace(address1, 'https://', '')
-            address3 = str.replace(address2, '/', '_')
-            appfile1.write("IceFirefox={0}".format(address3))
 
     name.set_text("")
     url.set_text("")
@@ -310,6 +318,11 @@ def delete(button):
             for profiles in os.listdir(directory):
 #                if profile in profiles:## edited by MG ##
                     os.system("rm -rf {0}/{1}".format(directory, profile))
+
+        if "X-ICE-SSB-Profile=" in line:
+            profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
+            directory = os.path.expanduser('{0}/profiles'.format(_ICE_DIR))
+            os.system("rm -rf {0}/{1}".format(directory, profile))
 
     os.system("rm {0}".format(appfile))
 
@@ -527,6 +540,12 @@ class Ice(Gtk.Window):
             new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
             icon.set_from_pixbuf(new_icon)
 
+    def isolate_clicked(self, button):
+        global isolate_profile
+        isolate_profile=False
+        if button.get_active() == True:
+          isolate_profile = True
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
@@ -637,6 +656,13 @@ class Ice(Gtk.Window):
                 os.path.exists(_CHROMIUM_BIN):
             chromium.set_active(True)
 
+        global isolate_profile
+        isolate_profile=False
+        isolate_box = Gtk.VBox()
+        isolate_button = Gtk.CheckButton(label="Isolate Sessions into separate browser profile")
+        isolate_button.connect("toggled", self.isolate_clicked)
+        isolate_box.add(isolate_button)
+
         apply_button = Gtk.Button.new_from_stock(Gtk.STOCK_APPLY)
         apply_button.connect("clicked", self.apply_clicked)
         close_button = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
@@ -657,6 +683,7 @@ class Ice(Gtk.Window):
         create_vbox.pack_start(url, False, False, 10)
         create_vbox.pack_start(where_box, False, False, 10)
         create_vbox.pack_start(icon_hbox, False, False, 10)
+        create_vbox.pack_start(isolate_box, False, False, 10)
         create_vbox.pack_start(button_box, False, False, 0)
 
         create_hbox = Gtk.HBox()
