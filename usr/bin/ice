@@ -200,7 +200,7 @@ def applicate():
     address = normalize(url.get_text())
 
     semiformatted = ""
-    array = filter(str.isalnum, title)
+    array = filter(str.isalpha, title)
     for obj in array:
         semiformatted = semiformatted + obj
     formatted = semiformatted.lower()
@@ -251,6 +251,7 @@ def writefile(title, formatted, address, iconext, location):
         sys.exit(1)
 
     with open(appfile, 'w') as appfile1:
+        global isolate_profile
         appfile1.truncate()
 
         appfile1.write("[Desktop Entry]\n")
@@ -258,20 +259,18 @@ def writefile(title, formatted, address, iconext, location):
         appfile1.write("Name={0}\n".format(title))
         appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
-        global isolate_profile
-        profile_path_argument = ""
-        if isolate_profile == True:
-            profile_path_argument = " --user-data-dir={0}/profiles/{1}".format(_ICE_DIR, formatted)
-            appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
-
         if (browser == "firefox"):
-            firefox_profile_path	= "{0}/firefox".format(_ICE_DIR)
-            firefox_profile	= formatted
-            appfile1.write("Exec={0} --profile {3}/{4} --no-remote --class ICE-SSB-{2} {1}\n".format(browser, address, formatted, firefox_profile_path, firefox_profile))
-            appfile1.write("IceFirefox={0}\n".format(firefox_profile))
-            init_firefox_profile("{0}/{1}".format(firefox_profile_path, firefox_profile))
+            firefox_profile_path  = "{0}/firefox/{1}".format(_ICE_DIR, formatted)
+            appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
+            appfile1.write("IceFirefox={0}\n".format(formatted))
+            init_firefox_profile(firefox_profile_path)
         else:
-            appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}{3}\n".format(browser, address, formatted, profile_path_argument))
+            if isolate_profile == True:
+                profile_path = "{0}/profiles/{1}".format(_ICE_DIR, formatted)
+                appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2} --user-data-dir={3}\n".format(browser, address, formatted, profile_path))
+                appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
+            else:
+              appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}\n".format(browser, address, formatted))
 
         appfile1.write("Terminal=false\n")
         appfile1.write("X-MultipleArgs=false\n")
@@ -324,7 +323,7 @@ def delete(button):
     liststore.remove(b)
 
     semiformatted = ""
-    array = filter(str.isalnum, c)
+    array = filter(str.isalpha, c)
 
     for obj in array:
         semiformatted = semiformatted + obj
@@ -349,6 +348,22 @@ def delete(button):
 
     os.system("rm {0}".format(appfile))
 
+
+def clean_orphaned_profiles(known_names):
+    known_profiles = []
+    for kn in known_names: 
+        semiformatted = ""
+        array = filter(str.isalpha, kn)
+        for obj in array:
+            semiformatted = semiformatted + obj
+        known_profiles.append(semiformatted.lower())
+
+    for p_type in ['profiles','firefox']:
+        for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
+            a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
+            if not os.path.isdir(a) or fl not in known_profiles:
+                #os.system("rm -rf {0}".format(a))
+                print("Would run: rm -rf {0}".format(a))
 
 class IconSel(Gtk.FileChooserDialog):
 
@@ -590,7 +605,7 @@ class Ice(Gtk.Window):
 
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
                        _("Office"), _("Programming"), _("Sound & Video"), _("System Tools")]
-        where_lab = Gtk.Label(_("Where in the menu?"))
+        where_lab = Gtk.Label(label="Where in the menu?")
         global where
         where = Gtk.ComboBoxText()
         where.set_entry_text_column(0)
@@ -616,9 +631,9 @@ class Ice(Gtk.Window):
         icon_box.pack_start(icon, False, False, 10)
         icon_box.pack_start(icon_void, False, False, 10)
 
-        choose_icon = Gtk.Button(_("Select an icon"))
+        choose_icon = Gtk.Button(label="Select an icon")
         choose_icon.connect("clicked", self.icon_select)
-        download_icon = Gtk.Button(_("Use site favicon"))
+        download_icon = Gtk.Button(label="Use site favicon")
         download_icon.connect("clicked", self.icon_download)
 
         icon_vbox = Gtk.VBox()
@@ -711,13 +726,14 @@ class Ice(Gtk.Window):
 
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
-        create_lab = Gtk.Label(_("Create"))
+        create_lab = Gtk.Label(label="Create")
 
         ######################
         #   'Remove' page.   #
         ######################
 
         global liststore
+        known_profiles = []
         liststore = Gtk.ListStore(Pixbuf, str)
 
         for fl in os.listdir(_APPS_DIR):
@@ -726,6 +742,9 @@ class Ice(Gtk.Window):
                 nameline, pixbuf = get_details(a)
                 if nameline is not None and pixbuf is not None:
                     liststore.append([pixbuf, nameline])
+                    known_profiles.append(nameline)
+
+        clean_orphaned_profiles(known_profiles)
 
         global iconview
         iconview = Gtk.IconView()
@@ -753,7 +772,7 @@ class Ice(Gtk.Window):
 
         remove_hbox = Gtk.HBox()
         remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label(_("Remove"))
+        remove_lab = Gtk.Label(label="Remove")
 
         ##########################
         #   Main window stuff.   #
