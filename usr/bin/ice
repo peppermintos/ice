@@ -64,7 +64,10 @@ def get_details(app):
     a = open(app, 'r')
     nameline = ""
     iconline = ""
-    is_ice = False
+    profile = ""
+    is_ice	= False
+    is_firefox = False
+    is_isolated = False
 
     for line in a:
         if "Name=" in line:
@@ -86,11 +89,24 @@ def get_details(app):
             is_ice = True
         elif "StartupWMClass=ICE-SSB" in line:
             is_ice = True
+        elif "IceFirefox=" in line:
+            is_firefox = True
+            profile = str.replace(line, 'IceFirefox=', '').strip()
+        elif "X-ICE-SSB-Profile=" in line:
+            is_isolated = True
+            profile = str.replace(line, 'X-ICE-SSB-Profile=', '').strip()
 
-    if nameline is not None and iconline is not None and is_ice is True:
-        return (nameline, pixbuf)
+    if nameline != "" and iconline != "" and is_ice is True:
+        details = {
+          'nameline' : nameline,
+          'profile' : profile,
+          'is_firefox' : is_firefox,
+          'is_isolated' : is_isolated,
+          'pixbuf': pixbuf
+          }
+        return details
 
-    return (None, None)
+    return None
 
 
 def normalize(url):
@@ -286,8 +302,9 @@ def writefile(title, formatted, address, iconext, location):
     iconpath = _ICE_ICON
     new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
     icon.set_from_pixbuf(new_icon)
-    iconline, pixbuf = get_details(appfile)
-    liststore.prepend([pixbuf, iconline])
+    details = get_details(appfile)
+    if details is not None:
+        liststore.prepend([ details['pixbuf'], details['nameline'] ])
 
 def init_firefox_profile(path):
     chromepath = "{0}/chrome".format(path)
@@ -349,14 +366,15 @@ def delete(button):
     os.system("rm {0}".format(appfile))
 
 
-def clean_orphaned_profiles(known_names):
+def clean_orphaned_profiles(known_apps):
     known_profiles = []
-    for kn in known_names: 
-        semiformatted = ""
-        array = filter(str.isalpha, kn)
-        for obj in array:
-            semiformatted = semiformatted + obj
-        known_profiles.append(semiformatted.lower())
+    for app in known_apps:
+        a = "{0}/firefox/{1}".format(_ICE_DIR, app['profile'])
+        if app['profile'] != "":
+            # make sure firefox apps have profiles available
+            if app['is_firefox'] is True and not os.path.isdir(a):
+                init_firefox_profile(a)
+            known_profiles.append(app['profile'])
 
     for p_type in ['profiles','firefox']:
         for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
@@ -739,10 +757,10 @@ class Ice(Gtk.Window):
         for fl in os.listdir(_APPS_DIR):
             a = "{0}/{1}".format(_APPS_DIR, fl)
             if not os.path.isdir(a):
-                nameline, pixbuf = get_details(a)
-                if nameline is not None and pixbuf is not None:
-                    liststore.append([pixbuf, nameline])
-                    known_profiles.append(nameline)
+                details = get_details(a)
+                if details is not None:
+                    liststore.append([ details['pixbuf'], details['nameline'] ])
+                    known_profiles.append(details)
 
         clean_orphaned_profiles(known_profiles)
 
