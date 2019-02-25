@@ -200,7 +200,7 @@ def applicate():
     address = normalize(url.get_text())
 
     semiformatted = ""
-    array = filter(str.isalpha, title)
+    array = filter(str.isalnum, title)
     for obj in array:
         semiformatted = semiformatted + obj
     formatted = semiformatted.lower()
@@ -245,16 +245,13 @@ def writefile(title, formatted, address, iconext, location):
     elif vivaldi.get_active() == True:
         browser = "vivaldi"
     elif firefox.get_active() == True:
-        browser = "ice-firefox"
+        browser = "firefox"
     else:
         print(_("ERROR: An unknown browser selection error has occurred."))
         sys.exit(1)
 
     with open(appfile, 'w') as appfile1:
         appfile1.truncate()
-        address1 = str.replace(address, 'http://', '')
-        address2 = str.replace(address1, 'https://', '')
-        address3 = str.replace(address2, '/', '_')
 
         appfile1.write("[Desktop Entry]\n")
         appfile1.write("Version=1.0\n")
@@ -267,9 +264,12 @@ def writefile(title, formatted, address, iconext, location):
             profile_path_argument = " --user-data-dir={0}/profiles/{1}".format(_ICE_DIR, formatted)
             appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
 
-        if (browser == "ice-firefox"):
-            appfile1.write("Exec={0} {1} ICE-SSB-{2}\n".format(browser, address, formatted))
-            appfile1.write("IceFirefox={0}\n".format(address3))
+        if (browser == "firefox"):
+            firefox_profile_path	= "{0}/firefox".format(_ICE_DIR)
+            firefox_profile	= formatted
+            appfile1.write("Exec={0} --profile {3}/{4} --no-remote --class ICE-SSB-{2} {1}\n".format(browser, address, formatted, firefox_profile_path, firefox_profile))
+            appfile1.write("IceFirefox={0}\n".format(firefox_profile))
+            init_firefox_profile("{0}/{1}".format(firefox_profile_path, firefox_profile))
         else:
             appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}{3}\n".format(browser, address, formatted, profile_path_argument))
 
@@ -290,6 +290,32 @@ def writefile(title, formatted, address, iconext, location):
     iconline, pixbuf = get_details(appfile)
     liststore.prepend([pixbuf, iconline])
 
+def init_firefox_profile(path):
+    chromepath = "{0}/chrome".format(path)
+    settingsfile = "{0}/user.js".format(path)
+    cssfile = "{0}/userChrome.css".format(chromepath)
+
+    os.system('mkdir -p ' + chromepath)
+    os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
+    os.system("touch {0}".format(cssfile))
+    with open(cssfile, 'w') as cfile:
+        cfile.write("#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; } #identity-box, #navigator-toolbox::after, #TabsToolbar { display: none !important; }")
+
+    os.system("touch {0}".format(settingsfile))
+    with open(settingsfile, 'w') as sfile:
+        sfile.write('user_pref("browser.cache.disk.enable", false);')
+        sfile.write('user_pref("browser.cache.disk.capacity", 0);')
+        sfile.write('user_pref("browser.cache.disk.filesystem_reported", 1);')
+        sfile.write('user_pref("browser.cache.disk.smart_size.enabled", false);')
+        sfile.write('user_pref("browser.cache.disk.smart_size.first_run", false);')
+        sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max", false);')
+        sfile.write('user_pref("browser.ctrlTab.previews", true);')
+        sfile.write('user_pref("browser.tabs.warnOnClose", false);')
+        sfile.write('user_pref("plugin.state.flash", 2);')
+
+    # rhein: do we really need this? 
+    #os.system('rm -rf ' + chromepath + '/cache2')
+
 
 def delete(button):
     a = iconview.get_selected_items()
@@ -298,7 +324,7 @@ def delete(button):
     liststore.remove(b)
 
     semiformatted = ""
-    array = filter(str.isalpha, c)
+    array = filter(str.isalnum, c)
 
     for obj in array:
         semiformatted = semiformatted + obj
@@ -314,10 +340,7 @@ def delete(button):
         if "IceFirefox=" in line:
             profile = str.replace(line, 'IceFirefox=', '')
             directory = os.path.expanduser('{0}/firefox'.format(_ICE_DIR))
-
-            for profiles in os.listdir(directory):
-#                if profile in profiles:## edited by MG ##
-                    os.system("rm -rf {0}/{1}".format(directory, profile))
+            os.system("rm -rf {0}/{1}".format(directory, profile))
 
         if "X-ICE-SSB-Profile=" in line:
             profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
@@ -659,7 +682,7 @@ class Ice(Gtk.Window):
         global isolate_profile
         isolate_profile=False
         isolate_box = Gtk.VBox()
-        isolate_button = Gtk.CheckButton(label="Isolate Sessions into separate browser profile")
+        isolate_button = Gtk.CheckButton(label="Isolate Sessions into separate browser profile (Note: Firefox Sessions are always isolated by default)")
         isolate_button.connect("toggled", self.isolate_clicked)
         isolate_box.add(isolate_button)
 
