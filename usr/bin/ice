@@ -380,8 +380,8 @@ def clean_orphaned_profiles(known_apps):
         for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
             a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
             if not os.path.isdir(a) or fl not in known_profiles:
-                #os.system("rm -rf {0}".format(a))
-                print("Would run: rm -rf {0}".format(a))
+                os.system("rm -rf {0}".format(a))
+
 
 class IconSel(Gtk.FileChooserDialog):
 
