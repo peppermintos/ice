@@ -54,9 +54,8 @@ if not os.path.exists(_APPS_DIR):
     os.system("mkdir -p {0}".format(_APPS_DIR))
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) \
-        AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 \
-        Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0',
+    #'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
 }
 
 
@@ -160,13 +159,12 @@ def download_favicon(url, file_prefix='', target_dir='/tmp'):
     return sanitized_filename
 
 
-def parse_markup_for_favicon(markup, url):
-    parsed_site_uri = urlparse(url)
+def parse_markup_for_favicon(markup, parsed_site_uri):
 
-#    soup = BeautifulSoup(markup)
-    soup = BeautifulSoup(markup, "lxml") ## edited by MG ##
+    soup = BeautifulSoup(markup, "lxml")
 
     icon_link = soup.find('link', rel='icon')
+
     if icon_link and icon_link.has_attr('href'):
 
         favicon_url = icon_link['href']
@@ -197,7 +195,7 @@ def get_favicon_url(url):
         raise Exception(_("Unable to find URL. Is it valid? {0}").format(url))
 
     if response.status_code == requests.codes.ok:
-        favicon_url = parse_markup_for_favicon(response.content, url)
+        favicon_url = parse_markup_for_favicon(response.content, parsed_site_uri)
 
         if favicon_url:
             return favicon_url
