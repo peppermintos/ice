@@ -3,6 +3,7 @@
 # by Kendall Weaver <kendall@peppermintos.com>
 # for Peppermint OS
 # modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
+# with much appreciated code contributions by rhein
 # internationalization (i18n)/gettext support by Kiyohito AOKI
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
@@ -232,9 +233,9 @@ def applicate():
         location = "Office;"
     elif loc == _("Programming"):
         location = "Development;"
-    elif loc == _("Sound & Video"):
+    elif loc == _("Multimedia"):
         location = "AudioVideo;"
-    elif loc == _("System Tools"):
+    elif loc == _("System"):
         location = "System;"
 
     global iconpath
@@ -620,7 +621,7 @@ class Ice(Gtk.Window):
         url.set_placeholder_text(_("Enter web address"))
 
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
-                       _("Office"), _("Programming"), _("Sound & Video"), _("System Tools")]
+                       _("Office"), _("Programming"), _("Multimedia"), _("System")]
         where_lab = Gtk.Label(label="Where in the menu?")
         global where
         where = Gtk.ComboBoxText()
@@ -660,7 +661,7 @@ class Ice(Gtk.Window):
         icon_hbox.pack_start(icon_vbox, True, True, 0)
 
         global firefox
-        firefox = Gtk.RadioButton.new_with_label_from_widget(None, "Firefox")
+        firefox = Gtk.RadioButton.new_with_label_from_widget(None, " Firefox")
 
         if not os.path.exists(_FIREFOX_BIN):
             firefox.set_sensitive(False)
@@ -673,7 +674,7 @@ class Ice(Gtk.Window):
 
         global chrome
         chrome = Gtk.RadioButton.new_from_widget(firefox)
-        chrome.set_label("Chrome")
+        chrome.set_label(" Chrome")
 
         if not os.path.exists(_CHROME_BIN):
             chrome.set_sensitive(False)
@@ -686,7 +687,7 @@ class Ice(Gtk.Window):
 
         global vivaldi
         vivaldi = Gtk.RadioButton.new_from_widget(chrome)
-        vivaldi.set_label("Vivaldi")
+        vivaldi.set_label(" Vivaldi")
 
         if not os.path.exists(_VIVALDI_BIN):
             vivaldi.set_sensitive(False)
@@ -699,7 +700,7 @@ class Ice(Gtk.Window):
 
         global chromium
         chromium = Gtk.RadioButton.new_from_widget(chrome)
-        chromium.set_label("Chromium")
+        chromium.set_label(" Chromium")
 
         if not os.path.exists(_CHROMIUM_BIN):
             chromium.set_sensitive(False)
@@ -713,7 +714,7 @@ class Ice(Gtk.Window):
         global isolate_profile
         isolate_profile=False
         isolate_box = Gtk.VBox()
-        isolate_button = Gtk.CheckButton(label="Isolate Sessions into separate browser profile (Note: Firefox Sessions are always isolated by default)")
+        isolate_button = Gtk.CheckButton(label=" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)")
         isolate_button.connect("toggled", self.isolate_clicked)
         isolate_box.add(isolate_button)
 
