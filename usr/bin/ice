@@ -34,6 +34,8 @@ import locale
 _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
 _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
+_PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
+_FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
@@ -47,11 +49,9 @@ _ = gettext.gettext
 
 
 # Requisite dirs
-if not os.path.exists(_ICE_DIR):
-    os.system("mkdir -p {0}".format(_ICE_DIR))
-
-if not os.path.exists(_APPS_DIR):
-    os.system("mkdir -p {0}".format(_APPS_DIR))
+for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
+    if not os.path.exists(directory):
+        os.system("mkdir -p {0}".format(directory))
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0',
@@ -274,13 +274,13 @@ def writefile(title, formatted, address, iconext, location):
         appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
         if (browser == "firefox"):
-            firefox_profile_path  = "{0}/firefox/{1}".format(_ICE_DIR, formatted)
+            firefox_profile_path  = "{0}/{1}".format(_FF_PROFILES_DIR, formatted)
             appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
             appfile1.write("IceFirefox={0}\n".format(formatted))
             init_firefox_profile(firefox_profile_path)
         else:
             if isolate_profile == True:
-                profile_path = "{0}/profiles/{1}".format(_ICE_DIR, formatted)
+                profile_path = "{0}/{1}".format(_PROFILES_DIR, formatted)
                 appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2} --user-data-dir={3}\n".format(browser, address, formatted, profile_path))
                 appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
             else:
@@ -353,13 +353,11 @@ def delete(button):
     for line in appfilelines:
         if "IceFirefox=" in line:
             profile = str.replace(line, 'IceFirefox=', '')
-            directory = os.path.expanduser('{0}/firefox'.format(_ICE_DIR))
-            os.system("rm -rf {0}/{1}".format(directory, profile))
+            os.system("rm -rf {0}/{1}".format(_FF_PROFILES_DIR, profile))
 
         if "X-ICE-SSB-Profile=" in line:
             profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
-            directory = os.path.expanduser('{0}/profiles'.format(_ICE_DIR))
-            os.system("rm -rf {0}/{1}".format(directory, profile))
+            os.system("rm -rf {0}/{1}".format(_PROFILES_DIR, profile))
 
     os.system("rm {0}".format(appfile))
 
@@ -367,7 +365,7 @@ def delete(button):
 def clean_orphaned_profiles(known_apps):
     known_profiles = []
     for app in known_apps:
-        a = "{0}/firefox/{1}".format(_ICE_DIR, app['profile'])
+        a = "{0}/{1}".format(_FF_PROFILES_DIR, app['profile'])
         if app['profile'] != "":
             # make sure firefox apps have profiles available
             if app['is_firefox'] is True and not os.path.isdir(a):
