@@ -34,6 +34,7 @@ import locale
 
 _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
+_PROFILES_DIR = "{0}/.local/share/ice/profiles".format(_HOME)
 _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
 _CHROME_BIN = "/usr/bin/google-chrome"
@@ -50,6 +51,9 @@ _ = gettext.gettext
 # Requisite dirs
 if not os.path.exists(_ICE_DIR):
     os.system("mkdir -p {0}".format(_ICE_DIR))
+    
+if not os.path.exists(_PROFILES_DIR):
+    os.system("mkdir -p {0}".format(_PROFILES_DIR))
 
 if not os.path.exists(_APPS_DIR):
     os.system("mkdir -p {0}".format(_APPS_DIR))
