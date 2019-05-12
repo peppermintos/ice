@@ -314,7 +314,7 @@ def init_firefox_profile(path):
     os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
     os.system("touch {0}".format(cssfile))
     with open(cssfile, 'w') as cfile:
-        cfile.write("#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; } #identity-box, #navigator-toolbox::after, #TabsToolbar { display: none !important; }")
+        cfile.write("#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; opacity: 0; } #identity-box, #navigator-toolbox::after, #tabbrowser-tabs {  --tab-min-height: 0px !important;  margin-left: 0px !important;  height: 0px !important; }")
 
     os.system("touch {0}".format(settingsfile))
     with open(settingsfile, 'w') as sfile:
