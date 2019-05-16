@@ -61,7 +61,7 @@ headers = {
 
 
 def get_details(app):
-    a = open(app, 'r')
+    a = open(app, 'r', errors='ignore')
     nameline = ""
     iconline = ""
     profile = ""
@@ -312,9 +312,10 @@ def init_firefox_profile(path):
 
     os.system('mkdir -p ' + chromepath)
     os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
+    os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
     os.system("touch {0}".format(cssfile))
     with open(cssfile, 'w') as cfile:
-        cfile.write("#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; opacity: 0; } #identity-box, #navigator-toolbox::after, #tabbrowser-tabs {  --tab-min-height: 0px !important;  margin-left: 0px !important;  height: 0px !important; }")
+        cfile.write("#nav-bar { max-height: 0 !important; margin-bottom: -20px !important; opacity: 0; } #identity-box, #navigator-toolbox::after, #tabbrowser-tabs {  --tab-min-height: 0px !important;  margin-left: 0px !important;  height: 0px !important; }")
 
     os.system("touch {0}".format(settingsfile))
     with open(settingsfile, 'w') as sfile:
@@ -447,7 +448,7 @@ class NoBrowserError(Gtk.Window):
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
         text_lab = Gtk.Label(_("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs."))
 
-        close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close = Gtk.Button(label="Close")
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -497,9 +498,9 @@ class DuplicateError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
 
-        okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
+        okay = Gtk.Button(label="OK")
         okay.connect("clicked", self.okay_clicked, title, formatted, address, iconext, location)
-        cancel = Gtk.Button.new_from_stock(Gtk.STOCK_CANCEL)
+        cancel = Gtk.Button(label="Cancel")
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -536,9 +537,9 @@ class AddressError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
         text_lab = Gtk.Label(_("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?"))
 
-        okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
+        okay = Gtk.Button(label="OK")
         okay.connect("clicked", self.okay_clicked)
-        cancel = Gtk.Button.new_from_stock(Gtk.STOCK_CANCEL)
+        cancel = Gtk.Button(label="Cancel")
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -716,9 +717,9 @@ class Ice(Gtk.Window):
         isolate_button.connect("toggled", self.isolate_clicked)
         isolate_box.add(isolate_button)
 
-        apply_button = Gtk.Button.new_from_stock(Gtk.STOCK_APPLY)
+        apply_button = Gtk.Button(label="Apply")
         apply_button.connect("clicked", self.apply_clicked)
-        close_button = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close_button = Gtk.Button(label="Close")
         close_button.connect("clicked", self.destroy)
         button_void = Gtk.Label()
         button_box = Gtk.HBox()
@@ -771,9 +772,9 @@ class Ice(Gtk.Window):
         scroll = Gtk.ScrolledWindow()
         scroll.add(iconview)
 
-        remove = Gtk.Button.new_from_stock(Gtk.STOCK_REMOVE)
+        remove = Gtk.Button(label="Remove")
         remove.connect("clicked", delete)
-        close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close = Gtk.Button(label="Close")
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         buttons = Gtk.HBox()
