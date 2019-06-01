@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 22:49+0900\n"
+"POT-Creation-Date: 2019-06-02 07:30+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,75 +17,74 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ice:113
+#: ../../../bin/ice:136
 #, python-brace-format
 msgid "Unable to parse URL, {0}"
 msgstr "{0}というURLを解釈できません"
 
-#: ice:118
+#: ../../../bin/ice:141
 #, python-brace-format
 msgid "Unable to find favicon for, {0}"
 msgstr "{0}のfaviconが見つかりません"
 
-#: ice:175
+#: ../../../bin/ice:196
 #, python-brace-format
 msgid "Unable to find URL. Is it valid? {0}"
 msgstr "{0}というURLが見つかりません。URLが正しいですか?"
 
-
-#: ice:203 ice:546
+#: ../../../bin/ice:224 ../../../bin/ice:622
 msgid "Accessories"
 msgstr "アクセサリ"
 
-#: ice:205 ice:546
+#: ../../../bin/ice:226 ../../../bin/ice:622
 msgid "Games"
 msgstr "ゲーム"
 
-#: ice:207 ice:546
+#: ../../../bin/ice:228 ../../../bin/ice:622
 msgid "Graphics"
 msgstr "グラフィックス"
 
-#: ice:209 ice:546
+#: ../../../bin/ice:230 ../../../bin/ice:622
 msgid "Internet"
 msgstr "インターネット"
 
-#: ice:211 ice:547
+#: ../../../bin/ice:232 ../../../bin/ice:623
 msgid "Office"
 msgstr "オフィス"
 
-#: ice:213 ice:547
+#: ../../../bin/ice:234 ../../../bin/ice:623
 msgid "Programming"
 msgstr "プログラミング"
 
-#: ice:215 ice:547
-msgid "Sound & Video"
-msgstr "サウンドとビデオ"
+#: ../../../bin/ice:236 ../../../bin/ice:623
+msgid "Multimedia"
+msgstr "マルチメディア"
 
-#: ice:217 ice:547
-msgid "System Tools"
-msgstr "システムツール"
+#: ../../../bin/ice:238 ../../../bin/ice:623
+msgid "System"
+msgstr "システム"
 
-#: ice:244
+#: ../../../bin/ice:265
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "エラー:不明なブラウザが選択された"
 
-#: ice:331
+#: ../../../bin/ice:401
 msgid "Please choose an icon."
 msgstr "アイコンを選択"
 
-#: ice:370
+#: ../../../bin/ice:440
 msgid "Browser Error"
 msgstr "ブラウザエラー"
 
-#: ice:374
+#: ../../../bin/ice:444
 msgid "test"
 msgstr "テスト"
 
-#: ice:377
+#: ../../../bin/ice:447
 msgid "<b>Warning: No Suitable Browser Detected</b>"
 msgstr "<b>警告:適合するブラウザが見つからない</b>"
 
-#: ice:378 ice:429
+#: ../../../bin/ice:448 ../../../bin/ice:499
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
@@ -95,7 +94,7 @@ msgstr ""
 "これを防止するには、名前を変更してください。\n"
 "上書きしますか？"
 
-#: ice:379
+#: ../../../bin/ice:449
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
@@ -104,23 +103,35 @@ msgstr ""
 "Iceの機能を使うにはGoogle ChromeかChromiumのインストールが必要です。\n"
 "SSBを作成するには、少なくともどちらかをインストールしてください。"
 
-#: ice:423
+#: ../../../bin/ice:451 ../../../bin/ice:722 ../../../bin/ice:777
+msgid "Close"
+msgstr "終了"
+
+#: ../../../bin/ice:493
 msgid "Duplication Error"
 msgstr "重複エラー"
 
-#: ice:428
+#: ../../../bin/ice:498
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>警告:ファイル重複エラー</b>"
 
-#: ice:462
+#: ../../../bin/ice:501 ../../../bin/ice:540
+msgid "OK"
+msgstr "OK"
+
+#: ../../../bin/ice:503 ../../../bin/ice:542
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: ../../../bin/ice:532
 msgid "Address Error"
 msgstr "アドレスエラー"
 
-#: ice:467
+#: ../../../bin/ice:537
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>警告:HTTPもしくはURLのエラー</b>"
 
-#: ice:468
+#: ../../../bin/ice:538
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
@@ -130,42 +141,55 @@ msgstr ""
 "サイトがダウンしているか、現在利用できなくなっている可能性があります。\n"
 "それでも続行しますか?"
 
-#: ice:505
+#: ../../../bin/ice:575
 msgid "ERROR: An address error has occurred."
 msgstr "エラー:アドレスエラーが発生した"
 
-#: ice:508
+#: ../../../bin/ice:578
 msgid "ERROR: An unknown error has occurred."
 msgstr "エラー:不明なエラーが発生した"
 
-#: ice:538
+#: ../../../bin/ice:614
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
 msgstr "<b>ICE SSBマネージャーへようこそ</b>"
 
-#: ice:541
+#: ../../../bin/ice:617
 msgid "Name the application"
 msgstr "アプリケーション名"
 
-#: ice:544
+#: ../../../bin/ice:620
 msgid "Enter web address"
 msgstr "Webアドレス"
 
-#: ice:548
+#: ../../../bin/ice:624
 msgid "Where in the menu?"
 msgstr "メニュー内の場所"
 
-#: ice:574
+#: ../../../bin/ice:650
 msgid "Select an icon"
 msgstr "アイコンを選択"
 
-#: ice:576
+#: ../../../bin/ice:652
 msgid "Use site favicon"
 msgstr "サイトのfaviconを使用"
 
-#: ice:661
+#: ../../../bin/ice:716
+msgid ""
+" Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
+"always isolated"
+msgstr ""
+"ブラウザのプロファイルを独立させてSSBを作成する (Firefox SSBは常に独立したプ"
+"ロファイルを使用)"
+
+#: ../../../bin/ice:720
+msgid "Apply"
+msgstr "適用"
+
+#: ../../../bin/ice:745
 msgid "Create"
 msgstr "追加"
 
-#: ice:703
+#: ../../../bin/ice:775 ../../../bin/ice:791
 msgid "Remove"
 msgstr "削除"
+

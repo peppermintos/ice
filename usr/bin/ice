@@ -448,7 +448,7 @@ class NoBrowserError(Gtk.Window):
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
         text_lab = Gtk.Label(_("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs."))
 
-        close = Gtk.Button(label="Close")
+        close = Gtk.Button(label=_("Close"))
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -498,9 +498,9 @@ class DuplicateError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
 
-        okay = Gtk.Button(label="OK")
+        okay = Gtk.Button(label=_("OK"))
         okay.connect("clicked", self.okay_clicked, title, formatted, address, iconext, location)
-        cancel = Gtk.Button(label="Cancel")
+        cancel = Gtk.Button(label=_("Cancel"))
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -537,9 +537,9 @@ class AddressError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
         text_lab = Gtk.Label(_("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?"))
 
-        okay = Gtk.Button(label="OK")
+        okay = Gtk.Button(label=_("OK"))
         okay.connect("clicked", self.okay_clicked)
-        cancel = Gtk.Button(label="Cancel")
+        cancel = Gtk.Button(label=_("Cancel"))
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -621,7 +621,7 @@ class Ice(Gtk.Window):
 
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
                        _("Office"), _("Programming"), _("Multimedia"), _("System")]
-        where_lab = Gtk.Label(label="Where in the menu?")
+        where_lab = Gtk.Label(label=_("Where in the menu?"))
         global where
         where = Gtk.ComboBoxText()
         where.set_entry_text_column(0)
@@ -647,9 +647,9 @@ class Ice(Gtk.Window):
         icon_box.pack_start(icon, False, False, 10)
         icon_box.pack_start(icon_void, False, False, 10)
 
-        choose_icon = Gtk.Button(label="Select an icon")
+        choose_icon = Gtk.Button(label=_("Select an icon"))
         choose_icon.connect("clicked", self.icon_select)
-        download_icon = Gtk.Button(label="Use site favicon")
+        download_icon = Gtk.Button(label=_("Use site favicon"))
         download_icon.connect("clicked", self.icon_download)
 
         icon_vbox = Gtk.VBox()
@@ -713,13 +713,13 @@ class Ice(Gtk.Window):
         global isolate_profile
         isolate_profile=False
         isolate_box = Gtk.VBox()
-        isolate_button = Gtk.CheckButton(label=" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)")
+        isolate_button = Gtk.CheckButton(label=_(" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated"))
         isolate_button.connect("toggled", self.isolate_clicked)
         isolate_box.add(isolate_button)
 
-        apply_button = Gtk.Button(label="Apply")
+        apply_button = Gtk.Button(label=_("Apply"))
         apply_button.connect("clicked", self.apply_clicked)
-        close_button = Gtk.Button(label="Close")
+        close_button = Gtk.Button(label=_("Close"))
         close_button.connect("clicked", self.destroy)
         button_void = Gtk.Label()
         button_box = Gtk.HBox()
@@ -742,7 +742,7 @@ class Ice(Gtk.Window):
 
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
-        create_lab = Gtk.Label(label="Create")
+        create_lab = Gtk.Label(label=_("Create"))
 
         ######################
         #   'Remove' page.   #
@@ -772,9 +772,9 @@ class Ice(Gtk.Window):
         scroll = Gtk.ScrolledWindow()
         scroll.add(iconview)
 
-        remove = Gtk.Button(label="Remove")
+        remove = Gtk.Button(label=_("Remove"))
         remove.connect("clicked", delete)
-        close = Gtk.Button(label="Close")
+        close = Gtk.Button(label=_("Close"))
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         buttons = Gtk.HBox()
@@ -788,7 +788,7 @@ class Ice(Gtk.Window):
 
         remove_hbox = Gtk.HBox()
         remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label(label="Remove")
+        remove_lab = Gtk.Label(label=_("Remove"))
 
         ##########################
         #   Main window stuff.   #
