@@ -1,6 +1,6 @@
 ##### Ice #####
 
-(C) 2010 - 2018 -- Kendall Weaver <kendall@peppermintos.com>
+(C) 2010 - 2019 -- Mark Greaves <mark@peppermintos.com>
 
 Released under GNU General Public License version 2
 
@@ -11,12 +11,15 @@ browsers in Debian and Ubuntu based Linux distributions. It
 was originally created for Peppermint OS Ice and is now used
 as the default SSB application in Peppermint OS since the
 two branches of the OS merged for Peppermint Two. Since
-version 5, Ice has supported Google Chrome. Since version
-5.1, Ice has supported Mozilla Firefox.
+version 5, Ice has supported Google Chrome.
+Ice now supports Chrome, Chromium, Firefox, and Vivaldi.
+Chrome, Chromium, and Vivaldi SSB's can now be completely
+isolated from each other (or use the shared master browser
+profile) Firefox SSB's are always isolated.
 
 #####
 
-Ice depends on the chromium-browser package being installed.
+Ice depends on one of the above browsers being installed.
 It's also possible to use it with any build of Google Chrome
 however this is something that is hard coded into the app
 and will need to be manually changed if one wishes to use it

@@ -3,6 +3,7 @@
 # by Kendall Weaver <kendall@peppermintos.com>
 # for Peppermint OS
 # modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
+# with much appreciated code contributions by rhein
 # internationalization (i18n)/gettext support by Kiyohito AOKI
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
@@ -34,6 +35,8 @@ import locale
 _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
 _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
+_PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
+_FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
@@ -47,24 +50,24 @@ _ = gettext.gettext
 
 
 # Requisite dirs
-if not os.path.exists(_ICE_DIR):
-    os.system("mkdir -p {0}".format(_ICE_DIR))
-
-if not os.path.exists(_APPS_DIR):
-    os.system("mkdir -p {0}".format(_APPS_DIR))
+for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
+    if not os.path.exists(directory):
+        os.system("mkdir -p {0}".format(directory))
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) \
-        AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 \
-        Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0',
+    #'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
 }
 
 
 def get_details(app):
-    a = open(app, 'r')
+    a = open(app, 'r', errors='ignore')
     nameline = ""
     iconline = ""
-    is_ice = False
+    profile = ""
+    is_ice	= False
+    is_firefox = False
+    is_isolated = False
 
     for line in a:
         if "Name=" in line:
@@ -82,12 +85,28 @@ def get_details(app):
             except:
                 pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON, 16, 16)
         elif "StartupWMClass=Chromium" in line:
+            # for legacy apps
             is_ice = True
+        elif "StartupWMClass=ICE-SSB" in line:
+            is_ice = True
+        elif "IceFirefox=" in line:
+            is_firefox = True
+            profile = str.replace(line, 'IceFirefox=', '').strip()
+        elif "X-ICE-SSB-Profile=" in line:
+            is_isolated = True
+            profile = str.replace(line, 'X-ICE-SSB-Profile=', '').strip()
 
-    if nameline is not None and iconline is not None and is_ice is True:
-        return (nameline, pixbuf)
+    if nameline != "" and iconline != "" and is_ice is True:
+        details = {
+          'nameline' : nameline,
+          'profile' : profile,
+          'is_firefox' : is_firefox,
+          'is_isolated' : is_isolated,
+          'pixbuf': pixbuf
+          }
+        return details
 
-    return (None, None)
+    return None
 
 
 def normalize(url):
@@ -141,13 +160,12 @@ def download_favicon(url, file_prefix='', target_dir='/tmp'):
     return sanitized_filename
 
 
-def parse_markup_for_favicon(markup, url):
-    parsed_site_uri = urlparse(url)
+def parse_markup_for_favicon(markup, parsed_site_uri):
 
-#    soup = BeautifulSoup(markup)
-    soup = BeautifulSoup(markup, "lxml") ## edited by MG ##
+    soup = BeautifulSoup(markup, "lxml")
 
     icon_link = soup.find('link', rel='icon')
+
     if icon_link and icon_link.has_attr('href'):
 
         favicon_url = icon_link['href']
@@ -178,7 +196,7 @@ def get_favicon_url(url):
         raise Exception(_("Unable to find URL. Is it valid? {0}").format(url))
 
     if response.status_code == requests.codes.ok:
-        favicon_url = parse_markup_for_favicon(response.content, url)
+        favicon_url = parse_markup_for_favicon(response.content, parsed_site_uri)
 
         if favicon_url:
             return favicon_url
@@ -215,9 +233,9 @@ def applicate():
         location = "Office;"
     elif loc == _("Programming"):
         location = "Development;"
-    elif loc == _("Sound & Video"):
+    elif loc == _("Multimedia"):
         location = "AudioVideo;"
-    elif loc == _("System Tools"):
+    elif loc == _("System"):
         location = "System;"
 
     global iconpath
@@ -242,45 +260,77 @@ def writefile(title, formatted, address, iconext, location):
     elif vivaldi.get_active() == True:
         browser = "vivaldi"
     elif firefox.get_active() == True:
-        browser = "ice-firefox"
+        browser = "firefox"
     else:
         print(_("ERROR: An unknown browser selection error has occurred."))
         sys.exit(1)
 
     with open(appfile, 'w') as appfile1:
+        global isolate_profile
         appfile1.truncate()
+
         appfile1.write("[Desktop Entry]\n")
         appfile1.write("Version=1.0\n")
         appfile1.write("Name={0}\n".format(title))
         appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
-        if (browser == "ice-firefox"):
-            appfile1.write("Exec={0} {1}\n".format(browser, address))
+        if (browser == "firefox"):
+            firefox_profile_path  = "{0}/{1}".format(_FF_PROFILES_DIR, formatted)
+            appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
+            appfile1.write("IceFirefox={0}\n".format(formatted))
+            init_firefox_profile(firefox_profile_path)
         else:
-            appfile1.write("Exec={0} --app={1}\n".format(browser, address))
+            if isolate_profile == True:
+                profile_path = "{0}/{1}".format(_PROFILES_DIR, formatted)
+                appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2} --user-data-dir={3}\n".format(browser, address, formatted, profile_path))
+                appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
+            else:
+              appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}\n".format(browser, address, formatted))
 
         appfile1.write("Terminal=false\n")
         appfile1.write("X-MultipleArgs=false\n")
         appfile1.write("Type=Application\n")
-        appfile1.write("Icon={0}/.local/share/ice/{1}.{2}\n".format(_HOME, formatted, iconext))
+        appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR, formatted, iconext))
         appfile1.write("Categories=GTK;{0}\n".format(location))
         appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
-        appfile1.write("StartupWMClass=Chromium\n")
+        appfile1.write("StartupWMClass=ICE-SSB-{0}\n".format(formatted))
         appfile1.write("StartupNotify=true\n")
-
-        if (browser == "ice-firefox"):
-            address1 = str.replace(address, 'http://', '')
-            address2 = str.replace(address1, 'https://', '')
-            address3 = str.replace(address2, '/', '_')
-            appfile1.write("IceFirefox={0}".format(address3))
 
     name.set_text("")
     url.set_text("")
     iconpath = _ICE_ICON
     new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
     icon.set_from_pixbuf(new_icon)
-    iconline, pixbuf = get_details(appfile)
-    liststore.prepend([pixbuf, iconline])
+    details = get_details(appfile)
+    if details is not None:
+        liststore.prepend([ details['pixbuf'], details['nameline'] ])
+
+def init_firefox_profile(path):
+    chromepath = "{0}/chrome".format(path)
+    settingsfile = "{0}/user.js".format(path)
+    cssfile = "{0}/userChrome.css".format(chromepath)
+
+    os.system('mkdir -p ' + chromepath)
+    os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
+    os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
+    os.system("touch {0}".format(cssfile))
+    with open(cssfile, 'w') as cfile:
+        cfile.write("#nav-bar { max-height: 0 !important; margin-bottom: -20px !important; opacity: 0; } #identity-box, #navigator-toolbox::after, #tabbrowser-tabs {  --tab-min-height: 0px !important;  margin-left: 0px !important;  height: 0px !important; }")
+
+    os.system("touch {0}".format(settingsfile))
+    with open(settingsfile, 'w') as sfile:
+        sfile.write('user_pref("browser.cache.disk.enable", false);')
+        sfile.write('user_pref("browser.cache.disk.capacity", 0);')
+        sfile.write('user_pref("browser.cache.disk.filesystem_reported", 1);')
+        sfile.write('user_pref("browser.cache.disk.smart_size.enabled", false);')
+        sfile.write('user_pref("browser.cache.disk.smart_size.first_run", false);')
+        sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max", false);')
+        sfile.write('user_pref("browser.ctrlTab.previews", true);')
+        sfile.write('user_pref("browser.tabs.warnOnClose", false);')
+        sfile.write('user_pref("plugin.state.flash", 2);')
+
+    # rhein: do we really need this? 
+    #os.system('rm -rf ' + chromepath + '/cache2')
 
 
 def delete(button):
@@ -305,13 +355,30 @@ def delete(button):
     for line in appfilelines:
         if "IceFirefox=" in line:
             profile = str.replace(line, 'IceFirefox=', '')
-            directory = os.path.expanduser('{0}/firefox'.format(_ICE_DIR))
+            os.system("rm -rf {0}/{1}".format(_FF_PROFILES_DIR, profile))
 
-            for profiles in os.listdir(directory):
-#                if profile in profiles:## edited by MG ##
-                    os.system("rm -rf {0}/{1}".format(directory, profile))
+        if "X-ICE-SSB-Profile=" in line:
+            profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
+            os.system("rm -rf {0}/{1}".format(_PROFILES_DIR, profile))
 
     os.system("rm {0}".format(appfile))
+
+
+def clean_orphaned_profiles(known_apps):
+    known_profiles = []
+    for app in known_apps:
+        a = "{0}/{1}".format(_FF_PROFILES_DIR, app['profile'])
+        if app['profile'] != "":
+            # make sure firefox apps have profiles available
+            if app['is_firefox'] is True and not os.path.isdir(a):
+                init_firefox_profile(a)
+            known_profiles.append(app['profile'])
+
+    for p_type in ['profiles','firefox']:
+        for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
+            a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
+            if not os.path.isdir(a) or fl not in known_profiles:
+                os.system("rm -rf {0}".format(a))
 
 
 class IconSel(Gtk.FileChooserDialog):
@@ -381,7 +448,7 @@ class NoBrowserError(Gtk.Window):
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
         text_lab = Gtk.Label(_("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs."))
 
-        close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close = Gtk.Button(label="Close")
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -431,9 +498,9 @@ class DuplicateError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
 
-        okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
+        okay = Gtk.Button(label="OK")
         okay.connect("clicked", self.okay_clicked, title, formatted, address, iconext, location)
-        cancel = Gtk.Button.new_from_stock(Gtk.STOCK_CANCEL)
+        cancel = Gtk.Button(label="Cancel")
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -470,9 +537,9 @@ class AddressError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
         text_lab = Gtk.Label(_("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?"))
 
-        okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
+        okay = Gtk.Button(label="OK")
         okay.connect("clicked", self.okay_clicked)
-        cancel = Gtk.Button.new_from_stock(Gtk.STOCK_CANCEL)
+        cancel = Gtk.Button(label="Cancel")
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -527,6 +594,12 @@ class Ice(Gtk.Window):
             new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
             icon.set_from_pixbuf(new_icon)
 
+    def isolate_clicked(self, button):
+        global isolate_profile
+        isolate_profile=False
+        if button.get_active() == True:
+          isolate_profile = True
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
@@ -547,8 +620,8 @@ class Ice(Gtk.Window):
         url.set_placeholder_text(_("Enter web address"))
 
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
-                       _("Office"), _("Programming"), _("Sound & Video"), _("System Tools")]
-        where_lab = Gtk.Label(_("Where in the menu?"))
+                       _("Office"), _("Programming"), _("Multimedia"), _("System")]
+        where_lab = Gtk.Label(label="Where in the menu?")
         global where
         where = Gtk.ComboBoxText()
         where.set_entry_text_column(0)
@@ -574,9 +647,9 @@ class Ice(Gtk.Window):
         icon_box.pack_start(icon, False, False, 10)
         icon_box.pack_start(icon_void, False, False, 10)
 
-        choose_icon = Gtk.Button(_("Select an icon"))
+        choose_icon = Gtk.Button(label="Select an icon")
         choose_icon.connect("clicked", self.icon_select)
-        download_icon = Gtk.Button(_("Use site favicon"))
+        download_icon = Gtk.Button(label="Use site favicon")
         download_icon.connect("clicked", self.icon_download)
 
         icon_vbox = Gtk.VBox()
@@ -587,7 +660,7 @@ class Ice(Gtk.Window):
         icon_hbox.pack_start(icon_vbox, True, True, 0)
 
         global firefox
-        firefox = Gtk.RadioButton.new_with_label_from_widget(None, "Firefox")
+        firefox = Gtk.RadioButton.new_with_label_from_widget(None, " Firefox")
 
         if not os.path.exists(_FIREFOX_BIN):
             firefox.set_sensitive(False)
@@ -600,7 +673,7 @@ class Ice(Gtk.Window):
 
         global chrome
         chrome = Gtk.RadioButton.new_from_widget(firefox)
-        chrome.set_label("Chrome")
+        chrome.set_label(" Chrome")
 
         if not os.path.exists(_CHROME_BIN):
             chrome.set_sensitive(False)
@@ -613,7 +686,7 @@ class Ice(Gtk.Window):
 
         global vivaldi
         vivaldi = Gtk.RadioButton.new_from_widget(chrome)
-        vivaldi.set_label("Vivaldi")
+        vivaldi.set_label(" Vivaldi")
 
         if not os.path.exists(_VIVALDI_BIN):
             vivaldi.set_sensitive(False)
@@ -626,7 +699,7 @@ class Ice(Gtk.Window):
 
         global chromium
         chromium = Gtk.RadioButton.new_from_widget(chrome)
-        chromium.set_label("Chromium")
+        chromium.set_label(" Chromium")
 
         if not os.path.exists(_CHROMIUM_BIN):
             chromium.set_sensitive(False)
@@ -637,9 +710,16 @@ class Ice(Gtk.Window):
                 os.path.exists(_CHROMIUM_BIN):
             chromium.set_active(True)
 
-        apply_button = Gtk.Button.new_from_stock(Gtk.STOCK_APPLY)
+        global isolate_profile
+        isolate_profile=False
+        isolate_box = Gtk.VBox()
+        isolate_button = Gtk.CheckButton(label=" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)")
+        isolate_button.connect("toggled", self.isolate_clicked)
+        isolate_box.add(isolate_button)
+
+        apply_button = Gtk.Button(label="Apply")
         apply_button.connect("clicked", self.apply_clicked)
-        close_button = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close_button = Gtk.Button(label="Close")
         close_button.connect("clicked", self.destroy)
         button_void = Gtk.Label()
         button_box = Gtk.HBox()
@@ -657,25 +737,30 @@ class Ice(Gtk.Window):
         create_vbox.pack_start(url, False, False, 10)
         create_vbox.pack_start(where_box, False, False, 10)
         create_vbox.pack_start(icon_hbox, False, False, 10)
+        create_vbox.pack_start(isolate_box, False, False, 10)
         create_vbox.pack_start(button_box, False, False, 0)
 
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
-        create_lab = Gtk.Label(_("Create"))
+        create_lab = Gtk.Label(label="Create")
 
         ######################
         #   'Remove' page.   #
         ######################
 
         global liststore
+        known_profiles = []
         liststore = Gtk.ListStore(Pixbuf, str)
 
         for fl in os.listdir(_APPS_DIR):
             a = "{0}/{1}".format(_APPS_DIR, fl)
             if not os.path.isdir(a):
-                nameline, pixbuf = get_details(a)
-                if nameline is not None and pixbuf is not None:
-                    liststore.append([pixbuf, nameline])
+                details = get_details(a)
+                if details is not None:
+                    liststore.append([ details['pixbuf'], details['nameline'] ])
+                    known_profiles.append(details)
+
+        clean_orphaned_profiles(known_profiles)
 
         global iconview
         iconview = Gtk.IconView()
@@ -687,9 +772,9 @@ class Ice(Gtk.Window):
         scroll = Gtk.ScrolledWindow()
         scroll.add(iconview)
 
-        remove = Gtk.Button.new_from_stock(Gtk.STOCK_REMOVE)
+        remove = Gtk.Button(label="Remove")
         remove.connect("clicked", delete)
-        close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close = Gtk.Button(label="Close")
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         buttons = Gtk.HBox()
@@ -703,7 +788,7 @@ class Ice(Gtk.Window):
 
         remove_hbox = Gtk.HBox()
         remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label(_("Remove"))
+        remove_lab = Gtk.Label(label="Remove")
 
         ##########################
         #   Main window stuff.   #

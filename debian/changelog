@@ -1,3 +1,34 @@
+ice (6.0.3) bionic; urgency=low
+
+  * Fixed flashing Allow/Deny dialog for
+  * passwords and addon installation, makes
+  * the nav-bar present but transparent.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  16 May 2019 12:48:00 +0000
+
+ice (6.0.2) bionic; urgency=low
+
+  * Fixed Ctrl+Tab hidden tab navigation.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  12 May 2019 19:34:00 +0000
+
+ice (6.0.1) bionic; urgency=low
+
+  * Added ability to isolate Chromium browser based SSB profiles.
+  * Fixed "Gtk.Button.new_from_stock is deprecated" warning.
+  * Added 4 bookmarks to Firefox SSB's on creation.
+  * Fixed bug where non-UTF8 items in ~/.local/share/applications
+  * would throw a "UnicodeDecodeError" in /usr/lib/python3.7/codecs.py.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  10 Apr 2019 18:00:00 +0000
+
+ice (5.3.5) bionic; urgency=low
+
+  * Changed 'Sound & Video' category to 'Multimedia'.
+  * Changed 'System Tools' category to 'System'.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  04 Dec 2018 12:24:00 +0000
+
 ice (5.3.4) bionic; urgency=low
 
   * Added simplified Chinese translation.
