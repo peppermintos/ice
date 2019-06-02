@@ -1,3 +1,11 @@
+ice (6.0.4) bionic; urgency=low
+
+  * Updated translations including the
+  * browser profile isolation line.
+  * Thanks to Kiyohito AOKI (sambar-fgfs).
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  02 Jun 2019 19:20:00 +0000
+
 ice (6.0.3) bionic; urgency=low
 
   * Fixed flashing Allow/Deny dialog for

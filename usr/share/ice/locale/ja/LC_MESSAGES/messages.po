@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-02 07:30+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2019-06-02 18:00+0100\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: ../../../bin/ice:136
 #, python-brace-format
@@ -66,11 +66,11 @@ msgstr "システム"
 
 #: ../../../bin/ice:265
 msgid "ERROR: An unknown browser selection error has occurred."
-msgstr "エラー:不明なブラウザが選択された"
+msgstr "エラー:不明なブラウザが選択された."
 
 #: ../../../bin/ice:401
 msgid "Please choose an icon."
-msgstr "アイコンを選択"
+msgstr "アイコンを選択."
 
 #: ../../../bin/ice:440
 msgid "Browser Error"
@@ -143,11 +143,11 @@ msgstr ""
 
 #: ../../../bin/ice:575
 msgid "ERROR: An address error has occurred."
-msgstr "エラー:アドレスエラーが発生した"
+msgstr "エラー:アドレスエラーが発生した."
 
 #: ../../../bin/ice:578
 msgid "ERROR: An unknown error has occurred."
-msgstr "エラー:不明なエラーが発生した"
+msgstr "エラー:不明なエラーが発生した."
 
 #: ../../../bin/ice:614
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
@@ -163,7 +163,7 @@ msgstr "Webアドレス"
 
 #: ../../../bin/ice:624
 msgid "Where in the menu?"
-msgstr "メニュー内の場所"
+msgstr "メニュー内の場所."
 
 #: ../../../bin/ice:650
 msgid "Select an icon"
@@ -176,10 +176,10 @@ msgstr "サイトのfaviconを使用"
 #: ../../../bin/ice:716
 msgid ""
 " Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
-"always isolated"
+"always isolated)"
 msgstr ""
-"ブラウザのプロファイルを独立させてSSBを作成する (Firefox SSBは常に独立したプ"
-"ロファイルを使用)"
+" ブラウザのプロファイルを独立させてSSBを作成する (Firefox SSBは常に独立し"
+"たプロファイルを使用)"
 
 #: ../../../bin/ice:720
 msgid "Apply"
@@ -192,4 +192,3 @@ msgstr "追加"
 #: ../../../bin/ice:775 ../../../bin/ice:791
 msgid "Remove"
 msgstr "削除"
-
