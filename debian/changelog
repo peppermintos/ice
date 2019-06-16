@@ -1,6 +1,6 @@
 ice (6.0.5) bionic; urgency=low
 
-  * Add check for zero lentgh SSB name, and
+  * Add check for zero length SSB name, and
   * EmptyNameError to warn/prevent the user
   * from creating an SSB with a blank name.
   * Updated translations with EmptyNameError
