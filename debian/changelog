@@ -1,3 +1,13 @@
+ice (6.0.5) bionic; urgency=low
+
+  * Add check for zero lentgh SSB name, and
+  * EmptyNameError to warn/prevent the user
+  * from creating an SSB with a blank name.
+  * Updated translations with EmptyNameError
+  * strings.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  16 Jun 2019 22:06:00 +0000
+
 ice (6.0.4) bionic; urgency=low
 
   * Updated translations including the

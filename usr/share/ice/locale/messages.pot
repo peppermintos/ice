@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-02 18:06+0100\n"
+"POT-Creation-Date: 2019-06-16 18:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,153 +32,165 @@ msgstr ""
 msgid "Unable to find URL. Is it valid? {0}"
 msgstr ""
 
-#: ../../../bin/ice:224 ../../../bin/ice:622
+#: ../../../bin/ice:224 ../../../bin/ice:659
 msgid "Accessories"
 msgstr ""
 
-#: ../../../bin/ice:226 ../../../bin/ice:622
+#: ../../../bin/ice:226 ../../../bin/ice:659
 msgid "Games"
 msgstr ""
 
-#: ../../../bin/ice:228 ../../../bin/ice:622
+#: ../../../bin/ice:228 ../../../bin/ice:659
 msgid "Graphics"
 msgstr ""
 
-#: ../../../bin/ice:230 ../../../bin/ice:622
+#: ../../../bin/ice:230 ../../../bin/ice:659
 msgid "Internet"
 msgstr ""
 
-#: ../../../bin/ice:232 ../../../bin/ice:623
+#: ../../../bin/ice:232 ../../../bin/ice:660
 msgid "Office"
 msgstr ""
 
-#: ../../../bin/ice:234 ../../../bin/ice:623
+#: ../../../bin/ice:234 ../../../bin/ice:660
 msgid "Programming"
 msgstr ""
 
-#: ../../../bin/ice:236 ../../../bin/ice:623
+#: ../../../bin/ice:236 ../../../bin/ice:660
 msgid "Multimedia"
 msgstr ""
 
-#: ../../../bin/ice:238 ../../../bin/ice:623
+#: ../../../bin/ice:238 ../../../bin/ice:660
 msgid "System"
 msgstr ""
 
-#: ../../../bin/ice:265
+#: ../../../bin/ice:267
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr ""
 
-#: ../../../bin/ice:401
+#: ../../../bin/ice:403
 msgid "Please choose an icon."
 msgstr ""
 
-#: ../../../bin/ice:440
+#: ../../../bin/ice:442
 msgid "Browser Error"
 msgstr ""
 
-#: ../../../bin/ice:444
+#: ../../../bin/ice:446
 msgid "test"
 msgstr ""
 
-#: ../../../bin/ice:447
+#: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
 msgstr ""
 
-#: ../../../bin/ice:448 ../../../bin/ice:499
+#: ../../../bin/ice:450 ../../../bin/ice:501
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
 "the name. Continue anyway?"
 msgstr ""
 
-#: ../../../bin/ice:449
+#: ../../../bin/ice:451
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
 "install at least one in order to create SSBs."
 msgstr ""
 
-#: ../../../bin/ice:451 ../../../bin/ice:722 ../../../bin/ice:777
+#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
 msgid "Close"
 msgstr ""
 
-#: ../../../bin/ice:493
+#: ../../../bin/ice:495
 msgid "Duplication Error"
 msgstr ""
 
-#: ../../../bin/ice:498
+#: ../../../bin/ice:500
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr ""
 
-#: ../../../bin/ice:501 ../../../bin/ice:540
+#: ../../../bin/ice:503 ../../../bin/ice:542
 msgid "OK"
 msgstr ""
 
-#: ../../../bin/ice:503 ../../../bin/ice:542
+#: ../../../bin/ice:505 ../../../bin/ice:544
 msgid "Cancel"
 msgstr ""
 
-#: ../../../bin/ice:532
+#: ../../../bin/ice:534
 msgid "Address Error"
 msgstr ""
 
-#: ../../../bin/ice:537
+#: ../../../bin/ice:539
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr ""
 
-#: ../../../bin/ice:538
+#: ../../../bin/ice:540
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
 "right now. Continue anyway?"
 msgstr ""
 
-#: ../../../bin/ice:575
-msgid "ERROR: An address error has occurred."
+#: ../../../bin/ice:572
+msgid "Name Error"
+msgstr ""
+
+#: ../../../bin/ice:577
+msgid "<b>Error: No Application Name Entered.</b>"
 msgstr ""
 
 #: ../../../bin/ice:578
+msgid "Please enter an application name to continue."
+msgstr ""
+
+#: ../../../bin/ice:612
+msgid "ERROR: An address error has occurred."
+msgstr ""
+
+#: ../../../bin/ice:615
 msgid "ERROR: An unknown error has occurred."
 msgstr ""
 
-#: ../../../bin/ice:614
+#: ../../../bin/ice:651
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
 msgstr ""
 
-#: ../../../bin/ice:617
+#: ../../../bin/ice:654
 msgid "Name the application"
 msgstr ""
 
-#: ../../../bin/ice:620
+#: ../../../bin/ice:657
 msgid "Enter web address"
 msgstr ""
 
-#: ../../../bin/ice:624
+#: ../../../bin/ice:661
 msgid "Where in the menu?"
 msgstr ""
 
-#: ../../../bin/ice:650
+#: ../../../bin/ice:687
 msgid "Select an icon"
 msgstr ""
 
-#: ../../../bin/ice:652
+#: ../../../bin/ice:689
 msgid "Use site favicon"
 msgstr ""
 
-#: ../../../bin/ice:716
+#: ../../../bin/ice:753
 msgid ""
 " Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
 "always isolated)"
 msgstr ""
 
-#: ../../../bin/ice:720
+#: ../../../bin/ice:757
 msgid "Apply"
 msgstr ""
 
-#: ../../../bin/ice:745
+#: ../../../bin/ice:782
 msgid "Create"
 msgstr ""
 
-#: ../../../bin/ice:775 ../../../bin/ice:791
+#: ../../../bin/ice:812 ../../../bin/ice:828
 msgid "Remove"
 msgstr ""

@@ -244,6 +244,8 @@ def applicate():
 
     if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, formatted)):
         DuplicateError(title, formatted, address, iconext, location)
+    elif len(title) == 0:
+        EmptyNameError()
     else:
         writefile(title, formatted, address, iconext, location)
 
@@ -546,6 +548,41 @@ class AddressError(Gtk.Window):
         box.pack_start(void, True, True, 0)
         box.pack_start(okay, False, False, 10)
         box.pack_start(cancel, False, False, 0)
+
+        main_vbox = Gtk.VBox()
+        main_vbox.pack_start(main_lab, False, False, 10)
+        main_vbox.pack_start(text_lab, False, False, 0)
+        main_vbox.pack_start(box, False, False, 10)
+
+        main_hbox = Gtk.HBox()
+        main_hbox.pack_start(main_vbox, True, True, 10)
+        self.add(main_hbox)
+        self.show_all()
+
+class EmptyNameError(Gtk.Window):
+
+    def destroy(self, button):
+        self.close()
+
+    def okay_clicked(self, button):
+        applicate()
+        self.close()
+
+    def __init__(self):
+        Gtk.Window.__init__(self, title=_("Name Error"))
+        self.set_size_request(250, 130)
+        self.set_icon_from_file(_ICE_ICON)
+
+        main_lab = Gtk.Label()
+        main_lab.set_markup(_("<b>Error: No Application Name Entered.</b>"))
+        text_lab = Gtk.Label(_("Please enter an application name to continue."))
+
+        close = Gtk.Button(label=_("Close"))
+        close.connect("clicked", self.destroy)
+        void = Gtk.Label()
+        box = Gtk.HBox()
+        box.pack_start(void, True, True, 0)
+        box.pack_start(close, False, False, 0)
 
         main_vbox = Gtk.VBox()
         main_vbox.pack_start(main_lab, False, False, 10)

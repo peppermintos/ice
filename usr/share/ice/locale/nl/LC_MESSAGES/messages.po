@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-02 07:32+0900\n"
-"PO-Revision-Date: 2019-06-02 18:01+0100\n"
-"Language: nl\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2019-06-16 18:55+0100\n"
+"PO-Revision-Date: 2019-06-16 19:57+0100\n"
 "Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
 
 #: ../../../bin/ice:136
 #, python-brace-format
@@ -32,60 +33,59 @@ msgstr "Niet in staat om een favicon te vinden voor, {0}"
 msgid "Unable to find URL. Is it valid? {0}"
 msgstr "Kan de link niet vinden. Is deze juist? {0}"
 
-#: ../../../bin/ice:224 ../../../bin/ice:622
+#: ../../../bin/ice:224 ../../../bin/ice:659
 msgid "Accessories"
 msgstr "Hulpmiddelen"
 
-#: ../../../bin/ice:226 ../../../bin/ice:622
+#: ../../../bin/ice:226 ../../../bin/ice:659
 msgid "Games"
 msgstr "Spelletjes"
 
-#: ../../../bin/ice:228 ../../../bin/ice:622
+#: ../../../bin/ice:228 ../../../bin/ice:659
 msgid "Graphics"
 msgstr "Grafisch"
 
-#: ../../../bin/ice:230 ../../../bin/ice:622
+#: ../../../bin/ice:230 ../../../bin/ice:659
 msgid "Internet"
 msgstr "Internet"
 
-#: ../../../bin/ice:232 ../../../bin/ice:623
+#: ../../../bin/ice:232 ../../../bin/ice:660
 msgid "Office"
 msgstr "Kantoor"
 
-#: ../../../bin/ice:234 ../../../bin/ice:623
+#: ../../../bin/ice:234 ../../../bin/ice:660
 msgid "Programming"
 msgstr "Programmeren"
 
-#: ../../../bin/ice:236 ../../../bin/ice:623
+#: ../../../bin/ice:236 ../../../bin/ice:660
 msgid "Multimedia"
 msgstr "Multimedia"
 
-#: ../../../bin/ice:238 ../../../bin/ice:623
-#, fuzzy
+#: ../../../bin/ice:238 ../../../bin/ice:660
 msgid "System"
 msgstr "Systeemgereedschap"
 
-#: ../../../bin/ice:265
+#: ../../../bin/ice:267
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "FOUT: er heeft zich een onbekende fout voorgedaan."
 
-#: ../../../bin/ice:401
+#: ../../../bin/ice:403
 msgid "Please choose an icon."
-msgstr "Please choose an icon."
+msgstr "Kies een icoon."
 
-#: ../../../bin/ice:440
+#: ../../../bin/ice:442
 msgid "Browser Error"
 msgstr "Browser fout"
 
-#: ../../../bin/ice:444
+#: ../../../bin/ice:446
 msgid "test"
 msgstr "test"
 
-#: ../../../bin/ice:447
+#: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
 msgstr "<b>Waarschuwing: er is geen geschikte browser gevonden</b>"
 
-#: ../../../bin/ice:448 ../../../bin/ice:499
+#: ../../../bin/ice:450 ../../../bin/ice:501
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
@@ -96,7 +96,7 @@ msgstr ""
 "één letter in de naam te wijzigen.\n"
 "Wilt u toch verder gaan?"
 
-#: ../../../bin/ice:449
+#: ../../../bin/ice:451
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
@@ -106,35 +106,35 @@ msgstr ""
 "Firefox of Vivaldi. Installeer tenminste één van\n"
 "deze browsers om SSB's te maken met Ice."
 
-#: ../../../bin/ice:451 ../../../bin/ice:722 ../../../bin/ice:777
+#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
 msgid "Close"
 msgstr "Sluit"
 
-#: ../../../bin/ice:493
+#: ../../../bin/ice:495
 msgid "Duplication Error"
 msgstr "Kopieerfout"
 
-#: ../../../bin/ice:498
+#: ../../../bin/ice:500
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>Waarschuwing: dubbele bestandsnaam</b>"
 
-#: ../../../bin/ice:501 ../../../bin/ice:540
+#: ../../../bin/ice:503 ../../../bin/ice:542
 msgid "OK"
 msgstr "OK"
 
-#: ../../../bin/ice:503 ../../../bin/ice:542
+#: ../../../bin/ice:505 ../../../bin/ice:544
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../../../bin/ice:532
+#: ../../../bin/ice:534
 msgid "Address Error"
 msgstr "Verkeerd adres"
 
-#: ../../../bin/ice:537
+#: ../../../bin/ice:539
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>Waarschuwing: HTTP of URL fout</b>"
 
-#: ../../../bin/ice:538
+#: ../../../bin/ice:540
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
@@ -144,39 +144,51 @@ msgstr ""
 "Waarschijnlijk is de website niet beschikbaar op dit\n"
 "moment. Wilt u toch verdergaan?"
 
-#: ../../../bin/ice:575
+#: ../../../bin/ice:572
+msgid "Name Error"
+msgstr "Naam Fout"
+
+#: ../../../bin/ice:577
+msgid "<b>Error: No Application Name Entered.</b>"
+msgstr "<b>Fout: er is geen toepassingsnaam ingevoerd.</b>"
+
+#: ../../../bin/ice:578
+msgid "Please enter an application name to continue."
+msgstr "Voer een toepassingsnaam in om door te gaan."
+
+#: ../../../bin/ice:612
 msgid "ERROR: An address error has occurred."
 msgstr "FOUT: er is een verkeerd adres geconstateerd."
 
-#: ../../../bin/ice:578
+#: ../../../bin/ice:615
 msgid "ERROR: An unknown error has occurred."
 msgstr "FOUT: er is een onbekende fout opgetreden."
 
-#: ../../../bin/ice:614
+#: ../../../bin/ice:651
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
 msgstr "<b>Welkom bij Ice, een eenvoudige SSB manager.</b>"
 
-#: ../../../bin/ice:617
+#: ../../../bin/ice:654
 msgid "Name the application"
 msgstr "Vul hier de naam van de webapplicatie in"
 
-#: ../../../bin/ice:620
+#: ../../../bin/ice:657
 msgid "Enter web address"
 msgstr "Vul hier het webadres van de apllicatie in"
 
-#: ../../../bin/ice:624
+#: ../../../bin/ice:661
 msgid "Where in the menu?"
 msgstr "Waar in het menu?"
 
-#: ../../../bin/ice:650
+#: ../../../bin/ice:687
 msgid "Select an icon"
 msgstr "Selecteer een icoon"
 
-#: ../../../bin/ice:652
+#: ../../../bin/ice:689
 msgid "Use site favicon"
 msgstr "Gebruik de website favicon"
 
-#: ../../../bin/ice:716
+#: ../../../bin/ice:753
 msgid ""
 " Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
 "always isolated)"
@@ -184,17 +196,14 @@ msgstr ""
 "Maak de SSB met een geïsoleerd browserprofiel (Opmerking: Firefox SSB's "
 "zijn altijd geïsoleerd)"
 
-#: ../../../bin/ice:720
+#: ../../../bin/ice:757
 msgid "Apply"
 msgstr "Aanbrengen"
 
-#: ../../../bin/ice:745
+#: ../../../bin/ice:782
 msgid "Create"
 msgstr "Maak"
 
-#: ../../../bin/ice:775 ../../../bin/ice:791
+#: ../../../bin/ice:812 ../../../bin/ice:828
 msgid "Remove"
 msgstr "Verwijder"
-
-#~ msgid "Sound & Video"
-#~ msgstr "Muziek en Video"
