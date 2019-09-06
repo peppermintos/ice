@@ -1,6 +1,13 @@
+ice (6.0.6) bionic; urgency=low
+
+  * Fixed address/tab bar reappearance in 
+  * SSB's using Firefox 69.
+
+ -- Mark Greaves (PCNetSpec) <mark@pcnetspec.co.uk>  06 Sep 2019 16:52:00 +0000
+
 ice (6.0.5) bionic; urgency=low
 
-  * Add check for zero length SSB name, and
+  * Add check for zero lentgh SSB name, and
   * EmptyNameError to warn/prevent the user
   * from creating an SSB with a blank name.
   * Updated translations with EmptyNameError

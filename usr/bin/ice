@@ -330,6 +330,7 @@ def init_firefox_profile(path):
         sfile.write('user_pref("browser.ctrlTab.previews", true);')
         sfile.write('user_pref("browser.tabs.warnOnClose", false);')
         sfile.write('user_pref("plugin.state.flash", 2);')
+        sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
 
     # rhein: do we really need this? 
     #os.system('rm -rf ' + chromepath + '/cache2')
