@@ -1,11 +1,10 @@
-##### Ice #####
-
+# ICE - SSB Manager
+## Copyright
 (C) 2010 - 2019 -- Mark Greaves <mark@peppermintos.com>
 
 Released under GNU General Public License version 2
 
-#####
-
+## Description
 Application to easily add and remove Chromium site specific
 browsers in Debian and Ubuntu based Linux distributions. It
 was originally created for Peppermint OS Ice and is now used
@@ -17,14 +16,14 @@ Chrome, Chromium, and Vivaldi SSB's can now be completely
 isolated from each other (or use the shared master browser
 profile) Firefox SSB's are always isolated.
 
-#####
-
+## Dependencies
 Ice depends on one of the above browsers being installed.
 It's also possible to use it with any build of Google Chrome
 however this is something that is hard coded into the app
 and will need to be manually changed if one wishes to use it
 in such a manner.
 
+## Usage
 Ice creates .desktop files in ~/.local/share/applications
 and removes them from the same directory. Ice doesn't remove
 downloaded icons, rather it overwrites them in the case that
@@ -45,7 +44,7 @@ Ice was originally written for Python 2.6.x and GTK+2. For
 version 4.0.0 in April 2014 it was ported to Python 3.x.x
 and GTK+3.
 
+## Contact details
 Thank you for your interest in Ice. If you wish to contact
 me for any reason, please do so via email using the address
 listed at the beginning of this document.
-
