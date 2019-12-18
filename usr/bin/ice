@@ -317,7 +317,7 @@ def init_firefox_profile(path):
     os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
     os.system("touch {0}".format(cssfile))
     with open(cssfile, 'w') as cfile:
-        cfile.write("#nav-bar { max-height: 0 !important; margin-bottom: -20px !important; opacity: 0; } #identity-box, #navigator-toolbox::after, #tabbrowser-tabs {  --tab-min-height: 0px !important;  margin-left: 0px !important;  height: 0px !important; }")
+        cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }")
 
     os.system("touch {0}".format(settingsfile))
     with open(settingsfile, 'w') as sfile:
