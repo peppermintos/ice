@@ -3,6 +3,7 @@
 # by Kendall Weaver <kendall@peppermintos.com>
 # for Peppermint OS
 # modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
+# with much appreciated code contributions by rhein
 # internationalization (i18n)/gettext support by Kiyohito AOKI
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
@@ -60,7 +61,7 @@ headers = {
 
 
 def get_details(app):
-    a = open(app, 'r')
+    a = open(app, 'r', errors='ignore')
     nameline = ""
     iconline = ""
     profile = ""
@@ -232,9 +233,9 @@ def applicate():
         location = "Office;"
     elif loc == _("Programming"):
         location = "Development;"
-    elif loc == _("Sound & Video"):
+    elif loc == _("Multimedia"):
         location = "AudioVideo;"
-    elif loc == _("System Tools"):
+    elif loc == _("System"):
         location = "System;"
 
     global iconpath
@@ -243,6 +244,8 @@ def applicate():
 
     if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, formatted)):
         DuplicateError(title, formatted, address, iconext, location)
+    elif len(title) == 0:
+        EmptyNameError()
     else:
         writefile(title, formatted, address, iconext, location)
 
@@ -311,9 +314,10 @@ def init_firefox_profile(path):
 
     os.system('mkdir -p ' + chromepath)
     os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
+    os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
     os.system("touch {0}".format(cssfile))
     with open(cssfile, 'w') as cfile:
-        cfile.write("#nav-bar { visibility: hidden !important; max-height: 0 !important; margin-bottom: -20px !important; } #identity-box, #navigator-toolbox::after, #TabsToolbar { display: none !important; }")
+        cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }")
 
     os.system("touch {0}".format(settingsfile))
     with open(settingsfile, 'w') as sfile:
@@ -326,6 +330,7 @@ def init_firefox_profile(path):
         sfile.write('user_pref("browser.ctrlTab.previews", true);')
         sfile.write('user_pref("browser.tabs.warnOnClose", false);')
         sfile.write('user_pref("plugin.state.flash", 2);')
+        sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
 
     # rhein: do we really need this? 
     #os.system('rm -rf ' + chromepath + '/cache2')
@@ -446,7 +451,7 @@ class NoBrowserError(Gtk.Window):
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
         text_lab = Gtk.Label(_("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs."))
 
-        close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close = Gtk.Button(label=_("Close"))
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -496,9 +501,9 @@ class DuplicateError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
         text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
 
-        okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
+        okay = Gtk.Button(label=_("OK"))
         okay.connect("clicked", self.okay_clicked, title, formatted, address, iconext, location)
-        cancel = Gtk.Button.new_from_stock(Gtk.STOCK_CANCEL)
+        cancel = Gtk.Button(label=_("Cancel"))
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
@@ -535,15 +540,50 @@ class AddressError(Gtk.Window):
         main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
         text_lab = Gtk.Label(_("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?"))
 
-        okay = Gtk.Button.new_from_stock(Gtk.STOCK_OK)
+        okay = Gtk.Button(label=_("OK"))
         okay.connect("clicked", self.okay_clicked)
-        cancel = Gtk.Button.new_from_stock(Gtk.STOCK_CANCEL)
+        cancel = Gtk.Button(label=_("Cancel"))
         cancel.connect("clicked", self.destroy)
         void = Gtk.Label()
         box = Gtk.HBox()
         box.pack_start(void, True, True, 0)
         box.pack_start(okay, False, False, 10)
         box.pack_start(cancel, False, False, 0)
+
+        main_vbox = Gtk.VBox()
+        main_vbox.pack_start(main_lab, False, False, 10)
+        main_vbox.pack_start(text_lab, False, False, 0)
+        main_vbox.pack_start(box, False, False, 10)
+
+        main_hbox = Gtk.HBox()
+        main_hbox.pack_start(main_vbox, True, True, 10)
+        self.add(main_hbox)
+        self.show_all()
+
+class EmptyNameError(Gtk.Window):
+
+    def destroy(self, button):
+        self.close()
+
+    def okay_clicked(self, button):
+        applicate()
+        self.close()
+
+    def __init__(self):
+        Gtk.Window.__init__(self, title=_("Name Error"))
+        self.set_size_request(250, 130)
+        self.set_icon_from_file(_ICE_ICON)
+
+        main_lab = Gtk.Label()
+        main_lab.set_markup(_("<b>Error: No Application Name Entered.</b>"))
+        text_lab = Gtk.Label(_("Please enter an application name to continue."))
+
+        close = Gtk.Button(label=_("Close"))
+        close.connect("clicked", self.destroy)
+        void = Gtk.Label()
+        box = Gtk.HBox()
+        box.pack_start(void, True, True, 0)
+        box.pack_start(close, False, False, 0)
 
         main_vbox = Gtk.VBox()
         main_vbox.pack_start(main_lab, False, False, 10)
@@ -618,8 +658,8 @@ class Ice(Gtk.Window):
         url.set_placeholder_text(_("Enter web address"))
 
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
-                       _("Office"), _("Programming"), _("Sound & Video"), _("System Tools")]
-        where_lab = Gtk.Label(label="Where in the menu?")
+                       _("Office"), _("Programming"), _("Multimedia"), _("System")]
+        where_lab = Gtk.Label(label=_("Where in the menu?"))
         global where
         where = Gtk.ComboBoxText()
         where.set_entry_text_column(0)
@@ -645,9 +685,9 @@ class Ice(Gtk.Window):
         icon_box.pack_start(icon, False, False, 10)
         icon_box.pack_start(icon_void, False, False, 10)
 
-        choose_icon = Gtk.Button(label="Select an icon")
+        choose_icon = Gtk.Button(label=_("Select an icon"))
         choose_icon.connect("clicked", self.icon_select)
-        download_icon = Gtk.Button(label="Use site favicon")
+        download_icon = Gtk.Button(label=_("Use site favicon"))
         download_icon.connect("clicked", self.icon_download)
 
         icon_vbox = Gtk.VBox()
@@ -658,7 +698,7 @@ class Ice(Gtk.Window):
         icon_hbox.pack_start(icon_vbox, True, True, 0)
 
         global firefox
-        firefox = Gtk.RadioButton.new_with_label_from_widget(None, "Firefox")
+        firefox = Gtk.RadioButton.new_with_label_from_widget(None, " Firefox")
 
         if not os.path.exists(_FIREFOX_BIN):
             firefox.set_sensitive(False)
@@ -671,7 +711,7 @@ class Ice(Gtk.Window):
 
         global chrome
         chrome = Gtk.RadioButton.new_from_widget(firefox)
-        chrome.set_label("Chrome")
+        chrome.set_label(" Chrome")
 
         if not os.path.exists(_CHROME_BIN):
             chrome.set_sensitive(False)
@@ -684,7 +724,7 @@ class Ice(Gtk.Window):
 
         global vivaldi
         vivaldi = Gtk.RadioButton.new_from_widget(chrome)
-        vivaldi.set_label("Vivaldi")
+        vivaldi.set_label(" Vivaldi")
 
         if not os.path.exists(_VIVALDI_BIN):
             vivaldi.set_sensitive(False)
@@ -697,7 +737,7 @@ class Ice(Gtk.Window):
 
         global chromium
         chromium = Gtk.RadioButton.new_from_widget(chrome)
-        chromium.set_label("Chromium")
+        chromium.set_label(" Chromium")
 
         if not os.path.exists(_CHROMIUM_BIN):
             chromium.set_sensitive(False)
@@ -711,13 +751,13 @@ class Ice(Gtk.Window):
         global isolate_profile
         isolate_profile=False
         isolate_box = Gtk.VBox()
-        isolate_button = Gtk.CheckButton(label="Isolate Sessions into separate browser profile (Note: Firefox Sessions are always isolated by default)")
+        isolate_button = Gtk.CheckButton(label=_(" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)"))
         isolate_button.connect("toggled", self.isolate_clicked)
         isolate_box.add(isolate_button)
 
-        apply_button = Gtk.Button.new_from_stock(Gtk.STOCK_APPLY)
+        apply_button = Gtk.Button(label=_("Apply"))
         apply_button.connect("clicked", self.apply_clicked)
-        close_button = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close_button = Gtk.Button(label=_("Close"))
         close_button.connect("clicked", self.destroy)
         button_void = Gtk.Label()
         button_box = Gtk.HBox()
@@ -740,7 +780,7 @@ class Ice(Gtk.Window):
 
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
-        create_lab = Gtk.Label(label="Create")
+        create_lab = Gtk.Label(label=_("Create"))
 
         ######################
         #   'Remove' page.   #
@@ -770,9 +810,9 @@ class Ice(Gtk.Window):
         scroll = Gtk.ScrolledWindow()
         scroll.add(iconview)
 
-        remove = Gtk.Button.new_from_stock(Gtk.STOCK_REMOVE)
+        remove = Gtk.Button(label=_("Remove"))
         remove.connect("clicked", delete)
-        close = Gtk.Button.new_from_stock(Gtk.STOCK_CLOSE)
+        close = Gtk.Button(label=_("Close"))
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
         buttons = Gtk.HBox()
@@ -786,7 +826,7 @@ class Ice(Gtk.Window):
 
         remove_hbox = Gtk.HBox()
         remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label(label="Remove")
+        remove_lab = Gtk.Label(label=_("Remove"))
 
         ##########################
         #   Main window stuff.   #

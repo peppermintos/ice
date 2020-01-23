@@ -3,90 +3,89 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-22 13:08+0000\n"
-"PO-Revision-Date: 2018-01-22 15:21+0000\n"
+"POT-Creation-Date: 2019-06-16 18:55+0100\n"
+"PO-Revision-Date: 2019-06-16 20:58+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: pin\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: pt_BR\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: pt_PT\n"
 
-#: ice:113
+#: ../../../bin/ice:136
 #, python-brace-format
 msgid "Unable to parse URL, {0}"
 msgstr "Não foi possível analisar o URL, {0}"
 
-#: ice:118
+#: ../../../bin/ice:141
 #, python-brace-format
 msgid "Unable to find favicon for, {0}"
 msgstr "Não foi possível encontrar o favicon para, {0}"
 
-#: ice:175
+#: ../../../bin/ice:196
 #, python-brace-format
 msgid "Unable to find URL. Is it valid? {0}"
 msgstr "Não foi possível encontrarl o URL. Está correto? {0}"
 
-#: ice:203 ice:546
+#: ../../../bin/ice:224 ../../../bin/ice:659
 msgid "Accessories"
 msgstr "Acessórios"
 
-#: ice:205 ice:546
+#: ../../../bin/ice:226 ../../../bin/ice:659
 msgid "Games"
 msgstr "Jogos"
 
-#: ice:207 ice:546
+#: ../../../bin/ice:228 ../../../bin/ice:659
 msgid "Graphics"
 msgstr "Gráficos"
 
-#: ice:209 ice:546
+#: ../../../bin/ice:230 ../../../bin/ice:659
 msgid "Internet"
 msgstr "Internet"
 
-#: ice:211 ice:547
+#: ../../../bin/ice:232 ../../../bin/ice:660
 msgid "Office"
 msgstr "Produtividade"
 
-#: ice:213 ice:547
+#: ../../../bin/ice:234 ../../../bin/ice:660
 msgid "Programming"
 msgstr "Desenvolvimento"
 
-#: ice:215 ice:547
-msgid "Sound & Video"
-msgstr "Som e vídeo"
+#: ../../../bin/ice:236 ../../../bin/ice:660
+msgid "Multimedia"
+msgstr "Multimídia"
 
-#: ice:217 ice:547
-msgid "System Tools"
+#: ../../../bin/ice:238 ../../../bin/ice:660
+msgid "System"
 msgstr "Ferramentas de sistema"
 
-#: ice:244
+#: ../../../bin/ice:267
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "ERRO: ocorreu uma seleção de navegador desconhecido."
 
-#: ice:331
+#: ../../../bin/ice:403
 msgid "Please choose an icon."
 msgstr "Por favor, selecione um ícone."
 
-#: ice:370
+#: ../../../bin/ice:442
 msgid "Browser Error"
 msgstr "Erro de navegador"
 
-#: ice:374
+#: ../../../bin/ice:446
 msgid "test"
-msgstr "teste"
+msgstr "te3ste"
 
-#: ice:377
+#: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
 msgstr "<b>Atenção: Nenhum navegador adequado foi detectado</b>"
 
-#: ice:378 ice:429
+#: ../../../bin/ice:450 ../../../bin/ice:501
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
@@ -96,7 +95,7 @@ msgstr ""
 "Para manter o SSB existente, mude alguma letra\n"
 "no nome. Continuar mesmo assim?"
 
-#: ice:379
+#: ../../../bin/ice:451
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
@@ -106,23 +105,35 @@ msgstr ""
 "instalados para funcionar: Chrome, Chromium, Firefox ou Vivaldi\n"
 "Por favor, instale ao menos um desses navegadores para criar SSBs."
 
-#: ice:423
+#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
+msgid "Close"
+msgstr "Fechar"
+
+#: ../../../bin/ice:495
 msgid "Duplication Error"
 msgstr "Erro de duplicação"
 
-#: ice:428
+#: ../../../bin/ice:500
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>Atenção: Erro de duplicação de arquivo</b>"
 
-#: ice:462
+#: ../../../bin/ice:503 ../../../bin/ice:542
+msgid "OK"
+msgstr "OK"
+
+#: ../../../bin/ice:505 ../../../bin/ice:544
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../../../bin/ice:534
 msgid "Address Error"
 msgstr "Erro de endereço"
 
-#: ice:467
+#: ../../../bin/ice:539
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>Atenção: Erro de HTTP ou de URL</b>"
 
-#: ice:468
+#: ../../../bin/ice:540
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
@@ -132,42 +143,66 @@ msgstr ""
 "Isso pode acontecer pelo site estar offline ou indisponível\n"
 "no momento. Continuar mesmo assim?"
 
-#: ice:505
+#: ../../../bin/ice:572
+msgid "Name Error"
+msgstr "Erro de nome"
+
+#: ../../../bin/ice:577
+msgid "<b>Error: No Application Name Entered.</b>"
+msgstr "<b>Erro: Nenhum nome de aplicativo inserido.</b>"
+
+#: ../../../bin/ice:578
+msgid "Please enter an application name to continue."
+msgstr "Insira um nome de aplicativo para continuar."
+
+#: ../../../bin/ice:612
 msgid "ERROR: An address error has occurred."
 msgstr "ERRO: Ocorreu um erro de endereço."
 
-#: ice:508
+#: ../../../bin/ice:615
 msgid "ERROR: An unknown error has occurred."
 msgstr "ERRO: Ocorreu um erro desconhecido."
 
-#: ice:538
+#: ../../../bin/ice:651
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
 msgstr "<b>Bem-vindo ao Ice, um simples gestor de SSB.</b>"
 
-#: ice:541
+#: ../../../bin/ice:654
 msgid "Name the application"
 msgstr "Nome para o aplicativo"
 
-#: ice:544
+#: ../../../bin/ice:657
 msgid "Enter web address"
 msgstr "Digite o endereço da web"
 
-#: ice:548
+#: ../../../bin/ice:661
 msgid "Where in the menu?"
 msgstr "Aonde no menu?"
 
-#: ice:574
+#: ../../../bin/ice:687
 msgid "Select an icon"
 msgstr "Escolher um ícone"
 
-#: ice:576
+#: ../../../bin/ice:689
 msgid "Use site favicon"
 msgstr "Usar o favicon da página"
 
-#: ice:661
+#: ../../../bin/ice:753
+msgid ""
+" Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
+"always isolated)"
+msgstr ""
+" Crie o SSB com um perfil de navegador isolado (Nota: os SSBs do Firefox "
+"estão sempre isolados)"
+
+#: ../../../bin/ice:757
+msgid "Apply"
+msgstr "Aplique"
+
+#: ../../../bin/ice:782
 msgid "Create"
 msgstr "Criar"
 
-#: ice:703
+#: ../../../bin/ice:812 ../../../bin/ice:828
 msgid "Remove"
 msgstr "Remover"

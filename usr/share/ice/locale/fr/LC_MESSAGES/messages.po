@@ -3,88 +3,89 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-05 12:53+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-06-16 18:55+0100\n"
+"PO-Revision-Date: 2019-06-16 18:57+0100\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
 
-#: ice:113
+#: ../../../bin/ice:136
 #, python-brace-format
 msgid "Unable to parse URL, {0}"
 msgstr "Impossible d'analyser l'URL, {0}"
 
-#: ice:118
+#: ../../../bin/ice:141
 #, python-brace-format
 msgid "Unable to find favicon for, {0}"
 msgstr "Impossible de trouver la favicon pour, {0}"
 
-#: ice:175
+#: ../../../bin/ice:196
 #, python-brace-format
 msgid "Unable to find URL. Is it valid? {0}"
 msgstr "Impossible de trouver l'URL. Est-elle correcte? {0}"
 
-#: ice:203 ice:546
+#: ../../../bin/ice:224 ../../../bin/ice:659
 msgid "Accessories"
 msgstr "Accessories"
 
-#: ice:205 ice:546
+#: ../../../bin/ice:226 ../../../bin/ice:659
 msgid "Games"
 msgstr "Jeux"
 
-#: ice:207 ice:546
+#: ../../../bin/ice:228 ../../../bin/ice:659
 msgid "Graphics"
 msgstr "Graphisme"
 
-#: ice:209 ice:546
+#: ../../../bin/ice:230 ../../../bin/ice:659
 msgid "Internet"
 msgstr "Internet"
 
-#: ice:211 ice:547
+#: ../../../bin/ice:232 ../../../bin/ice:660
 msgid "Office"
 msgstr "Bureautique"
 
-#: ice:213 ice:547
+#: ../../../bin/ice:234 ../../../bin/ice:660
 msgid "Programming"
 msgstr "Programmation"
 
-#: ice:215 ice:547
-msgid "Sound & Video"
-msgstr "Son et vidéo"
+#: ../../../bin/ice:236 ../../../bin/ice:660
+msgid "Multimedia"
+msgstr "Multimédia"
 
-#: ice:217 ice:547
-msgid "System Tools"
+#: ../../../bin/ice:238 ../../../bin/ice:660
+#, fuzzy
+msgid "System"
 msgstr "Outils systèm"
 
-#: ice:244
+#: ../../../bin/ice:267
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "ERREUR: Une erreur de sélection de navigateur inconnue s'est produite."
 
-#: ice:331
+#: ../../../bin/ice:403
 msgid "Please choose an icon."
 msgstr "Please choose an icon."
 
-#: ice:370
+#: ../../../bin/ice:442
 msgid "Browser Error"
 msgstr "Erreur de navigateur"
 
-#: ice:374
+#: ../../../bin/ice:446
 msgid "test"
 msgstr "test"
 
-#: ice:377
+#: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
 msgstr "<b>Alerte: Aucun navigateur compatible détecté</b>"
 
-#: ice:378 ice:429
+#: ../../../bin/ice:450 ../../../bin/ice:501
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
@@ -94,7 +95,7 @@ msgstr ""
 "Pour éviter cela, modifiez une lettre dans le nom.\n"
 "Continuer quand même?"
 
-#: ice:379
+#: ../../../bin/ice:451
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
@@ -104,23 +105,35 @@ msgstr ""
 "Chromium, Firefox ou Vivaldi pour fonctionner.\n"
 "Veuillez en installer au moins un pour créer des SSB."
 
-#: ice:423
+#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
+msgid "Close"
+msgstr "Fermer"
+
+#: ../../../bin/ice:495
 msgid "Duplication Error"
 msgstr "Erreur de duplication"
 
-#: ice:428
+#: ../../../bin/ice:500
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>Attention: Erreur de duplication du fichier</b>"
 
-#: ice:462
+#: ../../../bin/ice:503 ../../../bin/ice:542
+msgid "OK"
+msgstr "D'Accord"
+
+#: ../../../bin/ice:505 ../../../bin/ice:544
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../../../bin/ice:534
 msgid "Address Error"
 msgstr "Erreur d'adresse"
 
-#: ice:467
+#: ../../../bin/ice:539
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>Alerte: Erreur HTTP ou URL</b>"
 
-#: ice:468
+#: ../../../bin/ice:540
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
@@ -130,42 +143,69 @@ msgstr ""
 "C'est probablement le site qui est actuellement indisponible.\n"
 "Continuer quand même?"
 
-#: ice:505
+#: ../../../bin/ice:572
+msgid "Name Error"
+msgstr "Erreur de nom"
+
+#: ../../../bin/ice:577
+msgid "<b>Error: No Application Name Entered.</b>"
+msgstr "Erreur: Aucun nom d'application entré."
+
+#: ../../../bin/ice:578
+msgid "Please enter an application name to continue."
+msgstr "Veuillez entrer un nom d'application pour continuer."
+
+#: ../../../bin/ice:612
 msgid "ERROR: An address error has occurred."
 msgstr "ERREUR: Une erreur d'adresse s'est produite."
 
-#: ice:508
+#: ../../../bin/ice:615
 msgid "ERROR: An unknown error has occurred."
 msgstr "ERREUR: Une erreur inconnue s'est produite."
 
-#: ice:538
+#: ../../../bin/ice:651
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
 msgstr "<b>Bienvenue sur Ice, un gestionnaire SSB simple</b>"
 
-#: ice:541
+#: ../../../bin/ice:654
 msgid "Name the application"
 msgstr "Nommer l'application"
 
-#: ice:544
+#: ../../../bin/ice:657
 msgid "Enter web address"
 msgstr "Entrez l'adresse Web"
 
-#: ice:548
+#: ../../../bin/ice:661
 msgid "Where in the menu?"
 msgstr "Où dans le menu?"
 
-#: ice:574
+#: ../../../bin/ice:687
 msgid "Select an icon"
 msgstr "Sélectionnez une icône"
 
-#: ice:576
+#: ../../../bin/ice:689
 msgid "Use site favicon"
 msgstr "Utiliser la favicon du site"
 
-#: ice:661
+#: ../../../bin/ice:753
+msgid ""
+" Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
+"always isolated)"
+msgstr ""
+" Créez le SSB avec un profil de navigateur isolé (Remarque: les SSB Firefox "
+"sont toujours isolé)"
+
+#: ../../../bin/ice:757
+msgid "Apply"
+msgstr "Appliquer"
+
+#: ../../../bin/ice:782
 msgid "Create"
 msgstr "Créer"
 
-#: ice:703
+#: ../../../bin/ice:812 ../../../bin/ice:828
 msgid "Remove"
 msgstr "Supprimer"
+
+#~ msgid "Sound & Video"
+#~ msgstr "Son et vidéo"

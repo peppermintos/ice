@@ -3,90 +3,89 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-22 18:31+0000\n"
-"PO-Revision-Date: 2018-01-22 19:21+0000\n"
+"POT-Creation-Date: 2019-06-16 18:55+0100\n"
+"PO-Revision-Date: 2019-06-16 21:16+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: pin\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: sv\n"
 
-#: ice:113
+#: ../../../bin/ice:136
 #, python-brace-format
 msgid "Unable to parse URL, {0}"
 msgstr "Kan inte analysera webbadressen, {0}"
 
-#: ice:118
+#: ../../../bin/ice:141
 #, python-brace-format
 msgid "Unable to find favicon for, {0}"
 msgstr "Kan inte hitta ikonen för, {0}"
 
-#: ice:175
+#: ../../../bin/ice:196
 #, python-brace-format
 msgid "Unable to find URL. Is it valid? {0}"
 msgstr "Kan inte hitta webbadressen. Är den rätt? {0}"
 
-#: ice:203 ice:546
+#: ../../../bin/ice:224 ../../../bin/ice:659
 msgid "Accessories"
 msgstr "Tillbehör"
 
-#: ice:205 ice:546
+#: ../../../bin/ice:226 ../../../bin/ice:659
 msgid "Games"
 msgstr "Spel"
 
-#: ice:207 ice:546
+#: ../../../bin/ice:228 ../../../bin/ice:659
 msgid "Graphics"
 msgstr "Grafik"
 
-#: ice:209 ice:546
+#: ../../../bin/ice:230 ../../../bin/ice:659
 msgid "Internet"
 msgstr "Internet"
 
-#: ice:211 ice:547
+#: ../../../bin/ice:232 ../../../bin/ice:660
 msgid "Office"
 msgstr "Kontor"
 
-#: ice:213 ice:547
+#: ../../../bin/ice:234 ../../../bin/ice:660
 msgid "Programming"
 msgstr "Programmering"
 
-#: ice:215 ice:547
-msgid "Sound & Video"
-msgstr "Ljud och video"
+#: ../../../bin/ice:236 ../../../bin/ice:660
+msgid "Multimedia"
+msgstr "Multimedia"
 
-#: ice:217 ice:547
-msgid "System Tools"
+#: ../../../bin/ice:238 ../../../bin/ice:660
+msgid "System"
 msgstr "Systemverktyg"
 
-#: ice:244
+#: ../../../bin/ice:267
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "FEL: Ett okänt val av webbläsare har uppstått."
 
-#: ice:331
+#: ../../../bin/ice:403
 msgid "Please choose an icon."
 msgstr "Var god välj en ikon."
 
-#: ice:370
+#: ../../../bin/ice:442
 msgid "Browser Error"
 msgstr "Webbläsarefel"
 
-#: ice:374
+#: ../../../bin/ice:446
 msgid "test"
 msgstr "test"
 
-#: ice:377
+#: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
 msgstr "<b>Varning: Ingen lämpligt webbläsare hittades</b>"
 
-#: ice:378 ice:429
+#: ../../../bin/ice:450 ../../../bin/ice:501
 msgid ""
 "The name of the SSB will cause an existing SSB to\n"
 "be overwritten. To prevent this, change a letter in\n"
@@ -96,7 +95,7 @@ msgstr ""
 "SSB skrivs över. För att förhindra detta, ändra en bokstav\n"
 "i namnet. Fortsätt ändå?"
 
-#: ice:379
+#: ../../../bin/ice:451
 msgid ""
 "Ice requires a system installation of either Google\n"
 "Chrome or Chromium in order to function. Please\n"
@@ -106,23 +105,35 @@ msgstr ""
 "eller Vivaldi är installerat för att fungera. Var god installera\n"
 "minst ett för att kunna skapa SSBs."
 
-#: ice:423
+#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
+msgid "Close"
+msgstr "Stänga"
+
+#: ../../../bin/ice:495
 msgid "Duplication Error"
 msgstr "Dupliceringsfel"
 
-#: ice:428
+#: ../../../bin/ice:500
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>Varning: Fil Dupliceringsfel</b>"
 
-#: ice:462
+#: ../../../bin/ice:503 ../../../bin/ice:542
+msgid "OK"
+msgstr "OK"
+
+#: ../../../bin/ice:505 ../../../bin/ice:544
+msgid "Cancel"
+msgstr "Annullera"
+
+#: ../../../bin/ice:534
 msgid "Address Error"
 msgstr "Adress fel"
 
-#: ice:467
+#: ../../../bin/ice:539
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>Varning: HTTP eller URL Fel</b>"
 
-#: ice:468
+#: ../../../bin/ice:540
 msgid ""
 "An error with the web address has been detected.\n"
 "This is possibly the site being down or unavailable\n"
@@ -132,42 +143,66 @@ msgstr ""
 "på grund av att platsen är nere eller inte tillgängligt just nu.\n"
 "Fortsätt ändå?"
 
-#: ice:505
+#: ../../../bin/ice:572
+msgid "Name Error"
+msgstr "Namnfel"
+
+#: ../../../bin/ice:577
+msgid "<b>Error: No Application Name Entered.</b>"
+msgstr "<b>Fel: Inget appnamn inmatat.</b>"
+
+#: ../../../bin/ice:578
+msgid "Please enter an application name to continue."
+msgstr "Vänligen ange ett appenamn för att fortsätta."
+
+#: ../../../bin/ice:612
 msgid "ERROR: An address error has occurred."
 msgstr "FEL: Ett adress fel har uppstått."
 
-#: ice:508
+#: ../../../bin/ice:615
 msgid "ERROR: An unknown error has occurred."
 msgstr "FEL: Ett okänt fel har uppstått."
 
-#: ice:538
+#: ../../../bin/ice:651
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
 msgstr "<b>Välkommen till Ice, en enkel SSB hanterare.</b>"
 
-#: ice:541
+#: ../../../bin/ice:654
 msgid "Name the application"
 msgstr "Namnge appen"
 
-#: ice:544
+#: ../../../bin/ice:657
 msgid "Enter web address"
 msgstr "Ange webbadress"
 
-#: ice:548
+#: ../../../bin/ice:661
 msgid "Where in the menu?"
 msgstr "Var i menyn?"
 
-#: ice:574
+#: ../../../bin/ice:687
 msgid "Select an icon"
 msgstr "Välj en ikon"
 
-#: ice:576
+#: ../../../bin/ice:689
 msgid "Use site favicon"
 msgstr "Använd webbplatsikon"
 
-#: ice:661
+#: ../../../bin/ice:753
+msgid ""
+" Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
+"always isolated)"
+msgstr ""
+" Skapa SSB med en isolerad webbläsarprofil (Obs: Firefox SSB er är alltid "
+"isolerade)"
+
+#: ../../../bin/ice:757
+msgid "Apply"
+msgstr "Tillämpa"
+
+#: ../../../bin/ice:782
 msgid "Create"
 msgstr "Skapa"
 
-#: ice:703
+#: ../../../bin/ice:812 ../../../bin/ice:828
 msgid "Remove"
 msgstr "Ta bort"
