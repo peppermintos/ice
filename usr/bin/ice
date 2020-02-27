@@ -600,7 +600,7 @@ class EmptyNameError(Gtk.Window):
 
 
 class Ice(Gtk.Window):
-
+    
     def destroy(self, button):
         Gtk.main_quit()
 
@@ -803,6 +803,10 @@ class Ice(Gtk.Window):
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
         create_lab = Gtk.Label(label=_("Create"))
+
+        if len(sys.argv) >= 3:
+            name.set_text(sys.argv[1])
+            url.set_text(sys.argv[2])
 
         ######################
         #   'Remove' page.   #
