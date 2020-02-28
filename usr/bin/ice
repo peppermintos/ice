@@ -657,14 +657,17 @@ class Ice(Gtk.Window):
 
         welcome = Gtk.Label()
         welcome.set_markup(_("<b>Welcome to Ice, a simple SSB manager.</b>"))
+        
         global name
         name = Gtk.Entry()
         name.set_placeholder_text(_("Name the application"))
         name.set_text(namearg)
+        
         global url
         url = Gtk.Entry()
         url.set_placeholder_text(_("Enter web address"))
         url.set_text(urlarg)
+        
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
                        _("Office"), _("Programming"), _("Multimedia"), _("System")]
         where_lab = Gtk.Label(label=_("Where in the menu?"))
