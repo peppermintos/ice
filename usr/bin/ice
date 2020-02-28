@@ -577,7 +577,7 @@ class EmptyNameError(Gtk.Window):
         self.close()
 
     def __init__(self):
-        Gtk.Window.__init__(self, title=_("Na me Error"))
+        Gtk.Window.__init__(self, title=_("Name Error"))
         self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
 
