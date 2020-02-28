@@ -14,6 +14,7 @@
 # excellent pyfav library that is integrated into this application.
 # ADDENDUM: Added support for Firefox (via "ice-firefox") and Vivaldi.
 
+import argparse
 import os
 import sys
 import requests
@@ -48,8 +49,11 @@ gettext.bindtextdomain('messages', os.path.dirname(__file__)+ '/../share/ice/loc
 gettext.textdomain('messages')
 _ = gettext.gettext
 
-
-
+argparser = argparse.ArgumentParser()
+argparser.add_argument("-n", "--ssbname", type=str, default="", help="name of ice ssb") # I went with "ssbname" for the argument instead of just "name". I don't know why, but if the argument is just "name", it doesn't record the input.
+argparser.add_argument("-u", "--ssburl", type=str, default="", help="url of ice ssb") # I changed "url" to "ssburl" just so it matches "ssbname". - PizzaLovingNerd
+namearg = argparser.parse_args().ssbname
+urlarg = argparser.parse_args().ssburl
 # Requisite dirs
 for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
     if not os.path.exists(directory):
@@ -573,7 +577,7 @@ class EmptyNameError(Gtk.Window):
         self.close()
 
     def __init__(self):
-        Gtk.Window.__init__(self, title=_("Name Error"))
+        Gtk.Window.__init__(self, title=_("Na me Error"))
         self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
 
@@ -656,10 +660,11 @@ class Ice(Gtk.Window):
         global name
         name = Gtk.Entry()
         name.set_placeholder_text(_("Name the application"))
+        name.set_text(namearg)
         global url
         url = Gtk.Entry()
         url.set_placeholder_text(_("Enter web address"))
-
+        url.set_text(urlarg)
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
                        _("Office"), _("Programming"), _("Multimedia"), _("System")]
         where_lab = Gtk.Label(label=_("Where in the menu?"))
@@ -803,10 +808,6 @@ class Ice(Gtk.Window):
         create_hbox = Gtk.HBox()
         create_hbox.pack_start(create_vbox, True, True, 20)
         create_lab = Gtk.Label(label=_("Create"))
-
-        if len(sys.argv) >= 3:
-            name.set_text(sys.argv[1])
-            url.set_text(sys.argv[2])
 
         ######################
         #   'Remove' page.   #
