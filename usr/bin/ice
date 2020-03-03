@@ -50,10 +50,12 @@ gettext.textdomain('messages')
 _ = gettext.gettext
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument("-n", "--ssbname", type=str, default="", help="name of ice ssb") # I went with "ssbname" for the argument instead of just "name". I don't know why, but if the argument is just "name", it doesn't record the input.
-argparser.add_argument("-u", "--ssburl", type=str, default="", help="url of ice ssb") # I changed "url" to "ssburl" just so it matches "ssbname". - PizzaLovingNerd
+argparser.add_argument("-n", "--ssbname", type=str, default="", help="name of ice ssb", required=False) # I went with "ssbname" for the argument instead of just "name". I don't know why, but if the argument is just "name", it doesn't record the input.
+argparser.add_argument("-u", "--ssburl", type=str, default="", help="url of ice ssb", required=False) # I changed "url" to "ssburl" just so it matches "ssbname". - PizzaLovingNerd
+argparser.add_argument("-b", "--ssbbrowser", type=str, default="", help="browser of ice ssb", choices=["brave", "chrome", "chromium", "firefox", "vivaldi"], required=False)
 namearg = argparser.parse_args().ssbname
 urlarg = argparser.parse_args().ssburl
+browserarg = argparser.parse_args().ssbbrowser
 # Requisite dirs
 for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
     if not os.path.exists(directory):
@@ -773,6 +775,8 @@ class Ice(Gtk.Window):
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROMIUM_BIN):
             chromium.set_active(True)
+
+        if browserarg != "None": eval(browserarg).set_active(True)
 
         global isolate_profile
         isolate_profile=False
