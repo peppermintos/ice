@@ -2,9 +2,10 @@
 #
 # by Kendall Weaver <kendall@peppermintos.com>
 # for Peppermint OS
-# modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
+# modified by Mark Greaves to make other browsers workable (PCNetSpec) <mark@peppermintos.com>
 # with much appreciated code contributions by rhein
 # internationalization (i18n)/gettext support by Kiyohito AOKI
+# support for command line arguments written by PizzaLovingNerd 
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
 # Chrome specifically intended to integrate with the LXDE menu system.
@@ -13,8 +14,9 @@
 # SSBs. Special thanks to Matt Phillips <labratmatt@gmail.com> for the
 # excellent pyfav library that is integrated into this application.
 # ADDENDUM: Added support for Firefox (via "ice-firefox") and Vivaldi.
+# 
 
-import argparse
+import argparse ## added by PLN ##
 import os
 import sys
 import requests
@@ -53,9 +55,11 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument("-n", "--ssbname", type=str, default="", help="name of ice ssb", required=False) # I went with "ssbname" for the argument instead of just "name". I don't know why, but if the argument is just "name", it doesn't record the input.
 argparser.add_argument("-u", "--ssburl", type=str, default="", help="url of ice ssb", required=False) # I changed "url" to "ssburl" just so it matches "ssbname". - PizzaLovingNerd
 argparser.add_argument("-b", "--ssbbrowser", type=str, default="", help="browser of ice ssb", choices=["brave", "chrome", "chromium", "firefox", "vivaldi"], required=False)
+argparser.add_argument("-d", "--dialogmode", type=bool, default=False, help="puts ice into dialog mode", required=False)
 namearg = argparser.parse_args().ssbname
 urlarg = argparser.parse_args().ssburl
 browserarg = argparser.parse_args().ssbbrowser
+dialogmodearg = argparser.parse_args().dialogmode
 # Requisite dirs
 for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
     if not os.path.exists(directory):
@@ -779,7 +783,7 @@ class Ice(Gtk.Window):
                 os.path.exists(_CHROMIUM_BIN):
             chromium.set_active(True)
 
-        if browserarg != "None": eval(browserarg).set_active(True)
+        if browserarg != "": eval(browserarg).set_active(True)
 
         global isolate_profile
         isolate_profile=False
@@ -789,8 +793,10 @@ class Ice(Gtk.Window):
         isolate_box.add(isolate_button)
 
         apply_button = Gtk.Button(label=_("Apply"))
+        if dialogmodearg == True: apply_button.set_label("Ok")
         apply_button.connect("clicked", self.apply_clicked)
         close_button = Gtk.Button(label=_("Close"))
+        if dialogmodearg == True: close_button.set_label("Cancel")
         close_button.connect("clicked", self.destroy)
         button_void = Gtk.Label()
         button_box = Gtk.HBox()
@@ -820,58 +826,60 @@ class Ice(Gtk.Window):
         #   'Remove' page.   #
         ######################
 
-        global liststore
-        known_profiles = []
-        liststore = Gtk.ListStore(Pixbuf, str)
+        if dialogmodearg == False:
+            global liststore
+            known_profiles = []
+            liststore = Gtk.ListStore(Pixbuf, str)
 
-        for fl in os.listdir(_APPS_DIR):
-            a = "{0}/{1}".format(_APPS_DIR, fl)
-            if not os.path.isdir(a):
-                details = get_details(a)
-                if details is not None:
-                    liststore.append([ details['pixbuf'], details['nameline'] ])
-                    known_profiles.append(details)
+            for fl in os.listdir(_APPS_DIR):
+                a = "{0}/{1}".format(_APPS_DIR, fl)
+                if not os.path.isdir(a):
+                    details = get_details(a)
+                    if details is not None:
+                        liststore.append([ details['pixbuf'], details['nameline'] ])
+                        known_profiles.append(details)
 
-        clean_orphaned_profiles(known_profiles)
+            clean_orphaned_profiles(known_profiles)
 
-        global iconview
-        iconview = Gtk.IconView()
-        iconview.set_model(liststore)
-        iconview.set_pixbuf_column(0)
-        iconview.set_text_column(1)
-        iconview.set_selection_mode(1)
+            global iconview
+            iconview = Gtk.IconView()
+            iconview.set_model(liststore)
+            iconview.set_pixbuf_column(0)
+            iconview.set_text_column(1)
+            iconview.set_selection_mode(1)
 
-        scroll = Gtk.ScrolledWindow()
-        scroll.add(iconview)
+            scroll = Gtk.ScrolledWindow()
+            scroll.add(iconview)
 
-        remove = Gtk.Button(label=_("Remove"))
-        remove.connect("clicked", delete)
-        close = Gtk.Button(label=_("Close"))
-        close.connect("clicked", self.destroy)
-        void = Gtk.Label()
-        buttons = Gtk.HBox()
-        buttons.pack_start(void, True, True, 0)
-        buttons.pack_start(close, False, False, 20)
-        buttons.pack_start(remove, False, False, 0)
+            remove = Gtk.Button(label=_("Remove"))
+            remove.connect("clicked", delete)
+            close = Gtk.Button(label=_("Close"))
+            close.connect("clicked", self.destroy)
+            void = Gtk.Label()
+            buttons = Gtk.HBox()
+            buttons.pack_start(void, True, True, 0)
+            buttons.pack_start(close, False, False, 20)
+            buttons.pack_start(remove, False, False, 0)
 
-        remove_vbox = Gtk.VBox()
-        remove_vbox.pack_start(scroll, True, True, 10)
-        remove_vbox.pack_start(buttons, False, False, 0)
+            remove_vbox = Gtk.VBox()
+            remove_vbox.pack_start(scroll, True, True, 10)
+            remove_vbox.pack_start(buttons, False, False, 0)
 
-        remove_hbox = Gtk.HBox()
-        remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label(label=_("Remove"))
+            remove_hbox = Gtk.HBox()
+            remove_hbox.pack_start(remove_vbox, True, True, 20)
+            remove_lab = Gtk.Label(label=_("Remove"))
 
         ##########################
         #   Main window stuff.   #
         ##########################
-
+        
         notebook = Gtk.Notebook()
-        notebook.append_page(create_hbox, create_lab)
-        notebook.append_page(remove_hbox, remove_lab)
+        if dialogmodearg == False: notebook.append_page(create_hbox, create_lab)
+        if dialogmodearg == False: notebook.append_page(remove_hbox, remove_lab)
 
         main_vbox = Gtk.VBox()
-        main_vbox.pack_start(notebook, True, True, 10)
+        if dialogmodearg == False: main_vbox.pack_start(notebook, True, True, 10)
+        else: main_vbox.pack_start(create_hbox, True, True, 10)
         main_hbox = Gtk.HBox()
         main_hbox.pack_start(main_vbox, True, True, 10)
         self.add(main_hbox)
