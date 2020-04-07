@@ -36,16 +36,21 @@ import gettext
 import locale
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument("-n", "--ssbname", type=str, default="", help="name of ice ssb", required=False) # I went with "ssbname" for the argument instead of just "name". I don't know why, but if the argument is just "name", it doesn't record the input.
-argparser.add_argument("-u", "--ssburl", type=str, default="", help="url of ice ssb", required=False) # I changed "url" to "ssburl" just so it matches "ssbname". - PizzaLovingNerd
-argparser.add_argument("-b", "--ssbbrowser", type=str, default="", help="browser of ice ssb", choices=["brave", "chrome", "chromium", "firefox", "vivaldi"], required=False)
-argparser.add_argument("-i", "--ssbicon", type=str, default="", help="icon for ssb", required=False)
 argparser.add_argument("-d", "--dialogmode", type=bool, default=False, help="puts ice into dialog mode", required=False)
+argparser.add_argument("-b", "--ssbbrowser", type=str, default="", help="browser of ice ssb", choices=["brave", "chrome", "chromium", "firefox", "vivaldi"], required=False)
+argparser.add_argument("-c", "--ssbcatagory", type=str, default="", help="catagory of ice ssb", choices=["accessories", "games", "graphics", "internet", "multimedia", "office", "programming", "system",], required=False)
+argparser.add_argument("-i", "--ssbicon", type=str, default="", help="icon for ssb", required=False)
+argparser.add_argument("-I", "--ssbisolated", type=bool, default="False", help="isolate ssb?", required=False)
+argparser.add_argument("-n", "--ssbname", type=str, default="", help="name of ice ssb", required=False)
+argparser.add_argument("-u", "--ssburl", type=str, default="", help="url of ice ssb", required=False)
+
+browserarg = argparser.parse_args().ssbbrowser
+catagoryarg = argparser.parse_args().ssbcatagory
+dialogmodearg = argparser.parse_args().dialogmode
+iconarg = argparser.parse_args().ssbicon
+isolatearg = argparser.parse_args().ssbisolated
 namearg = argparser.parse_args().ssbname
 urlarg = argparser.parse_args().ssburl
-browserarg = argparser.parse_args().ssbbrowser
-iconarg = argparser.parse_args().ssbicon
-dialogmodearg = argparser.parse_args().dialogmode
 
 _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
@@ -681,7 +686,7 @@ class Ice(Gtk.Window):
         url.set_text(urlarg)
         
         where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
-                       _("Office"), _("Programming"), _("Multimedia"), _("System")]
+                        _("Multimedia"), _("Office"), _("Programming"), _("System")]
         where_lab = Gtk.Label(label=_("Where in the menu?"))
         global where
         where = Gtk.ComboBoxText()
@@ -689,6 +694,15 @@ class Ice(Gtk.Window):
         for entry in where_store:
             where.append_text(entry)
         where.set_active(3)
+
+        if catagoryarg == "accessories": where.set_active(0)
+        elif catagoryarg == "games": where.set_active(1)
+        elif catagoryarg == "graphics": where.set_active(2)
+        elif catagoryarg == "internet": where.set_active(3)
+        elif catagoryarg == "multimedia": where.set_active(4)
+        elif catagoryarg == "office": where.set_active(5)
+        elif catagoryarg == "programming": where.set_active(6)
+        elif catagoryarg == "system": where.set_active(7)
 
         where_box = Gtk.HBox()
         where_void = Gtk.Label()
@@ -794,9 +808,13 @@ class Ice(Gtk.Window):
         global isolate_profile
         isolate_profile=False
         isolate_box = Gtk.VBox()
-        isolate_button = Gtk.CheckButton(label=_(" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)"))
+        isolate_button = Gtk.CheckButton(label=_("Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)"))
         isolate_button.connect("toggled", self.isolate_clicked)
         isolate_box.add(isolate_button)
+
+        if isolatearg == True:
+            isolate_button.set_active(True)
+            isolate_profile = True
 
         apply_button = Gtk.Button(label=_("Apply"))
         if dialogmodearg == True: apply_button.set_label("Ok")
