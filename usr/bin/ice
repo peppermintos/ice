@@ -631,6 +631,7 @@ class Ice(Gtk.Window):
     def apply_clicked(self, button):
         if errortest(normalize(url.get_text())) is True:
             applicate()
+            if dialogmodearg == True: sys.exit(1)
         elif errortest(normalize(url.get_text())) is False:
             AddressError()
         elif errortest(normalize(url.get_text())) is None:
