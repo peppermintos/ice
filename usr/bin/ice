@@ -58,7 +58,7 @@ _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
 _FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
-_BRAVE_BIN = "/usr/bin/brave"
+_BRAVE_BIN = "/usr/bin/brave-browser"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
 _VIVALDI_BIN = "/usr/bin/vivaldi-stable"
@@ -282,7 +282,7 @@ def writefile(title, formatted, address, iconext, location):
     elif chromium.get_active() == True:
         browser = "chromium-browser"
     elif brave.get_active() == True:
-        browser = "brave"
+        browser = "brave-browser"
     elif vivaldi.get_active() == True:
         browser = "vivaldi"
     elif firefox.get_active() == True:
