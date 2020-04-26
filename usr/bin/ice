@@ -28,6 +28,8 @@ from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 from urllib.parse import urlparse, urlunparse
 from bs4 import BeautifulSoup
+from plumbum import local, CommandNotFound
+from contextlib import suppress
 
 import gettext
 import locale
@@ -38,11 +40,37 @@ _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
 _FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
-_BRAVE_BIN = "/usr/bin/brave"
-_CHROME_BIN = "/usr/bin/google-chrome"
-_CHROMIUM_BIN = "/usr/bin/chromium-browser"
-_VIVALDI_BIN = "/usr/bin/vivaldi-stable"
-_FIREFOX_BIN = "/usr/bin/firefox"
+_BRAVE_BIN = _CHROME_BIN = _CHROMIUM_BIN = _VIVALDI_BIN = _FIREFOX_BIN = None
+with suppress(CommandNotFound):
+    _BRAVE_BIN = local.get(
+        "brave",
+        "brave-beta",
+        "brave-dev",
+        "brave-nightly",
+    )
+with suppress(CommandNotFound):
+    _CHROME_BIN = local.get(
+        "google-chrome",
+        "google-chrome-stable",
+        "google-chrome-beta",
+        "google-chrome-unstable",
+    )
+with suppress(CommandNotFound):
+    _CHROMIUM_BIN = local.get(
+        "chromium-browser",
+        "chromium",
+    )
+with suppress(CommandNotFound):
+    _VIVALDI_BIN = local.get(
+        "vivaldi-stable",
+        "vivaldi",
+        "vivaldi-snapshot",
+    )
+with suppress(CommandNotFound):
+    _FIREFOX_BIN = local.get(
+        "firefox",
+        "firefox-beta",
+    )
 
 gettext.bindtextdomain('messages', os.path.dirname(__file__)+ '/../share/ice/locale/')
 gettext.textdomain('messages')
@@ -51,7 +79,7 @@ _ = gettext.gettext
 
 
 # Requisite dirs
-for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
+for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]:
     if not os.path.exists(directory):
         os.system("mkdir -p {0}".format(directory))
 
@@ -257,15 +285,15 @@ def writefile(title, formatted, address, iconext, location):
     appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR, formatted))
     os.system("touch {0}".format(appfile))
     if chrome.get_active() == True:
-        browser = "google-chrome"
+        browser = local.path(_CHROME_BIN).name
     elif chromium.get_active() == True:
-        browser = "chromium-browser"
+        browser = local.path(_CHROMIUM_BIN).name
     elif brave.get_active() == True:
-        browser = "brave"
+        browser = local.path(_BRAVE_BIN).name
     elif vivaldi.get_active() == True:
-        browser = "vivaldi"
+        browser = local.path(_VIVALDI_BIN).name
     elif firefox.get_active() == True:
-        browser = "firefox"
+        browser = local.path(_FIREFOX_BIN).name
     else:
         print(_("ERROR: An unknown browser selection error has occurred."))
         sys.exit(1)
@@ -279,7 +307,7 @@ def writefile(title, formatted, address, iconext, location):
         appfile1.write("Name={0}\n".format(title))
         appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
-        if (browser == "firefox"):
+        if (_FIREFOX_BIN and browser == local.path(_FIREFOX_BIN).name):
             firefox_profile_path  = "{0}/{1}".format(_FF_PROFILES_DIR, formatted)
             appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
             appfile1.write("IceFirefox={0}\n".format(formatted))
@@ -335,7 +363,7 @@ def init_firefox_profile(path):
         sfile.write('user_pref("plugin.state.flash", 2);')
         sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
 
-    # rhein: do we really need this? 
+    # rhein: do we really need this?
     #os.system('rm -rf ' + chromepath + '/cache2')
 
 
@@ -703,70 +731,70 @@ class Ice(Gtk.Window):
         global firefox
         firefox = Gtk.RadioButton.new_with_label_from_widget(None, " Firefox")
 
-        if not os.path.exists(_FIREFOX_BIN):
+        if not _FIREFOX_BIN:
             firefox.set_sensitive(False)
-
-        if not os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_CHROME_BIN) and not \
-                os.path.exists(_BRAVE_BIN) and not \
-                os.path.exists(_VIVALDI_BIN) and \
-                os.path.exists(_FIREFOX_BIN):
+        elif not any((
+            _CHROMIUM_BIN,
+            _CHROME_BIN,
+            _BRAVE_BIN,
+            _VIVALDI_BIN,
+        )):
             firefox.set_active(True)
 
-        global brave 
+        global brave
         brave = Gtk.RadioButton.new_from_widget(firefox)
         brave.set_label(" Brave")
 
-        if not os.path.exists(_BRAVE_BIN):
+        if not _BRAVE_BIN:
             brave.set_sensitive(False)
-
-        if not os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_FIREFOX_BIN) and not \
-                os.path.exists(_CHROME_BIN) and not \
-                os.path.exists(_VIVALDI_BIN) and \
-                os.path.exists(_BRAVE_BIN):
+        elif not any((
+            _CHROMIUM_BIN,
+            _FIREFOX_BIN,
+            _CHROME_BIN,
+            _VIVALDI_BIN,
+        )):
             brave.set_active(True)
 
         global chrome
         chrome = Gtk.RadioButton.new_from_widget(brave)
         chrome.set_label(" Chrome")
 
-        if not os.path.exists(_CHROME_BIN):
+        if not _CHROME_BIN:
             chrome.set_sensitive(False)
-
-        if not os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_FIREFOX_BIN) and not \
-                os.path.exists(_BRAVE_BIN) and not \
-                os.path.exists(_VIVALDI_BIN) and \
-                os.path.exists(_CHROME_BIN):
+        elif not any((
+            _CHROMIUM_BIN,
+            _FIREFOX_BIN,
+            _BRAVE_BIN,
+            _VIVALDI_BIN,
+        )):
             chrome.set_active(True)
 
         global vivaldi
         vivaldi = Gtk.RadioButton.new_from_widget(chrome)
         vivaldi.set_label(" Vivaldi")
 
-        if not os.path.exists(_VIVALDI_BIN):
+        if not _VIVALDI_BIN:
             vivaldi.set_sensitive(False)
-
-        if not os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_FIREFOX_BIN) and not \
-                os.path.exists(_BRAVE_BIN) and not \
-                os.path.exists(_CHROME_BIN) and \
-                os.path.exists(_VIVALDI_BIN):
+        elif not any((
+            _CHROMIUM_BIN,
+            _FIREFOX_BIN,
+            _BRAVE_BIN,
+            _CHROME_BIN,
+        )):
             vivaldi.set_active(True)
 
         global chromium
         chromium = Gtk.RadioButton.new_from_widget(vivaldi)
         chromium.set_label(" Chromium")
 
-        if not os.path.exists(_CHROMIUM_BIN):
+        if not _CHROMIUM_BIN:
             chromium.set_sensitive(False)
-
-        if not os.path.exists(_CHROME_BIN) and not \
-                os.path.exists(_FIREFOX_BIN) and not \
-                os.path.exists(_BRAVE_BIN) and not \
-                os.path.exists(_VIVALDI_BIN) and \
-                os.path.exists(_CHROMIUM_BIN):
+        elif not any((
+            _CHROME_BIN,
+            _FIREFOX_BIN,
+            _BRAVE_BIN,
+            _VIVALDI_BIN,
+        )):
             chromium.set_active(True)
 
         global isolate_profile
@@ -865,11 +893,13 @@ class Ice(Gtk.Window):
         self.add(main_hbox)
         self.show_all()
 
-        if not os.path.exists(_CHROME_BIN) and not \
-                os.path.exists(_CHROMIUM_BIN) and not \
-                os.path.exists(_VIVALDI_BIN) and not \
-                os.path.exists(_BRAVE_BIN) and not \
-                os.path.exists(_FIREFOX_BIN):
+        if not any((
+            _CHROME_BIN,
+            _CHROMIUM_BIN,
+            _VIVALDI_BIN,
+            _BRAVE_BIN,
+            _FIREFOX_BIN,
+        )):
             apply_button.set_sensitive(False)
             NoBrowserError()
 
