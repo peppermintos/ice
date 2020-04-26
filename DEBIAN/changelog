@@ -1,3 +1,34 @@
+ice (8.0.0a) focal; urgency=low
+
+  * Ice Redesign
+  * Moved Create and Remove tabs to the headerbar using a Stack and Stackswitcher
+  * Opted for a new grid based layout instead of Vboxes and Hboxes. This should make future UI changes much easier
+  * Made the UI more compact
+  * Removed the welcome to Ice text
+  * Removed the close button because you can close it by using the X button on the window manager
+  * Now you can remove Ice SSBs with a double click, instead of selecting, and removing with the remove button
+
+ -- PizzaLovingNerd <pizzalovingnerd@teknik.io>  16 Apr 2020 17:38:00 −0700
+
+ice (7.0.2) focal; urgency=low
+
+  * Fixed brave browser not working
+
+ -- PizzaLovingNerd <pizzalovingnerd@teknik.io>  7 Apr 2020 16:54:00 −0700
+
+ice (7.0.1) focal; urgency=low
+
+  * Clicking OK in Dialog Mode will now close ice.
+
+ -- PizzaLovingNerd <pizzalovingnerd@teknik.io>  7 Apr 2020 16:54:00 −0700
+
+ice (7.0.0) focal; urgency=low
+
+  * Added command-line argument support
+  * Added "dialog-mode" which treats ice like a install dialog.
+
+ -- PizzaLovingNerd <pizzalovingnerd@teknik.io>  7 Apr 2020 11:50:00 −0700
+
 ice (6.0.8) bionic; urgency=low
 
   * Updated search.json.mozlz4 for Firefox 71.

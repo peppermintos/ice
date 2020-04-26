@@ -1,0 +1,12 @@
+Package: ice
+Version: 8.0.0a
+Architecture: all
+Maintainer: PizzaLovingNerd <pizzalovingnerd@teknik.io>
+Depends: python3, python3-gi, python3-requests, python3-bs4
+Recommends: chromium-browser
+Section: net
+Priority: optional
+Description: Webapp integration with Peppermint Ice
+ Front end for building single site browsers using
+ Chromium, Chrome, or Firefox as a backend, allowing
+ custom menu integration.
