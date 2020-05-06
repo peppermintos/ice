@@ -34,7 +34,7 @@ msgstr "Impossible de trouver l'URL. Est-elle correcte? {0}"
 
 #: ../../../bin/ice:224 ../../../bin/ice:659
 msgid "Accessories"
-msgstr "Accessories"
+msgstr "Accessoires"
 
 #: ../../../bin/ice:226 ../../../bin/ice:659
 msgid "Games"
@@ -61,9 +61,8 @@ msgid "Multimedia"
 msgstr "Multimédia"
 
 #: ../../../bin/ice:238 ../../../bin/ice:660
-#, fuzzy
 msgid "System"
-msgstr "Outils systèm"
+msgstr "Outils système"
 
 #: ../../../bin/ice:267
 msgid "ERROR: An unknown browser selection error has occurred."
@@ -71,7 +70,7 @@ msgstr "ERREUR: Une erreur de sélection de navigateur inconnue s'est produite."
 
 #: ../../../bin/ice:403
 msgid "Please choose an icon."
-msgstr "Please choose an icon."
+msgstr "Veuillez choisir une icône."
 
 #: ../../../bin/ice:442
 msgid "Browser Error"
@@ -93,7 +92,7 @@ msgid ""
 msgstr ""
 "Donner ce nom au SSB supprimera un SSB existant.\n"
 "Pour éviter cela, modifiez une lettre dans le nom.\n"
-"Continuer quand même?"
+"Continuer quand même ?"
 
 #: ../../../bin/ice:451
 msgid ""
@@ -101,7 +100,7 @@ msgid ""
 "Chrome or Chromium in order to function. Please\n"
 "install at least one in order to create SSBs."
 msgstr ""
-"Ice nécessite l'installation d'un système Google Chrome,\n"
+"Ice nécessite l'installation système de Google Chrome,\n"
 "Chromium, Firefox ou Vivaldi pour fonctionner.\n"
 "Veuillez en installer au moins un pour créer des SSB."
 
@@ -119,7 +118,7 @@ msgstr "<b>Attention: Erreur de duplication du fichier</b>"
 
 #: ../../../bin/ice:503 ../../../bin/ice:542
 msgid "OK"
-msgstr "D'Accord"
+msgstr "Valider"
 
 #: ../../../bin/ice:505 ../../../bin/ice:544
 msgid "Cancel"
@@ -141,7 +140,7 @@ msgid ""
 msgstr ""
 "Une erreur avec l'adresse web a été détectée.\n"
 "C'est probablement le site qui est actuellement indisponible.\n"
-"Continuer quand même?"
+"Continuer quand même ?"
 
 #: ../../../bin/ice:572
 msgid "Name Error"
@@ -165,11 +164,11 @@ msgstr "ERREUR: Une erreur inconnue s'est produite."
 
 #: ../../../bin/ice:651
 msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
-msgstr "<b>Bienvenue sur Ice, un gestionnaire SSB simple</b>"
+msgstr "<b>Bienvenue sur Ice, un gestionnaire SSB simple.</b>"
 
 #: ../../../bin/ice:654
 msgid "Name the application"
-msgstr "Nommer l'application"
+msgstr "Nommez l'application"
 
 #: ../../../bin/ice:657
 msgid "Enter web address"
@@ -177,7 +176,7 @@ msgstr "Entrez l'adresse Web"
 
 #: ../../../bin/ice:661
 msgid "Where in the menu?"
-msgstr "Où dans le menu?"
+msgstr "Où dans le menu ?"
 
 #: ../../../bin/ice:687
 msgid "Select an icon"
@@ -192,8 +191,8 @@ msgid ""
 " Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
 "always isolated)"
 msgstr ""
-" Créez le SSB avec un profil de navigateur isolé (Remarque: les SSB Firefox "
-"sont toujours isolé)"
+" Créer le SSB avec un profil de navigateur isolé (Remarque: les SSB Firefox "
+"sont toujours isolés)"
 
 #: ../../../bin/ice:757
 msgid "Apply"
