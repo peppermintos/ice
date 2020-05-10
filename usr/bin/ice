@@ -641,6 +641,12 @@ class Ice(Gtk.Window):
         if button.get_active() == True:
           isolate_profile = True
 
+    def about_clicked(self, button):
+        os.system('xdg-open ../share/ice/copyright')
+
+    def license_clicked(self,button):
+        os.system('xdg-open ../share/ice/gpl-2.0.txt')
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
@@ -875,6 +881,15 @@ class Ice(Gtk.Window):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1 :
+        pass
+    elif sys.argv[1] == "--about" :
+        os.system('less ../share/ice/copyright' )
+    elif sys.argv[1] == "--license":
+        os.system('less ../share/ice/gpl-2.0.txt' )
+    else:
+        pass
+
     window = Ice()
     window.connect("delete-event", Gtk.main_quit)
     Gtk.main()
