@@ -43,6 +43,9 @@ _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
 _VIVALDI_BIN = "/usr/bin/vivaldi-stable"
 _FIREFOX_BIN = "/usr/bin/firefox"
+_ABOUT_FILE = os.path.dirname(__file__)+ "/../share/ice/about"
+_LICENSE_FILE =os.path.dirname(__file__)+  "/../share/ice/gpl-2.0.txt"
+
 
 gettext.bindtextdomain('messages', os.path.dirname(__file__)+ '/../share/ice/locale/')
 gettext.textdomain('messages')
@@ -642,10 +645,10 @@ class Ice(Gtk.Window):
           isolate_profile = True
 
     def about_clicked(self, button):
-        os.system('xdg-open ../share/ice/copyright')
+        os.system("xdg-open " + _ABOUT_FILE)
 
     def license_clicked(self,button):
-        os.system('xdg-open ../share/ice/gpl-2.0.txt')
+        os.system("xdg-open " + _LICENSE_FILE)
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
@@ -884,9 +887,11 @@ if __name__ == '__main__':
     if len(sys.argv) == 1 :
         pass
     elif sys.argv[1] == "--about" :
-        os.system('less ../share/ice/copyright' )
+        os.system("less " + _ABOUT_FILE)
+        exit()
     elif sys.argv[1] == "--license":
-        os.system('less ../share/ice/gpl-2.0.txt' )
+        os.system("less " + _LICENSE_FILE)
+        exit()
     else:
         pass
 
