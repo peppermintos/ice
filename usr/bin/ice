@@ -37,7 +37,7 @@ _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
 _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
 _FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
-_ICE_ICON = "../share/pixmaps/ice.png"
+_ICE_ICON = os.path.dirname(__file__)+ "/../share/pixmaps/ice.png"
 _BRAVE_BIN = "/usr/bin/brave"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
@@ -316,8 +316,8 @@ def init_firefox_profile(path):
     cssfile = "{0}/userChrome.css".format(chromepath)
 
     os.system('mkdir -p ' + chromepath)
-    os.system('cp -n ../lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
-    os.system('cp -n ../lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
+    os.system('cp -n os.path.dirname(__file__)+  "/../lib/peppermint/ice/search.json.mozlz4" ' + path + '/search.json.mozlz4')
+    os.system('cp -n os.path.dirname(__file__)+  "/../lib/peppermint/ice/places.sqlite" ' + path + '/places.sqlite')
     os.system("touch {0}".format(cssfile))
     with open(cssfile, 'w') as cfile:
         cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }")
