@@ -60,333 +60,6 @@ headers = {
     #'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
 }
 
-
-def get_details(app):
-    a = open(app, 'r', errors='ignore')
-    nameline = ""
-    iconline = ""
-    profile = ""
-    is_ice	= False
-    is_firefox = False
-    is_isolated = False
-
-    for line in a:
-        if "Name=" in line:
-            array = line.replace("=", " ").split()
-            array.pop(0)
-            for word in array:
-                nameline = nameline + word + " "
-        elif "Icon=" in line:
-            array = line.replace("=", " ").split()
-            array.pop(0)
-            for word in array:
-                iconline = iconline + word
-            try:
-                pixbuf = Pixbuf.new_from_file_at_size(iconline, 16, 16)
-            except:
-                pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON, 16, 16)
-        elif "StartupWMClass=Chromium" in line:
-            # for legacy apps
-            is_ice = True
-        elif "StartupWMClass=ICE-SSB" in line:
-            is_ice = True
-        elif "IceFirefox=" in line:
-            is_firefox = True
-            profile = str.replace(line, 'IceFirefox=', '').strip()
-        elif "X-ICE-SSB-Profile=" in line:
-            is_isolated = True
-            profile = str.replace(line, 'X-ICE-SSB-Profile=', '').strip()
-
-    if nameline != "" and iconline != "" and is_ice is True:
-        details = {
-          'nameline' : nameline,
-          'profile' : profile,
-          'is_firefox' : is_firefox,
-          'is_isolated' : is_isolated,
-          'pixbuf': pixbuf
-          }
-        return details
-
-    return None
-
-
-def normalize(url):
-    (scheme, netloc, path, _, _, frag) = urlparse(url, "http")
-    if not netloc and path:
-        return urlunparse((scheme, path, "", "", "", ""))
-
-    return urlunparse((scheme, netloc, path, "", "", ""))
-
-
-def errortest(url):
-    try:
-        urllib.request.urlopen(url)
-        return True
-    except (urllib.request.HTTPError, urllib.request.URLError):
-        return False
-
-
-def download_favicon(url, file_prefix='', target_dir='/tmp'):
-    parsed_site_uri = urlparse(url)
-
-    if not parsed_site_uri.scheme:
-        url = 'http://{0}'.format(url)
-        parsed_site_uri = urlparse(url)
-
-    if not parsed_site_uri.scheme or not parsed_site_uri.netloc:
-        raise Exception(_("Unable to parse URL, {0}").format(url))
-
-    favicon_url = get_favicon_url(url)
-
-    if not favicon_url:
-        raise Exception(_("Unable to find favicon for, {0}").format(url))
-    response = requests.get(favicon_url, headers=headers)
-    if response.status_code == requests.codes.ok:
-        parsed_uri = urlparse(favicon_url)
-        favicon_filepath = parsed_uri.path
-        favicon_path, favicon_filename = os.path.split(favicon_filepath)
-
-    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-
-    sanitized_filename = "".join([x if valid_chars else "" for x in favicon_filename])
-
-    sanitized_filename = os.path.join(target_dir, file_prefix + sanitized_filename)
-
-    with open(sanitized_filename, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
-                    f.flush()
-
-    return sanitized_filename
-
-
-def parse_markup_for_favicon(markup, parsed_site_uri):
-
-    soup = BeautifulSoup(markup, "lxml")
-
-    icon_link = soup.find('link', rel='icon')
-
-    if icon_link and icon_link.has_attr('href'):
-
-        favicon_url = icon_link['href']
-
-        if favicon_url.startswith('//'):
-            parsed_uri = urlparse(url)
-            favicon_url = "{0}:{1}".format(parsed_uri.scheme, favicon_url)
-
-        elif favicon_url.startswith('/'):
-            favicon_url = "{0}://{1}{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc, favicon_url)
-
-        elif not favicon_url.startswith('http'):
-            path, filename = os.path.split(parsed_site_uri.path)
-            favicon_url = "{0}://{1}/{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc,
-                                                 os.path.join(path, favicon_url))
-
-        return favicon_url
-
-    return None
-
-
-def get_favicon_url(url):
-    parsed_site_uri = urlparse(url)
-
-    try:
-        response = requests.get(url, headers=headers)
-    except:
-        raise Exception(_("Unable to find URL. Is it valid? {0}").format(url))
-
-    if response.status_code == requests.codes.ok:
-        favicon_url = parse_markup_for_favicon(response.content, parsed_site_uri)
-
-        if favicon_url:
-            return favicon_url
-
-    favicon_url = '{uri.scheme}://{uri.netloc}/favicon.ico'.format(uri=parsed_site_uri)
-
-    response = requests.get(favicon_url, headers=headers)
-    if response.status_code == requests.codes.ok:
-        return favicon_url
-
-    return None
-
-
-def applicate():
-    title = name.get_text()
-    address = normalize(url.get_text())
-
-    semiformatted = ""
-    array = filter(str.isalpha, title)
-    for obj in array:
-        semiformatted = semiformatted + obj
-    formatted = semiformatted.lower()
-
-    loc = where.get_active_text()
-    if loc == _("Accessories"):
-        location = "Utility;"
-    elif loc == _("Games"):
-        location = "Game;"
-    elif loc == _("Graphics"):
-        location = "Graphics;"
-    elif loc == _("Internet"):
-        location = "Network;"
-    elif loc == _("Office"):
-        location = "Office;"
-    elif loc == _("Programming"):
-        location = "Development;"
-    elif loc == _("Multimedia"):
-        location = "AudioVideo;"
-    elif loc == _("System"):
-        location = "System;"
-
-    global iconpath
-    iconname = iconpath.replace("/", " ").split()[-1]
-    iconext = iconname.replace(".", " ").split()[-1]
-
-    if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, formatted)):
-        DuplicateError(title, formatted, address, iconext, location)
-    elif len(title) == 0:
-        EmptyNameError()
-    else:
-        writefile(title, formatted, address, iconext, location)
-
-
-def writefile(title, formatted, address, iconext, location):
-    global iconpath
-    os.system("cp --force {0} {1}/{2}.{3}".format(iconpath, _ICE_DIR, formatted, iconext))
-    appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR, formatted))
-    os.system("touch {0}".format(appfile))
-    if chrome.get_active() == True:
-        browser = "google-chrome"
-    elif chromium.get_active() == True:
-        browser = "chromium-browser"
-    elif brave.get_active() == True:
-        browser = "brave"
-    elif vivaldi.get_active() == True:
-        browser = "vivaldi"
-    elif firefox.get_active() == True:
-        browser = "firefox"
-    else:
-        print(_("ERROR: An unknown browser selection error has occurred."))
-        sys.exit(1)
-
-    with open(appfile, 'w') as appfile1:
-        global isolate_profile
-        appfile1.truncate()
-
-        appfile1.write("[Desktop Entry]\n")
-        appfile1.write("Version=1.0\n")
-        appfile1.write("Name={0}\n".format(title))
-        appfile1.write("Comment={0} (Ice SSB)\n".format(title))
-
-        if (browser == "firefox"):
-            firefox_profile_path  = "{0}/{1}".format(_FF_PROFILES_DIR, formatted)
-            appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
-            appfile1.write("IceFirefox={0}\n".format(formatted))
-            init_firefox_profile(firefox_profile_path)
-        else:
-            if isolate_profile == True:
-                profile_path = "{0}/{1}".format(_PROFILES_DIR, formatted)
-                appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2} --user-data-dir={3}\n".format(browser, address, formatted, profile_path))
-                appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
-            else:
-              appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}\n".format(browser, address, formatted))
-
-        appfile1.write("Terminal=false\n")
-        appfile1.write("X-MultipleArgs=false\n")
-        appfile1.write("Type=Application\n")
-        appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR, formatted, iconext))
-        appfile1.write("Categories=GTK;{0}\n".format(location))
-        appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
-        appfile1.write("StartupWMClass=ICE-SSB-{0}\n".format(formatted))
-        appfile1.write("StartupNotify=true\n")
-
-    name.set_text("")
-    url.set_text("")
-    iconpath = _ICE_ICON
-    new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
-    icon.set_from_pixbuf(new_icon)
-    details = get_details(appfile)
-    if details is not None:
-        liststore.prepend([ details['pixbuf'], details['nameline'] ])
-
-def init_firefox_profile(path):
-    chromepath = "{0}/chrome".format(path)
-    settingsfile = "{0}/user.js".format(path)
-    cssfile = "{0}/userChrome.css".format(chromepath)
-
-    os.system('mkdir -p ' + chromepath)
-    os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
-    os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
-    os.system("touch {0}".format(cssfile))
-    with open(cssfile, 'w') as cfile:
-        cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }")
-
-    os.system("touch {0}".format(settingsfile))
-    with open(settingsfile, 'w') as sfile:
-        sfile.write('user_pref("browser.cache.disk.enable", false);')
-        sfile.write('user_pref("browser.cache.disk.capacity", 0);')
-        sfile.write('user_pref("browser.cache.disk.filesystem_reported", 1);')
-        sfile.write('user_pref("browser.cache.disk.smart_size.enabled", false);')
-        sfile.write('user_pref("browser.cache.disk.smart_size.first_run", false);')
-        sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max", false);')
-        sfile.write('user_pref("browser.ctrlTab.previews", true);')
-        sfile.write('user_pref("browser.tabs.warnOnClose", false);')
-        sfile.write('user_pref("plugin.state.flash", 2);')
-        sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
-
-    # rhein: do we really need this? 
-    #os.system('rm -rf ' + chromepath + '/cache2')
-
-
-def delete(button):
-    a = iconview.get_selected_items()
-    b = liststore.get_iter(a[0])
-    c = liststore.get_value(b, 1)
-    liststore.remove(b)
-
-    semiformatted = ""
-    array = filter(str.isalpha, c)
-
-    for obj in array:
-        semiformatted = semiformatted + obj
-
-    formatted = semiformatted.lower()
-    appfile = "{0}/{1}.desktop".format(_APPS_DIR, formatted)
-
-    appfileopen = open(appfile, 'r')
-    appfilelines = appfileopen.readlines()
-    appfileopen.close()
-
-    for line in appfilelines:
-        if "IceFirefox=" in line:
-            profile = str.replace(line, 'IceFirefox=', '')
-            os.system("rm -rf {0}/{1}".format(_FF_PROFILES_DIR, profile))
-
-        if "X-ICE-SSB-Profile=" in line:
-            profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
-            os.system("rm -rf {0}/{1}".format(_PROFILES_DIR, profile))
-
-    os.system("rm {0}".format(appfile))
-
-
-def clean_orphaned_profiles(known_apps):
-    known_profiles = []
-    for app in known_apps:
-        a = "{0}/{1}".format(_FF_PROFILES_DIR, app['profile'])
-        if app['profile'] != "":
-            # make sure firefox apps have profiles available
-            if app['is_firefox'] is True and not os.path.isdir(a):
-                init_firefox_profile(a)
-            known_profiles.append(app['profile'])
-
-    for p_type in ['profiles','firefox']:
-        for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
-            a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
-            if not os.path.isdir(a) or fl not in known_profiles:
-                os.system("rm -rf {0}".format(a))
-
-
 class IconSel(Gtk.FileChooserDialog):
 
     def __init__(self):
@@ -492,7 +165,7 @@ class DuplicateError(Gtk.Window):
             if forma == formatted:
                 liststore.remove(itemiter)
 
-        writefile(title, formatted, address, iconext, location)
+        window.writefile(title, formatted, address, iconext, location)
         self.close()
 
     def __init__(self, title, formatted, address, iconext, location):
@@ -531,7 +204,7 @@ class AddressError(Gtk.Window):
         self.close()
 
     def okay_clicked(self, button):
-        applicate()
+        window.applicate()
         self.close()
 
     def __init__(self):
@@ -569,7 +242,7 @@ class EmptyNameError(Gtk.Window):
         self.close()
 
     def okay_clicked(self, button):
-        applicate()
+        window.applicate()
         self.close()
 
     def __init__(self):
@@ -608,11 +281,11 @@ class Ice(Gtk.Window):
         IconSel()
 
     def apply_clicked(self, button):
-        if errortest(normalize(url.get_text())) is True:
-            applicate()
-        elif errortest(normalize(url.get_text())) is False:
+        if self.errortest(self.normalize(url.get_text())) is True:
+            self.applicate()
+        elif self.errortest(self.normalize(url.get_text())) is False:
             AddressError()
-        elif errortest(normalize(url.get_text())) is None:
+        elif self.errortest(self.normalize(url.get_text())) is None:
             print(_("ERROR: An address error has occurred."))
             sys.exit(1)
         else:
@@ -620,11 +293,11 @@ class Ice(Gtk.Window):
             sys.exit(1)
 
     def icon_download(self, button):
-        appurl = normalize(url.get_text())
+        appurl = self.normalize(url.get_text())
         global iconpath
         try:
-            download_favicon(appurl)
-            addr0 = get_favicon_url(appurl)
+            self.download_favicon(appurl)
+            addr0 = self.get_favicon_url(appurl)
             addr1 = addr0.replace('/', ' ')
             addr2 = addr1.split()[-1]
             iconpath = "/tmp/{0}".format(addr2)
@@ -815,12 +488,12 @@ class Ice(Gtk.Window):
         for fl in os.listdir(_APPS_DIR):
             a = "{0}/{1}".format(_APPS_DIR, fl)
             if not os.path.isdir(a):
-                details = get_details(a)
+                details = self.get_details(a)
                 if details is not None:
                     liststore.append([ details['pixbuf'], details['nameline'] ])
                     known_profiles.append(details)
 
-        clean_orphaned_profiles(known_profiles)
+        self.clean_orphaned_profiles(known_profiles)
 
         global iconview
         iconview = Gtk.IconView()
@@ -833,7 +506,7 @@ class Ice(Gtk.Window):
         scroll.add(iconview)
 
         remove = Gtk.Button(label=_("Remove"))
-        remove.connect("clicked", delete)
+        remove.connect("clicked", self.delete)
         close = Gtk.Button(label=_("Close"))
         close.connect("clicked", self.destroy)
         void = Gtk.Label()
@@ -872,6 +545,332 @@ class Ice(Gtk.Window):
                 os.path.exists(_FIREFOX_BIN):
             apply_button.set_sensitive(False)
             NoBrowserError()
+
+
+
+    def get_details(self, app):
+        a = open(app, 'r', errors='ignore')
+        nameline = ""
+        iconline = ""
+        profile = ""
+        is_ice	= False
+        is_firefox = False
+        is_isolated = False
+
+        for line in a:
+            if "Name=" in line:
+                array = line.replace("=", " ").split()
+                array.pop(0)
+                for word in array:
+                    nameline = nameline + word + " "
+            elif "Icon=" in line:
+                array = line.replace("=", " ").split()
+                array.pop(0)
+                for word in array:
+                    iconline = iconline + word
+                try:
+                    pixbuf = Pixbuf.new_from_file_at_size(iconline, 16, 16)
+                except:
+                    pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON, 16, 16)
+            elif "StartupWMClass=Chromium" in line:
+                # for legacy apps
+                is_ice = True
+            elif "StartupWMClass=ICE-SSB" in line:
+                is_ice = True
+            elif "IceFirefox=" in line:
+                is_firefox = True
+                profile = str.replace(line, 'IceFirefox=', '').strip()
+            elif "X-ICE-SSB-Profile=" in line:
+                is_isolated = True
+                profile = str.replace(line, 'X-ICE-SSB-Profile=', '').strip()
+
+        if nameline != "" and iconline != "" and is_ice is True:
+            details = {
+            'nameline' : nameline,
+            'profile' : profile,
+            'is_firefox' : is_firefox,
+            'is_isolated' : is_isolated,
+            'pixbuf': pixbuf
+            }
+            return details
+
+        return None
+
+    def normalize(self, url):
+        (scheme, netloc, path, _, _) = urlparse(url, "http")
+        if not netloc and path:
+            return urlunparse((scheme, path, "", "", "", ""))
+
+        return urlunparse((scheme, netloc, path, "", "", ""))
+
+
+    def errortest(self, url):
+        try:
+            urllib.request.urlopen(url)
+            return True
+        except (urllib.request.HTTPError, urllib.request.URLError):
+            return False
+
+
+    def download_favicon(self, url, file_prefix='', target_dir='/tmp'):
+        parsed_site_uri = urlparse(url)
+
+        if not parsed_site_uri.scheme:
+            url = 'http://{0}'.format(url)
+            parsed_site_uri = urlparse(url)
+
+        if not parsed_site_uri.scheme or not parsed_site_uri.netloc:
+            raise Exception(_("Unable to parse URL, {0}").format(url))
+
+        favicon_url = self.get_favicon_url(url)
+
+        if not favicon_url:
+            raise Exception(_("Unable to find favicon for, {0}").format(url))
+        response = requests.get(favicon_url, headers=headers)
+        if response.status_code == requests.codes.ok:
+            parsed_uri = urlparse(favicon_url)
+            favicon_filepath = parsed_uri.path
+            favicon_filename = os.path.split(favicon_filepath)
+
+        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+
+        sanitized_filename = "".join([x if valid_chars else "" for x in favicon_filename])
+
+        sanitized_filename = os.path.join(target_dir, file_prefix + sanitized_filename)
+
+        with open(sanitized_filename, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+                        f.flush()
+
+        return sanitized_filename
+
+
+    def parse_markup_for_favicon(self, markup, parsed_site_uri):
+
+        soup = BeautifulSoup(markup, "lxml")
+
+        icon_link = soup.find('link', rel='icon')
+
+        if icon_link and icon_link.has_attr('href'):
+
+            favicon_url = icon_link['href']
+
+            if favicon_url.startswith('//'):
+                parsed_uri = urlparse(url)
+                favicon_url = "{0}:{1}".format(parsed_uri.scheme, favicon_url)
+
+            elif favicon_url.startswith('/'):
+                favicon_url = "{0}://{1}{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc, favicon_url)
+
+            elif not favicon_url.startswith('http'):
+                path, filename = os.path.split(parsed_site_uri.path)
+                favicon_url = "{0}://{1}/{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc,
+                                                    os.path.join(path, favicon_url))
+
+            return favicon_url
+
+        return None
+
+
+    def get_favicon_url(self, url):
+        parsed_site_uri = urlparse(url)
+
+        try:
+            response = requests.get(url, headers=headers)
+        except:
+            raise Exception(_("Unable to find URL. Is it valid? {0}").format(url))
+
+        if response.status_code == requests.codes.ok:
+            favicon_url = self.parse_markup_for_favicon(response.content, parsed_site_uri)
+
+            if favicon_url:
+                return favicon_url
+
+        favicon_url = '{uri.scheme}://{uri.netloc}/favicon.ico'.format(uri=parsed_site_uri)
+
+        response = requests.get(favicon_url, headers=headers)
+        if response.status_code == requests.codes.ok:
+            return favicon_url
+
+        return None
+
+
+    def applicate(self):
+        title = name.get_text()
+        address = self.normalize(url.get_text())
+
+        semiformatted = ""
+        array = filter(str.isalpha, title)
+        for obj in array:
+            semiformatted = semiformatted + obj
+        formatted = semiformatted.lower()
+
+        loc = where.get_active_text()
+        if loc == _("Accessories"):
+            location = "Utility;"
+        elif loc == _("Games"):
+            location = "Game;"
+        elif loc == _("Graphics"):
+            location = "Graphics;"
+        elif loc == _("Internet"):
+            location = "Network;"
+        elif loc == _("Office"):
+            location = "Office;"
+        elif loc == _("Programming"):
+            location = "Development;"
+        elif loc == _("Multimedia"):
+            location = "AudioVideo;"
+        elif loc == _("System"):
+            location = "System;"
+
+        global iconpath
+        iconname = iconpath.replace("/", " ").split()[-1]
+        iconext = iconname.replace(".", " ").split()[-1]
+
+        if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, formatted)):
+            DuplicateError(title, formatted, address, iconext, location)
+        elif len(title) == 0:
+            EmptyNameError()
+        else:
+            self.writefile(title, formatted, address, iconext, location)
+
+
+    def writefile(self, title, formatted, address, iconext, location):
+        global iconpath
+        os.system("cp --force {0} {1}/{2}.{3}".format(iconpath, _ICE_DIR, formatted, iconext))
+        appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR, formatted))
+        os.system("touch {0}".format(appfile))
+        if chrome.get_active() == True:
+            browser = "google-chrome"
+        elif chromium.get_active() == True:
+            browser = "chromium-browser"
+        elif brave.get_active() == True:
+            browser = "brave"
+        elif vivaldi.get_active() == True:
+            browser = "vivaldi"
+        elif firefox.get_active() == True:
+            browser = "firefox"
+        else:
+            print(_("ERROR: An unknown browser selection error has occurred."))
+            sys.exit(1)
+
+        with open(appfile, 'w') as appfile1:
+            global isolate_profile
+            appfile1.truncate()
+
+            appfile1.write("[Desktop Entry]\n")
+            appfile1.write("Version=1.0\n")
+            appfile1.write("Name={0}\n".format(title))
+            appfile1.write("Comment={0} (Ice SSB)\n".format(title))
+
+            if (browser == "firefox"):
+                firefox_profile_path  = "{0}/{1}".format(_FF_PROFILES_DIR, formatted)
+                appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
+                appfile1.write("IceFirefox={0}\n".format(formatted))
+                self.init_firefox_profile(firefox_profile_path)
+            else:
+                if isolate_profile == True:
+                    profile_path = "{0}/{1}".format(_PROFILES_DIR, formatted)
+                    appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2} --user-data-dir={3}\n".format(browser, address, formatted, profile_path))
+                    appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
+                else:
+                    appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}\n".format(browser, address, formatted))
+
+            appfile1.write("Terminal=false\n")
+            appfile1.write("X-MultipleArgs=false\n")
+            appfile1.write("Type=Application\n")
+            appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR, formatted, iconext))
+            appfile1.write("Categories=GTK;{0}\n".format(location))
+            appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
+            appfile1.write("StartupWMClass=ICE-SSB-{0}\n".format(formatted))
+            appfile1.write("StartupNotify=true\n")
+
+        name.set_text("")
+        url.set_text("")
+        iconpath = _ICE_ICON
+        new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
+        icon.set_from_pixbuf(new_icon)
+        details = self.get_details(appfile)
+        if details is not None:
+            liststore.prepend([ details['pixbuf'], details['nameline'] ])
+
+    def init_firefox_profile(self, path):
+        chromepath = "{0}/chrome".format(path)
+        settingsfile = "{0}/user.js".format(path)
+        cssfile = "{0}/userChrome.css".format(chromepath)
+
+        os.system('mkdir -p ' + chromepath)
+        os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
+        os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
+        os.system("touch {0}".format(cssfile))
+        with open(cssfile, 'w') as cfile:
+            cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }")
+
+        os.system("touch {0}".format(settingsfile))
+        with open(settingsfile, 'w') as sfile:
+            sfile.write('user_pref("browser.cache.disk.enable", false);')
+            sfile.write('user_pref("browser.cache.disk.capacity", 0);')
+            sfile.write('user_pref("browser.cache.disk.filesystem_reported", 1);')
+            sfile.write('user_pref("browser.cache.disk.smart_size.enabled", false);')
+            sfile.write('user_pref("browser.cache.disk.smart_size.first_run", false);')
+            sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max", false);')
+            sfile.write('user_pref("browser.ctrlTab.previews", true);')
+            sfile.write('user_pref("browser.tabs.warnOnClose", false);')
+            sfile.write('user_pref("plugin.state.flash", 2);')
+            sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
+
+        # rhein: do we really need this? 
+        #os.system('rm -rf ' + chromepath + '/cache2')
+
+
+    def delete(self, button):
+        a = iconview.get_selected_items()
+        b = liststore.get_iter(a[0])
+        c = liststore.get_value(b, 1)
+        liststore.remove(b)
+
+        semiformatted = ""
+        array = filter(str.isalpha, c)
+
+        for obj in array:
+            semiformatted = semiformatted + obj
+
+        formatted = semiformatted.lower()
+        appfile = "{0}/{1}.desktop".format(_APPS_DIR, formatted)
+
+        appfileopen = open(appfile, 'r')
+        appfilelines = appfileopen.readlines()
+        appfileopen.close()
+
+        for line in appfilelines:
+            if "IceFirefox=" in line:
+                profile = str.replace(line, 'IceFirefox=', '')
+                os.system("rm -rf {0}/{1}".format(_FF_PROFILES_DIR, profile))
+
+            if "X-ICE-SSB-Profile=" in line:
+                profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
+                os.system("rm -rf {0}/{1}".format(_PROFILES_DIR, profile))
+
+        os.system("rm {0}".format(appfile))
+
+
+    def clean_orphaned_profiles(self, known_apps):
+        known_profiles = []
+        for app in known_apps:
+            a = "{0}/{1}".format(_FF_PROFILES_DIR, app['profile'])
+            if app['profile'] != "":
+                # make sure firefox apps have profiles available
+                if app['is_firefox'] is True and not os.path.isdir(a):
+                    self.init_firefox_profile(a)
+                known_profiles.append(app['profile'])
+
+        for p_type in ['profiles','firefox']:
+            for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
+                a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
+                if not os.path.isdir(a) or fl not in known_profiles:
+                    os.system("rm -rf {0}".format(a))
 
 
 if __name__ == '__main__':
