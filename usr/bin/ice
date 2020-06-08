@@ -14,134 +14,141 @@
 # excellent pyfav library that is integrated into this application.
 # ADDENDUM: Added support for Firefox (via "ice-firefox") and Vivaldi.
 
-import os
-import sys
-import requests
-import urllib.request
-import urllib.parse
-import urllib.error
-import os.path
-import string
-import gi  ## added by MG ##
-gi.require_version('Gtk','3.0') ## added by MG ##
-from gi.repository import Gtk
-from gi.repository.GdkPixbuf import Pixbuf
-from urllib.parse import urlparse, urlunparse
-from bs4 import BeautifulSoup
-
+import bs4
 import gettext
 import locale
+import os
+import os.path
+import requests
+import shutil
+import string
+import sys
+import threading
+import urllib.error
+import urllib.parse
+import urllib.request
+
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository.GdkPixbuf import Pixbuf
 
 _HOME = os.getenv("HOME")
 _ICE_DIR = "{0}/.local/share/ice".format(_HOME)
 _APPS_DIR = "{0}/.local/share/applications".format(_HOME)
 _PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
 _FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
+_EPIPHANY_PROFILES_DIR = "{0}/epiphany".format(_ICE_DIR)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
-_BRAVE_BIN = "/usr/bin/brave"
+_BRAVE_BIN = "/usr/bin/brave-browser"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
 _VIVALDI_BIN = "/usr/bin/vivaldi-stable"
 _FIREFOX_BIN = "/usr/bin/firefox"
+_EPIPHANY_BIN = "/usr/bin/epiphany-browser"
 
-gettext.bindtextdomain('messages', os.path.dirname(__file__)+ '/../share/ice/locale/')
+gettext.bindtextdomain(
+    'messages',
+    os.path.dirname(__file__) + '/../share/ice/locale/'
+    )
+
 gettext.textdomain('messages')
 _ = gettext.gettext
 
-
-
 # Requisite dirs
-for directory in [ _ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR ]: 
+for directory in [_ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR]:
     if not os.path.exists(directory):
-        os.system("mkdir -p {0}".format(directory))
+        os.makedirs(directory)
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0',
-    #'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
-}
 
 class IconSel(Gtk.FileChooserDialog):
 
     def __init__(self):
 
-        def update_image(dialog):
-            filename = dialog.get_preview_filename()
-
-            try:
-                pixbuf = Pixbuf.new_from_file(filename)
-                preview.set_from_pixbuf(pixbuf)
-                valid_preview = True
-            except:
-                valid_preview = False
-
-            dialog.set_preview_widget_active(valid_preview)
-
-        filew = Gtk.FileChooserDialog(
+        self.filew = Gtk.FileChooserDialog(
             _("Please choose an icon."),
             None,
             Gtk.FileChooserAction.OPEN,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        filew.set_filename(_ICE_ICON)
+            (
+                Gtk.STOCK_CANCEL,
+                Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OPEN,
+                Gtk.ResponseType.OK
+            )
+        )
+        self.filew.set_filename(_ICE_ICON)
 
-        filter1 = Gtk.FileFilter()
-        filter1.set_name("Icons")
-        filter1.add_mime_type("image/png")
-        filter1.add_mime_type("image/jpeg")
-        filter1.add_mime_type("image/gif")
-        filter1.add_pattern("*.png")
-        filter1.add_pattern("*.jpg")
-        filter1.add_pattern("*.gif")
-        filter1.add_pattern("*.xpm")
-        filter1.add_pattern("*.svg")
-        filew.add_filter(filter1)
+        self.filter1 = Gtk.FileFilter()
+        self.filter1.set_name("Icons")
+        self.filter1.add_mime_type("image/png")
+        self.filter1.add_mime_type("image/jpeg")
+        self.filter1.add_mime_type("image/gif")
+        self.filter1.add_pattern("*.png")
+        self.filter1.add_pattern("*.jpg")
+        self.filter1.add_pattern("*.gif")
+        self.filter1.add_pattern("*.xpm")
+        self.filter1.add_pattern("*.svg")
+        self.filew.add_filter(self.filter1)
 
-        preview = Gtk.Image()
-        filew.set_preview_widget(preview)
-        filew.connect("update-preview", update_image)
+        self.preview = Gtk.Image()
+        self.filew.set_preview_widget(self.preview)
+        self.filew.connect("update-preview", self.update_image)
 
-        response = filew.run()
-        if response == Gtk.ResponseType.OK:
-            global iconpath
-            iconpath = filew.get_filename()
-            new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
-            icon.set_from_pixbuf(new_icon)
-            filew.destroy()
+        self.response = self.filew.run()
+        if self.response == Gtk.ResponseType.OK:
+            self.iconpath = self.filew.get_filename()
+            self.new_icon = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
+            self.icon.set_from_pixbuf(self.new_icon)
+            self.filew.destroy()
         elif response == Gtk.ResponseType.CANCEL:
-            filew.destroy()
+            self.filew.destroy()
+
+    def update_image(self, dialog):
+        self.filename = dialog.get_preview_filename()
+        try:
+            self.pixbuf = Pixbuf.new_from_file(self.filename)
+            self.preview.set_from_pixbuf(self.pixbuf)
+            self.valid_preview = True
+        except GLib.Error:
+            self.valid_preview = False
+
+        self.dialog.set_preview_widget_active(self.valid_preview)
 
 
-class NoBrowserError(Gtk.Window):
-
+class ErrorDialog(Gtk.Window):
     def destroy(self, button):
         self.close()
 
-    def __init__(self):
-        Gtk.Window.__init__(self, title=_("Browser Error"))
-        self.set_size_request(250, 130)
+    def __init__(self, name, main, text):
+        Gtk.Window.__init__(self, title=_(name))
+        self.set_border_width(10)
         self.set_icon_from_file(_ICE_ICON)
+        self.set_resizable(False)
 
-        print(_("test"))
+        self.main_lab = Gtk.Label()
+        self.main_lab.set_markup(_("<b>" + main + "</b>"))
 
-        main_lab = Gtk.Label()
-        main_lab.set_markup(_("<b>Warning: No Suitable Browser Detected</b>"))
-        text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
-        text_lab = Gtk.Label(_("Ice requires a system installation of either Google\nChrome or Chromium in order to function. Please\ninstall at least one in order to create SSBs."))
+        self.text_lab = Gtk.Label(
+            label=_(text),
+            justify=Gtk.Justification.CENTER
+        )
 
-        close = Gtk.Button(label=_("Close"))
-        close.connect("clicked", self.destroy)
-        void = Gtk.Label()
-        box = Gtk.HBox()
-        box.pack_start(void, True, True, 0)
-        box.pack_start(close, False, False, 0)
+        self.text_lab.set_line_wrap(True)
 
-        main_vbox = Gtk.VBox()
-        main_vbox.pack_start(main_lab, False, False, 10)
-        main_vbox.pack_start(text_lab, False, False, 0)
-        main_vbox.pack_start(box, False, False, 10)
+        self.close_button = Gtk.Button(label=_("Close"))
+        self.close_button.connect("clicked", self.destroy)
+        self.void = Gtk.Label()
+        self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.pack_start(self.void, True, True, 0)
+        self.box.pack_start(self.close_button, False, False, 0)
 
-        main_hbox = Gtk.HBox()
-        main_hbox.pack_start(main_vbox, True, True, 10)
-        self.add(main_hbox)
+        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_vbox.pack_start(self.main_lab, False, False, 5)
+        self.main_vbox.pack_start(self.text_lab, True, True, 10)
+        self.main_vbox.pack_start(self.box, False, False, 0)
+
+        self.add(self.main_vbox)
         self.show_all()
 
 
@@ -150,51 +157,62 @@ class DuplicateError(Gtk.Window):
     def destroy(self, button):
         self.close()
 
-    def okay_clicked(self, button, title, formatted, address, iconext, location):
+    def okay_clicked(self, button, title,
+                     formatted, address, iconext, location):
 
-        for item in liststore:
-            itemiter = item.iter
-            semiformatted = ""
-            array = filter(str.isalpha, item[1])
+        for item in window.liststore:
+            self.itemiter = item.iter
+            self.semiformatted = ""
+            self.array = filter(str.isalpha, self.item[1])
 
-            for obj in array:
-                semiformatted = semiformatted + obj
+            for obj in self.array:
+                self.semiformatted = self.semiformatted + self.obj
 
-            forma = semiformatted.lower()
+            self.forma = self.semiformatted.lower()
 
-            if forma == formatted:
-                liststore.remove(itemiter)
+            if self.forma == formatted:
+                self.window.liststore.remove(self.itemiter)
 
-        window.writefile(title, formatted, address, iconext, location)
+        self.window.writefile(title, formatted, address, iconext, location)
         self.close()
 
     def __init__(self, title, formatted, address, iconext, location):
         Gtk.Window.__init__(self, title=_("Duplication Error"))
-        self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
+        self.set_border_width(10)
 
-        main_lab = Gtk.Label()
-        main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
-        text_lab = Gtk.Label(_("The name of the SSB will cause an existing SSB to\nbe overwritten. To prevent this, change a letter in\nthe name. Continue anyway?"))
+        self.main_lab = Gtk.Label()
+        self.main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
 
-        okay = Gtk.Button(label=_("OK"))
-        okay.connect("clicked", self.okay_clicked, title, formatted, address, iconext, location)
-        cancel = Gtk.Button(label=_("Cancel"))
-        cancel.connect("clicked", self.destroy)
-        void = Gtk.Label()
-        box = Gtk.HBox()
-        box.pack_start(void, True, True, 0)
-        box.pack_start(okay, False, False, 10)
-        box.pack_start(cancel, False, False, 0)
+        self.text_lab = Gtk.Label(
+            label=_("The name of the SSB will cause an existing SSB "
+                    "to be overwritten.\nTo prevent this, "
+                    "change a letter in the name.\nContinue anyway?\n"),
 
-        main_vbox = Gtk.VBox()
-        main_vbox.pack_start(main_lab, False, False, 10)
-        main_vbox.pack_start(text_lab, False, False, 0)
-        main_vbox.pack_start(box, False, False, 10)
+            justify=Gtk.Justification.CENTER
+        )
 
-        main_hbox = Gtk.HBox()
-        main_hbox.pack_start(main_vbox, True, True, 10)
-        self.add(main_hbox)
+        self.text_lab.set_line_wrap(True)
+
+        self.okay = Gtk.Button(label=_("OK"))
+        self.okay.connect("clicked", self.okay_clicked, title,
+                          formatted, address, iconext, location)
+        self.cancel = Gtk.Button(label=_("Cancel"))
+        self.cancel.connect("clicked", self.destroy)
+        self.void = Gtk.Label()
+        self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.pack_start(void, True, True, 5)
+        self.box.pack_start(okay, False, False, 10)
+        self.box.pack_start(cancel, False, False, 0)
+
+        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_vbox.pack_start(main_lab, False, False, 10)
+        self.main_vbox.pack_start(text_lab, True, True, 0)
+        self.main_vbox.pack_start(box, False, False, 10)
+
+        # self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        # self.main_hbox.pack_start(self.main_vbox, True, True, 10)
+        self.add(main_vbox)
         self.show_all()
 
 
@@ -209,110 +227,44 @@ class AddressError(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title=_("Address Error"))
-        self.set_size_request(250, 130)
         self.set_icon_from_file(_ICE_ICON)
+        self.set_border_width(10)
 
-        main_lab = Gtk.Label()
-        main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
-        text_lab = Gtk.Label(_("An error with the web address has been detected.\nThis is possibly the site being down or unavailable\nright now. Continue anyway?"))
+        self.main_lab = Gtk.Label()
+        self.main_lab.set_markup(_("<b>Warning: HTTP or URL Error</b>"))
 
-        okay = Gtk.Button(label=_("OK"))
-        okay.connect("clicked", self.okay_clicked)
-        cancel = Gtk.Button(label=_("Cancel"))
-        cancel.connect("clicked", self.destroy)
-        void = Gtk.Label()
-        box = Gtk.HBox()
-        box.pack_start(void, True, True, 0)
-        box.pack_start(okay, False, False, 10)
-        box.pack_start(cancel, False, False, 0)
+        self.text_lab = Gtk.Label(
+            label=_("An error with the web address has been detected.\n"
+                    "This is possibly the site being down or "
+                    "unavailable right now.\nContinue anyway?\n"),
 
-        main_vbox = Gtk.VBox()
-        main_vbox.pack_start(main_lab, False, False, 10)
-        main_vbox.pack_start(text_lab, False, False, 0)
-        main_vbox.pack_start(box, False, False, 10)
+            justify=Gtk.Justification.CENTER
+        )
 
-        main_hbox = Gtk.HBox()
-        main_hbox.pack_start(main_vbox, True, True, 10)
-        self.add(main_hbox)
-        self.show_all()
+        self.text_lab.set_line_wrap(True)
 
-class EmptyNameError(Gtk.Window):
+        self.okay = Gtk.Button(label=_("OK"))
+        self.okay.connect("clicked", self.okay_clicked)
+        self.cancel = Gtk.Button(label=_("Cancel"))
+        self.cancel.connect("clicked", self.destroy)
+        self.void = Gtk.Label()
+        self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.pack_start(void, True, True, 0)
+        self.box.pack_start(okay, False, False, 10)
+        self.box.pack_start(cancel, False, False, 0)
 
-    def destroy(self, button):
-        self.close()
+        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_vbox.pack_start(main_lab, False, False, 10)
+        self.main_vbox.pack_start(text_lab, False, False, 0)
+        self.main_vbox.pack_start(box, False, False, 10)
 
-    def okay_clicked(self, button):
-        window.applicate()
-        self.close()
-
-    def __init__(self):
-        Gtk.Window.__init__(self, title=_("Name Error"))
-        self.set_size_request(250, 130)
-        self.set_icon_from_file(_ICE_ICON)
-
-        main_lab = Gtk.Label()
-        main_lab.set_markup(_("<b>Error: No Application Name Entered.</b>"))
-        text_lab = Gtk.Label(_("Please enter an application name to continue."))
-
-        close = Gtk.Button(label=_("Close"))
-        close.connect("clicked", self.destroy)
-        void = Gtk.Label()
-        box = Gtk.HBox()
-        box.pack_start(void, True, True, 0)
-        box.pack_start(close, False, False, 0)
-
-        main_vbox = Gtk.VBox()
-        main_vbox.pack_start(main_lab, False, False, 10)
-        main_vbox.pack_start(text_lab, False, False, 0)
-        main_vbox.pack_start(box, False, False, 10)
-
-        main_hbox = Gtk.HBox()
-        main_hbox.pack_start(main_vbox, True, True, 10)
+        self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.main_hbox.pack_start(main_vbox, True, True, 10)
         self.add(main_hbox)
         self.show_all()
 
 
 class Ice(Gtk.Window):
-
-    def destroy(self, button):
-        Gtk.main_quit()
-
-    def icon_select(self, button):
-        IconSel()
-
-    def apply_clicked(self, button):
-        if self.errortest(self.normalize(url.get_text())) is True:
-            self.applicate()
-        elif self.errortest(self.normalize(url.get_text())) is False:
-            AddressError()
-        elif self.errortest(self.normalize(url.get_text())) is None:
-            print(_("ERROR: An address error has occurred."))
-            sys.exit(1)
-        else:
-            print(_("ERROR: An unknown error has occurred."))
-            sys.exit(1)
-
-    def icon_download(self, button):
-        appurl = self.normalize(url.get_text())
-        global iconpath
-        try:
-            self.download_favicon(appurl)
-            addr0 = self.get_favicon_url(appurl)
-            addr1 = addr0.replace('/', ' ')
-            addr2 = addr1.split()[-1]
-            iconpath = "/tmp/{0}".format(addr2)
-            new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
-            icon.set_from_pixbuf(new_icon)
-        except:
-            iconpath = _ICE_ICON
-            new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
-            icon.set_from_pixbuf(new_icon)
-
-    def isolate_clicked(self, button):
-        global isolate_profile
-        isolate_profile=False
-        if button.get_active() == True:
-          isolate_profile = True
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
@@ -324,102 +276,101 @@ class Ice(Gtk.Window):
         #   'Create' page.   #
         ######################
 
-        welcome = Gtk.Label()
-        welcome.set_markup(_("<b>Welcome to Ice, a simple SSB manager.</b>"))
-        global name
-        name = Gtk.Entry()
-        name.set_placeholder_text(_("Name the application"))
-        global url
-        url = Gtk.Entry()
-        url.set_placeholder_text(_("Enter web address"))
+        self.welcome = Gtk.Label()
+        self.welcome.set_markup(_(
+            "<b>Welcome to Ice, a simple SSB manager.</b>")
+        )
+        self.name = Gtk.Entry()
+        self.name.set_placeholder_text(_("Name the application"))
+        self.url = Gtk.Entry()
+        self.url.set_placeholder_text(_("Enter web address"))
 
-        where_store = [_("Accessories"), _("Games"), _("Graphics"), _("Internet"),
-                       _("Office"), _("Programming"), _("Multimedia"), _("System")]
-        where_lab = Gtk.Label(label=_("Where in the menu?"))
-        global where
-        where = Gtk.ComboBoxText()
-        where.set_entry_text_column(0)
-        for entry in where_store:
-            where.append_text(entry)
-        where.set_active(3)
+        self.where_store = [_("Accessories"), _("Games"),
+                            _("Graphics"), _("Internet"),
+                            _("Office"), _("Programming"),
+                            _("Multimedia"), _("System")]
 
-        where_box = Gtk.HBox()
-        where_void = Gtk.Label()
-        where_box.pack_start(where_lab, False, False, 0)
-        where_box.pack_start(where_void, False, False, 10)
-        where_box.pack_start(where, True, True, 0)
+        self.where_lab = Gtk.Label(label=_("Where in the menu?"))
+        self.where = Gtk.ComboBoxText()
+        self.where.set_entry_text_column(0)
+        for entry in self.where_store:
+            self.where.append_text(entry)
+        self.where.set_active(3)
 
-        global iconpath
-        iconpath = _ICE_ICON
-        icon_pixbuf = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
-        global icon
-        icon = Gtk.Image()
-        icon.set_from_pixbuf(icon_pixbuf)
+        self.where_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.where_void = Gtk.Label()
+        self.where_box.pack_start(self.where_lab, False, False, 0)
+        self.where_box.pack_start(self.where_void, False, False, 10)
+        self.where_box.pack_start(self.where, True, True, 0)
 
-        icon_void = Gtk.Label()
-        icon_box = Gtk.HBox()
-        icon_box.pack_start(icon, False, False, 10)
-        icon_box.pack_start(icon_void, False, False, 10)
+        self.iconpath = _ICE_ICON
+        self.icon_pixbuf = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
+        self.icon = Gtk.Image()
+        self.icon.set_from_pixbuf(self.icon_pixbuf)
 
-        choose_icon = Gtk.Button(label=_("Select an icon"))
-        choose_icon.connect("clicked", self.icon_select)
-        download_icon = Gtk.Button(label=_("Use site favicon"))
-        download_icon.connect("clicked", self.icon_download)
+        self.icon_void = Gtk.Label()
+        self.icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.icon_box.pack_start(self.icon, False, False, 10)
+        self.icon_box.pack_start(self.icon_void, False, False, 10)
 
-        icon_vbox = Gtk.VBox()
-        icon_vbox.pack_start(choose_icon, True, True, 5)
-        icon_vbox.pack_start(download_icon, True, True, 5)
-        icon_hbox = Gtk.HBox()
-        icon_hbox.pack_start(icon_box, False, False, 10)
-        icon_hbox.pack_start(icon_vbox, True, True, 0)
+        self.choose_icon = Gtk.Button(label=_("Select an icon"))
+        self.choose_icon.connect("clicked", self.icon_select)
+        self.download_icon = Gtk.Button(label=_("Use site favicon"))
+        self.download_icon.connect("clicked", self.thread_icon_download)
 
-        global firefox
-        firefox = Gtk.RadioButton.new_with_label_from_widget(None, " Firefox")
+        self.icon_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.icon_vbox.pack_start(self.choose_icon, True, True, 5)
+        self.icon_vbox.pack_start(self.download_icon, True, True, 5)
+        self.icon_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.icon_hbox.pack_start(self.icon_box, False, False, 10)
+        self.icon_hbox.pack_start(self.icon_vbox, True, True, 0)
+
+        self.firefox = Gtk.RadioButton.new_with_label_from_widget(
+            None,
+            " Firefox"
+        )
 
         if not os.path.exists(_FIREFOX_BIN):
-            firefox.set_sensitive(False)
+            self.firefox.set_sensitive(False)
 
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_CHROME_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_FIREFOX_BIN):
-            firefox.set_active(True)
+            self.firefox.set_active(True)
 
-        global brave 
-        brave = Gtk.RadioButton.new_from_widget(firefox)
-        brave.set_label(" Brave")
+        self.brave = Gtk.RadioButton.new_from_widget(self.firefox)
+        self.brave.set_label(" Brave")
 
         if not os.path.exists(_BRAVE_BIN):
-            brave.set_sensitive(False)
+            self.brave.set_sensitive(False)
 
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_CHROME_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_BRAVE_BIN):
-            brave.set_active(True)
+            self.brave.set_active(True)
 
-        global chrome
-        chrome = Gtk.RadioButton.new_from_widget(brave)
-        chrome.set_label(" Chrome")
+        self.chrome = Gtk.RadioButton.new_from_widget(self.brave)
+        self.chrome.set_label(" Chrome")
 
         if not os.path.exists(_CHROME_BIN):
-            chrome.set_sensitive(False)
+            self.chrome.set_sensitive(False)
 
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROME_BIN):
-            chrome.set_active(True)
+            self.chrome.set_active(True)
 
-        global vivaldi
-        vivaldi = Gtk.RadioButton.new_from_widget(chrome)
-        vivaldi.set_label(" Vivaldi")
+        self.vivaldi = Gtk.RadioButton.new_from_widget(self.chrome)
+        self.vivaldi.set_label(" Vivaldi")
 
         if not os.path.exists(_VIVALDI_BIN):
-            vivaldi.set_sensitive(False)
+            self.vivaldi.set_sensitive(False)
 
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
@@ -428,114 +379,114 @@ class Ice(Gtk.Window):
                 os.path.exists(_VIVALDI_BIN):
             vivaldi.set_active(True)
 
-        global chromium
-        chromium = Gtk.RadioButton.new_from_widget(vivaldi)
-        chromium.set_label(" Chromium")
+        self.chromium = Gtk.RadioButton.new_from_widget(self.vivaldi)
+        self.chromium.set_label(" Chromium")
 
         if not os.path.exists(_CHROMIUM_BIN):
-            chromium.set_sensitive(False)
+            self.chromium.set_sensitive(False)
 
         if not os.path.exists(_CHROME_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROMIUM_BIN):
-            chromium.set_active(True)
+            self.chromium.set_active(True)
 
-        global isolate_profile
-        isolate_profile=False
-        isolate_box = Gtk.VBox()
-        isolate_button = Gtk.CheckButton(label=_(" Create the SSB with an isolated browser profile (Note: Firefox SSB's are always isolated)"))
-        isolate_button.connect("toggled", self.isolate_clicked)
-        isolate_box.add(isolate_button)
+        self.isolate_profile = False
+        self.isolate_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.isolate_button = Gtk.CheckButton(
+            label=_(" Create the SSB with an isolated browser profile"
+                    "(Note: Firefox SSB's are always isolated)")
+            )
+        self.isolate_button.connect("toggled", self.isolate_clicked)
+        self.isolate_box.add(self.isolate_button)
 
-        apply_button = Gtk.Button(label=_("Apply"))
-        apply_button.connect("clicked", self.apply_clicked)
-        close_button = Gtk.Button(label=_("Close"))
-        close_button.connect("clicked", self.destroy)
-        button_void = Gtk.Label()
-        button_box = Gtk.HBox()
-        button_box.pack_start(brave, False, False, 10)
-        button_box.pack_start(chrome, False, False, 10)
-        button_box.pack_start(chromium, False, False, 0)
-        button_box.pack_start(vivaldi, False, False, 10)
-        button_box.pack_start(firefox, False, False, 0)
-        button_box.pack_start(button_void, True, True, 0)
-        button_box.pack_start(close_button, False, False, 20)
-        button_box.pack_start(apply_button, False, False, 0)
+        self.apply_button = Gtk.Button(label=_("Apply"))
+        self.apply_button.connect("clicked", self.thread_apply_clicked)
+        self.close_button = Gtk.Button(label=_("Close"))
+        self.close_button.connect("clicked", self.destroy)
+        self.button_void = Gtk.Label()
+        self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.button_box.pack_start(self.brave, False, False, 10)
+        self.button_box.pack_start(self.chrome, False, False, 10)
+        self.button_box.pack_start(self.chromium, False, False, 0)
+        self.button_box.pack_start(self.vivaldi, False, False, 10)
+        self.button_box.pack_start(self.firefox, False, False, 0)
+        self.button_box.pack_start(self.button_void, True, True, 0)
+        self.button_box.pack_start(self.close_button, False, False, 20)
+        self.button_box.pack_start(self.apply_button, False, False, 0)
 
-        create_vbox = Gtk.VBox()
-        create_vbox.pack_start(welcome, False, False, 15)
-        create_vbox.pack_start(name, False, False, 0)
-        create_vbox.pack_start(url, False, False, 10)
-        create_vbox.pack_start(where_box, False, False, 10)
-        create_vbox.pack_start(icon_hbox, False, False, 10)
-        create_vbox.pack_start(isolate_box, False, False, 10)
-        create_vbox.pack_start(button_box, False, False, 0)
+        self.create_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.create_vbox.pack_start(self.welcome, False, False, 15)
+        self.create_vbox.pack_start(self.name, False, False, 0)
+        self.create_vbox.pack_start(self.url, False, False, 10)
+        self.create_vbox.pack_start(self.where_box, False, False, 10)
+        self.create_vbox.pack_start(self.icon_hbox, False, False, 10)
+        self.create_vbox.pack_start(self.isolate_box, False, False, 10)
+        self.create_vbox.pack_start(self.button_box, False, False, 0)
 
-        create_hbox = Gtk.HBox()
-        create_hbox.pack_start(create_vbox, True, True, 20)
-        create_lab = Gtk.Label(label=_("Create"))
+        self.create_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.create_hbox.pack_start(self.create_vbox, True, True, 20)
+        self.create_lab = Gtk.Label(label=_("Create"))
 
         ######################
         #   'Remove' page.   #
         ######################
 
-        global liststore
-        known_profiles = []
-        liststore = Gtk.ListStore(Pixbuf, str)
+        self.known_profiles = []
+        self.liststore = Gtk.ListStore(Pixbuf, str)
 
         for fl in os.listdir(_APPS_DIR):
-            a = "{0}/{1}".format(_APPS_DIR, fl)
-            if not os.path.isdir(a):
-                details = self.get_details(a)
-                if details is not None:
-                    liststore.append([ details['pixbuf'], details['nameline'] ])
-                    known_profiles.append(details)
+            self.a = "{0}/{1}".format(_APPS_DIR, fl)
+            if not os.path.isdir(self.a):
+                self.details = self.get_details(self.a)
+                if self.details is not None:
+                    self.liststore.append([self.details['pixbuf'],
+                                           self.details['nameline']])
+                    self.known_profiles.append(self.details)
 
-        self.clean_orphaned_profiles(known_profiles)
+        self.clean_orphaned_profiles(self.known_profiles)
 
-        global iconview
-        iconview = Gtk.IconView()
-        iconview.set_model(liststore)
-        iconview.set_pixbuf_column(0)
-        iconview.set_text_column(1)
-        iconview.set_selection_mode(1)
+        self.iconview = Gtk.IconView()
+        self.iconview.set_model(self.liststore)
+        self.iconview.set_pixbuf_column(0)
+        self.iconview.set_text_column(1)
+        self.iconview.set_selection_mode(1)
 
-        scroll = Gtk.ScrolledWindow()
-        scroll.add(iconview)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.add(self.iconview)
 
-        remove = Gtk.Button(label=_("Remove"))
-        remove.connect("clicked", self.delete)
-        close = Gtk.Button(label=_("Close"))
-        close.connect("clicked", self.destroy)
-        void = Gtk.Label()
-        buttons = Gtk.HBox()
-        buttons.pack_start(void, True, True, 0)
-        buttons.pack_start(close, False, False, 20)
-        buttons.pack_start(remove, False, False, 0)
+        self.remove = Gtk.Button(label=_("Remove"))
+        self.remove.connect("clicked", self.delete)
+        self.close = Gtk.Button(label=_("Close"))
+        self.close.connect("clicked", self.destroy)
+        self.void = Gtk.Label()
+        self.buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.buttons.pack_start(self.void, True, True, 0)
+        self.buttons.pack_start(self.close, False, False, 20)
+        self.buttons.pack_start(self.remove, False, False, 0)
 
-        remove_vbox = Gtk.VBox()
-        remove_vbox.pack_start(scroll, True, True, 10)
-        remove_vbox.pack_start(buttons, False, False, 0)
+        self.remove_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.remove_vbox.pack_start(self.scroll, True, True, 10)
+        self.remove_vbox.pack_start(self.buttons, False, False, 0)
 
-        remove_hbox = Gtk.HBox()
-        remove_hbox.pack_start(remove_vbox, True, True, 20)
-        remove_lab = Gtk.Label(label=_("Remove"))
+        self.remove_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.remove_hbox.pack_start(self.remove_vbox, True, True, 20)
+        self.remove_lab = Gtk.Label(label=_("Remove"))
 
         ##########################
         #   Main window stuff.   #
         ##########################
 
-        notebook = Gtk.Notebook()
-        notebook.append_page(create_hbox, create_lab)
-        notebook.append_page(remove_hbox, remove_lab)
+        self.notebook = Gtk.Notebook()
+        self.notebook.append_page(self.create_hbox, self.create_lab)
+        self.notebook.append_page(self.remove_hbox, self.remove_lab)
 
-        main_vbox = Gtk.VBox()
-        main_vbox.pack_start(notebook, True, True, 10)
-        main_hbox = Gtk.HBox()
-        main_hbox.pack_start(main_vbox, True, True, 10)
-        self.add(main_hbox)
+        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_vbox.pack_start(self.notebook, True, True, 10)
+        self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.main_hbox.pack_start(self.main_vbox, True, True, 10)
+        self.add(self.main_hbox)
         self.show_all()
 
         if not os.path.exists(_CHROME_BIN) and not \
@@ -543,334 +494,425 @@ class Ice(Gtk.Window):
                 os.path.exists(_VIVALDI_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
                 os.path.exists(_FIREFOX_BIN):
-            apply_button.set_sensitive(False)
-            NoBrowserError()
+            self.apply_button.set_sensitive(False)
+            ErrorDialog(
+                "Browser Error",
+                "Warning: No Suitable Browser Detected",
+                "Ice can not detect any browsers.\n"
+                "Please make sure you have a supported browser installed.",
+            )
 
+    def destroy(self, button):
+        Gtk.main_quit()
 
+    def icon_select(self, button):
+        IconSel()
+
+    def thread_apply_clicked():
+        button.set_label(_("Applying"))
+        applythread = threading.Thread(target=self.apply_clicked)
+        applythread.daemon = True
+        applythread.start()
+        button.set_label(_("Apply"))
+
+    def apply_clicked(self, button):
+        if self.errortest(self.normalize(self.url.get_text())) is not None:
+            self.applicate()
+        elif self.errortest(self.normalize(self.url.get_text())) is None:
+            GLib.idle_add(self.apply_errors, "address")
+        else:
+            GLib.idle_add(self.apply_errors, "unknown")
+
+    def apply_errors(self, errortype):
+        if errortype == "address":
+            AddressError()
+        elif errortype == "unknown":
+            ErrorDialog(
+                "Error Applying SSB",
+                "Error: Unknown Error",
+                "An unknown error has occurred. :(",
+            )
+
+    def isolate_clicked(self, button):
+        self.isolate_profile = False
+        if self.button.get_active() is True:
+            self.isolate_profile = True
 
     def get_details(self, app):
-        a = open(app, 'r', errors='ignore')
-        nameline = ""
-        iconline = ""
-        profile = ""
-        is_ice	= False
-        is_firefox = False
-        is_isolated = False
+        self.a = open(app, 'r', errors='ignore')
+        self.nameline = ""
+        self.iconline = ""
+        self.profile = ""
+        self.is_ice = False
+        self.is_firefox = False
+        self.is_isolated = False
 
-        for line in a:
+        for line in self.a:
             if "Name=" in line:
-                array = line.replace("=", " ").split()
-                array.pop(0)
-                for word in array:
-                    nameline = nameline + word + " "
+                self.array = line.replace("=", " ").split()
+                self.array.pop(0)
+                for word in self.array:
+                    self.nameline = self.nameline + word + " "
             elif "Icon=" in line:
-                array = line.replace("=", " ").split()
-                array.pop(0)
-                for word in array:
-                    iconline = iconline + word
+                self.array = line.replace("=", " ").split()
+                self.array.pop(0)
+                for word in self.array:
+                    self.iconline = self.iconline + word
                 try:
-                    pixbuf = Pixbuf.new_from_file_at_size(iconline, 16, 16)
-                except:
-                    pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON, 16, 16)
+                    self.pixbuf = Pixbuf.new_from_file_at_size(self.iconline,
+                                                               16, 16)
+                except GLib.Error:
+                    self.pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON,
+                                                               16, 16)
             elif "StartupWMClass=Chromium" in line:
                 # for legacy apps
-                is_ice = True
+                self.is_ice = True
             elif "StartupWMClass=ICE-SSB" in line:
-                is_ice = True
+                self.is_ice = True
             elif "IceFirefox=" in line:
-                is_firefox = True
-                profile = str.replace(line, 'IceFirefox=', '').strip()
+                self.is_firefox = True
+                self.profile = str.replace(line, 'IceFirefox=', '').strip()
             elif "X-ICE-SSB-Profile=" in line:
-                is_isolated = True
-                profile = str.replace(line, 'X-ICE-SSB-Profile=', '').strip()
+                self.is_isolated = True
+                self.profile = str.replace(line,
+                                           'X-ICE-SSB-Profile=', '').strip()
 
-        if nameline != "" and iconline != "" and is_ice is True:
-            details = {
-            'nameline' : nameline,
-            'profile' : profile,
-            'is_firefox' : is_firefox,
-            'is_isolated' : is_isolated,
-            'pixbuf': pixbuf
+        if self.nameline != "" and self.iconline != "" and self.is_ice is True:
+            self.details = {
+                'nameline': self.nameline,
+                'profile': self.profile,
+                'is_firefox': self.is_firefox,
+                'is_isolated': self.is_isolated,
+                'pixbuf': self.pixbuf
             }
-            return details
+            return self.details
 
         return None
 
     def normalize(self, url):
-        (scheme, netloc, path, _, _) = urlparse(url, "http")
-        if not netloc and path:
-            return urlunparse((scheme, path, "", "", "", ""))
+        (self.scheme, self.netloc,
+         self.path, _, _, _) = urllib.parse.urlparse(url, "http")
 
-        return urlunparse((scheme, netloc, path, "", "", ""))
+        if not self.netloc and self.path:
+            return urllib.parse.urlunparse((self.scheme,
+                                            self.path, "", "", "", ""))
 
+        return urllib.parse.urlunparse((self.scheme, self.netloc,
+                                        self.path, "", "", ""))
 
     def errortest(self, url):
         try:
-            urllib.request.urlopen(url)
-            return True
+            return urllib.request.urlopen(url, timeout=3)
         except (urllib.request.HTTPError, urllib.request.URLError):
-            return False
+            return None
 
+    def thread_icon_download(self, button):
+        self.download_icon.set_label(_("Downloading Favicon"))
+        iconthread = threading.Thread(target=self.icon_download)
+        iconthread.daemon = True
+        iconthread.start()
 
-    def download_favicon(self, url, file_prefix='', target_dir='/tmp'):
-        parsed_site_uri = urlparse(url)
+    def icon_download(self):
+        self.appurl = self.normalize(self.url.get_text())
+        self.iconformats = ["apple-touch-icon", "shortcut icon",
+                            "icon", "msapplication-TileImage"]
 
-        if not parsed_site_uri.scheme:
-            url = 'http://{0}'.format(url)
-            parsed_site_uri = urlparse(url)
+        self.icon_link = None
+        self.page = self.errortest(self.appurl)
 
-        if not parsed_site_uri.scheme or not parsed_site_uri.netloc:
-            raise Exception(_("Unable to parse URL, {0}").format(url))
+        if self.page is not None:
+            self.soup = bs4.BeautifulSoup(self.page.read(), "html.parser")
 
-        favicon_url = self.get_favicon_url(url)
+            for iconformat in self.iconformats:
+                self.icon_link = self.soup.find("link", {"rel": iconformat})
+                if self.icon_link is not None:
+                    self.icon_link = self.icon_link["href"]
+                    break
 
-        if not favicon_url:
-            raise Exception(_("Unable to find favicon for, {0}").format(url))
-        response = requests.get(favicon_url, headers=headers)
-        if response.status_code == requests.codes.ok:
-            parsed_uri = urlparse(favicon_url)
-            favicon_filepath = parsed_uri.path
-            favicon_filename = os.path.split(favicon_filepath)
+            if self.icon_link is None:
+                self.parsed_uri = urllib.parse.urlparse(self.appurl)
 
-        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+                self.iconrequest = requests.get(
+                    self.parsed_uri.scheme + "://" +
+                    self.parsed_uri.netloc + "/favicon.ico"
+                )
 
-        sanitized_filename = "".join([x if valid_chars else "" for x in favicon_filename])
+                try:
+                    if self.iconrequest.status_code == 200:
+                        self.icon_link = (
+                            self.parsed_uri.scheme + "://" +
+                            self.parsed_uri.netloc + "/favicon.ico"
+                        )
+                except ConnectionError:
+                    pass
 
-        sanitized_filename = os.path.join(target_dir, file_prefix + sanitized_filename)
+            if self.icon_link is None:
+                self.iconrequest = requests.get(
+                    'https://www.google.com/s2/favicons?domain=' + self.appurl
+                )
+                try:
+                    if self.iconrequest.status_code == 200:
+                        self.icon_link = (
+                            self.parsed_uri.scheme + "://" +
+                            self.parsed_uri.netloc + "/favicon.ico"
+                        )
+                except ConnectionError:
+                    pass
 
-        with open(sanitized_filename, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=1024):
-                    if chunk:  # filter out keep-alive new chunks
-                        f.write(chunk)
-                        f.flush()
+            self.icondl = urllib.request.urlopen(self.icon_link)
+            with open(_ICE_DIR + "/favicon.ico", "wb") as f:
+                f.write(self.icondl.read())
 
-        return sanitized_filename
+            GLib.idle_add(self.apply_icon, True)
+        elif self.page is None:
+            GLib.idle_add(apply_icon, False)
+        else:
+            GLib.idle_add(apply_icon, None)
 
-
-    def parse_markup_for_favicon(self, markup, parsed_site_uri):
-
-        soup = BeautifulSoup(markup, "lxml")
-
-        icon_link = soup.find('link', rel='icon')
-
-        if icon_link and icon_link.has_attr('href'):
-
-            favicon_url = icon_link['href']
-
-            if favicon_url.startswith('//'):
-                parsed_uri = urlparse(url)
-                favicon_url = "{0}:{1}".format(parsed_uri.scheme, favicon_url)
-
-            elif favicon_url.startswith('/'):
-                favicon_url = "{0}://{1}{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc, favicon_url)
-
-            elif not favicon_url.startswith('http'):
-                path, filename = os.path.split(parsed_site_uri.path)
-                favicon_url = "{0}://{1}/{2}".format(parsed_site_uri.scheme, parsed_site_uri.netloc,
-                                                    os.path.join(path, favicon_url))
-
-            return favicon_url
-
-        return None
-
-
-    def get_favicon_url(self, url):
-        parsed_site_uri = urlparse(url)
-
-        try:
-            response = requests.get(url, headers=headers)
-        except:
-            raise Exception(_("Unable to find URL. Is it valid? {0}").format(url))
-
-        if response.status_code == requests.codes.ok:
-            favicon_url = self.parse_markup_for_favicon(response.content, parsed_site_uri)
-
-            if favicon_url:
-                return favicon_url
-
-        favicon_url = '{uri.scheme}://{uri.netloc}/favicon.ico'.format(uri=parsed_site_uri)
-
-        response = requests.get(favicon_url, headers=headers)
-        if response.status_code == requests.codes.ok:
-            return favicon_url
-
-        return None
-
+    def apply_icon(self, done):
+        if done is True:
+            self.new_icon = Pixbuf.new_from_file_at_size(
+                _ICE_DIR + "/favicon.ico", 32, 32
+            )
+            self.icon.set_from_pixbuf(self.new_icon)
+        elif done is False:
+            ErrorDialog(
+                "Address Error",
+                "Error: HTTP or URL Error",
+                "An error with the web address has been detected.\n"
+                "This is possibly the site being down or"
+                "unavailable right now.\n"
+                "Please check the URL",
+            )
+            self.iconpath = _ICE_ICON
+            self.new_icon = Pixbuf.new_from_file_at_size(_ICE_ICON, 32, 32)
+            self.icon.set_from_pixbuf(self.new_icon)
+        else:
+            ErrorDialog(
+                "Error Applying SSB",
+                "Error: Unknown Error",
+                "An unknown error has occurred. :(",
+            )
+            self.iconpath = _ICE_ICON
+            self.new_icon = Pixbuf.new_from_file_at_size(_ICE_ICON, 32, 32)
+            self.icon.set_from_pixbuf(self.new_icon)
+        self.download_icon.set_label(_("Use site favicon"))
+        return False
 
     def applicate(self):
-        title = name.get_text()
-        address = self.normalize(url.get_text())
+        self.title = self.name.get_text()
+        self.address = self.normalize(self.url.get_text())
 
-        semiformatted = ""
-        array = filter(str.isalpha, title)
-        for obj in array:
-            semiformatted = semiformatted + obj
-        formatted = semiformatted.lower()
+        self.semiformatted = ""
+        self.array = filter(str.isalpha, self.title)
+        for obj in self.array:
+            self.semiformatted = self.semiformatted + obj
+        self.formatted = self.semiformatted.lower()
 
-        loc = where.get_active_text()
-        if loc == _("Accessories"):
-            location = "Utility;"
-        elif loc == _("Games"):
-            location = "Game;"
-        elif loc == _("Graphics"):
-            location = "Graphics;"
-        elif loc == _("Internet"):
-            location = "Network;"
-        elif loc == _("Office"):
-            location = "Office;"
-        elif loc == _("Programming"):
-            location = "Development;"
-        elif loc == _("Multimedia"):
-            location = "AudioVideo;"
-        elif loc == _("System"):
-            location = "System;"
+        self.loc = self.where.get_active_text()
+        if self.loc == _("Accessories"):
+            self.location = "Utility;"
+        elif self.loc == _("Games"):
+            self.location = "Game;"
+        elif self.loc == _("Graphics"):
+            self.location = "Graphics;"
+        elif self.loc == _("Internet"):
+            self.location = "Network;"
+        elif self.loc == _("Office"):
+            self.location = "Office;"
+        elif self.loc == _("Programming"):
+            self.location = "Development;"
+        elif self.loc == _("Multimedia"):
+            self.location = "AudioVideo;"
+        elif self.loc == _("System"):
+            self.location = "System;"
 
-        global iconpath
-        iconname = iconpath.replace("/", " ").split()[-1]
-        iconext = iconname.replace(".", " ").split()[-1]
+        self.iconname = self.iconpath.replace("/", " ").split()[-1]
+        self.iconext = self.iconname.replace(".", " ").split()[-1]
 
-        if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, formatted)):
-            DuplicateError(title, formatted, address, iconext, location)
-        elif len(title) == 0:
-            EmptyNameError()
+        if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, self.formatted)):
+            DuplicateError(self.title, self.formatted, self.address,
+                           self.iconext, self.location)
+        elif len(self.title) == 0:
+            ErrorDialog(
+                "Empty Name Error",
+                "Error: No Application Name Entered.",
+                "Please enter an application name to continue.",
+            )
         else:
-            self.writefile(title, formatted, address, iconext, location)
-
+            self.writefile(self.title, self.formatted, self.address,
+                           self.iconext, self.location)
 
     def writefile(self, title, formatted, address, iconext, location):
-        global iconpath
-        os.system("cp --force {0} {1}/{2}.{3}".format(iconpath, _ICE_DIR, formatted, iconext))
-        appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR, formatted))
-        os.system("touch {0}".format(appfile))
-        if chrome.get_active() == True:
-            browser = "google-chrome"
-        elif chromium.get_active() == True:
-            browser = "chromium-browser"
-        elif brave.get_active() == True:
-            browser = "brave"
-        elif vivaldi.get_active() == True:
-            browser = "vivaldi"
-        elif firefox.get_active() == True:
-            browser = "firefox"
+        shutil.copyfile(self.iconpath,
+                        "{0}/{1}.{2}".format(_ICE_DIR, formatted, iconext))
+        self.appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR,
+                                                                   formatted))
+        if self.chrome.get_active() is True:
+            self.browser = "google-chrome"
+        elif self.chromium.get_active() is True:
+            self.browser = "chromium-browser"
+        elif self.brave.get_active() is True:
+            self.browser = "brave"
+        elif self.vivaldi.get_active() is True:
+            self.browser = "vivaldi"
+        elif self.firefox.get_active() is True:
+            self.browser = "firefox"
         else:
             print(_("ERROR: An unknown browser selection error has occurred."))
             sys.exit(1)
 
-        with open(appfile, 'w') as appfile1:
-            global isolate_profile
-            appfile1.truncate()
+        with open(self.appfile, 'w') as self.appfile1:
+            self.appfile1.truncate()
 
-            appfile1.write("[Desktop Entry]\n")
-            appfile1.write("Version=1.0\n")
-            appfile1.write("Name={0}\n".format(title))
-            appfile1.write("Comment={0} (Ice SSB)\n".format(title))
+            self.appfile1.write("[Desktop Entry]\n")
+            self.appfile1.write("Version=1.0\n")
+            self.appfile1.write("Name={0}\n".format(title))
+            self.appfile1.write("Comment={0} (Ice SSB)\n".format(title))
 
-            if (browser == "firefox"):
-                firefox_profile_path  = "{0}/{1}".format(_FF_PROFILES_DIR, formatted)
-                appfile1.write("Exec={0} --class ICE-SSB-{2} --profile {3} --no-remote {1}\n".format(browser, address, formatted, firefox_profile_path))
-                appfile1.write("IceFirefox={0}\n".format(formatted))
-                self.init_firefox_profile(firefox_profile_path)
+            if self.browser == "firefox":
+                self.firefox_profile_path = "{0}/{1}".format(_FF_PROFILES_DIR,
+                                                             formatted)
+                self.appfile1.write("Exec=" + self.browser +
+                                    " --class ICE-SSB-" + formatted +
+                                    " --profile" + self.firefox_profile_path +
+                                    " --no-remote address\n")
+
+                self.appfile1.write("IceFirefox={0}\n".format(formatted))
+                self.init_firefox_profile(self.firefox_profile_path)
             else:
-                if isolate_profile == True:
-                    profile_path = "{0}/{1}".format(_PROFILES_DIR, formatted)
-                    appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2} --user-data-dir={3}\n".format(browser, address, formatted, profile_path))
-                    appfile1.write("X-ICE-SSB-Profile={0}\n".format(formatted))
+                if self.isolate_profile is True:
+                    self.profile_path = "{0}/{1}".format(_PROFILES_DIR,
+                                                         formatted)
+                    self.appfile1.write("Exec=" + self.browser +
+                                        " --app=" + address +
+                                        " --class=ICE-SSB-" + formatted +
+                                        " --user-data-dir=" +
+                                        self.profile_path + "\n")
+
+                    self.appfile1.write("X-ICE-SSB-Profile=" +
+                                        formatted + "\n")
                 else:
-                    appfile1.write("Exec={0} --app={1} --class=ICE-SSB-{2}\n".format(browser, address, formatted))
+                    self.appfile1.write("Exec=" + browser +
+                                        " --app=" + address +
+                                        " --class=ICE-SSB-" + formatted +
+                                        "\n")
 
-            appfile1.write("Terminal=false\n")
-            appfile1.write("X-MultipleArgs=false\n")
-            appfile1.write("Type=Application\n")
-            appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR, formatted, iconext))
-            appfile1.write("Categories=GTK;{0}\n".format(location))
-            appfile1.write("MimeType=text/html;text/xml;application/xhtml_xml;\n")
-            appfile1.write("StartupWMClass=ICE-SSB-{0}\n".format(formatted))
-            appfile1.write("StartupNotify=true\n")
+            self.appfile1.write("Terminal=false\n")
+            self.appfile1.write("X-MultipleArgs=false\n")
+            self.appfile1.write("Type=Application\n")
+            self.appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR,
+                                                            formatted,
+                                                            iconext))
 
-        name.set_text("")
-        url.set_text("")
-        iconpath = _ICE_ICON
-        new_icon = Pixbuf.new_from_file_at_size(iconpath, 32, 32)
-        icon.set_from_pixbuf(new_icon)
-        details = self.get_details(appfile)
-        if details is not None:
-            liststore.prepend([ details['pixbuf'], details['nameline'] ])
+            self.appfile1.write("Categories=GTK;{0}\n".format(location))
+            self.appfile1.write("MimeType=text/html;text/xml;"
+                                "application/xhtml_xml;\n")
+
+            self.appfile1.write(
+                "StartupWMClass=ICE-SSB-{0}\n".format(formatted)
+            )
+            self.appfile1.write("StartupNotify=true\n")
+
+        self.name.set_text("")
+        self.url.set_text("")
+        self.iconpath = _ICE_ICON
+        self.new_icon = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
+        self.icon.set_from_pixbuf(self.new_icon)
+        self.details = self.get_details(self.appfile)
+        if self.details is not None:
+            self.liststore.prepend([self.details['pixbuf'],
+                                    self.details['nameline']])
 
     def init_firefox_profile(self, path):
-        chromepath = "{0}/chrome".format(path)
-        settingsfile = "{0}/user.js".format(path)
-        cssfile = "{0}/userChrome.css".format(chromepath)
+        self.chromepath = "{0}/chrome".format(path)
+        self.settingsfile = "{0}/user.js".format(path)
+        self.cssfile = "{0}/userChrome.css".format(self.chromepath)
 
-        os.system('mkdir -p ' + chromepath)
-        os.system('cp -n /usr/lib/peppermint/ice/search.json.mozlz4 ' + path + '/search.json.mozlz4')
-        os.system('cp -n /usr/lib/peppermint/ice/places.sqlite ' + path + '/places.sqlite')
-        os.system("touch {0}".format(cssfile))
-        with open(cssfile, 'w') as cfile:
-            cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }")
+        os.makedirs(self.chromepath)
 
-        os.system("touch {0}".format(settingsfile))
-        with open(settingsfile, 'w') as sfile:
-            sfile.write('user_pref("browser.cache.disk.enable", false);')
+        try:
+            shutil.copyfile('/usr/lib/peppermint/ice/search.json.mozlz4',
+                            path + '/search.json.mozlz4')
+        except FileNotFoundError:
+            print("Error: search.json.mozlz4 not found")
+        try:
+            shutil.copyfile('/usr/lib/peppermint/ice/places.sqlite',
+                            path + '/places.sqlite')
+        except FileNotFoundError:
+            print("Error: places.sqlite not found")
+        # os.system("touch {0}".format(self.cssfile))
+        with open(self.cssfile, 'w') as cfile:
+            cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, "
+                        "#TabsToolbar { visibility: collapse !important; }")
+
+        # os.system("touch {0}".format(self.settingsfile))
+        with open(self.settingsfile, 'w') as sfile:
+            sfile.write('user_pref("browser.cache.disk.enable",'
+                        ' false);')
             sfile.write('user_pref("browser.cache.disk.capacity", 0);')
-            sfile.write('user_pref("browser.cache.disk.filesystem_reported", 1);')
-            sfile.write('user_pref("browser.cache.disk.smart_size.enabled", false);')
-            sfile.write('user_pref("browser.cache.disk.smart_size.first_run", false);')
-            sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max", false);')
+            sfile.write('user_pref("browser.cache.disk.filesystem_reported"'
+                        ', 1);')
+            sfile.write('user_pref("browser.cache.disk.smart_size.enabled",'
+                        ' false);')
+            sfile.write('user_pref("browser.cache.disk.smart_size.first_run",'
+                        ' false);')
+            sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max"'
+                        ', false);')
+
             sfile.write('user_pref("browser.ctrlTab.previews", true);')
             sfile.write('user_pref("browser.tabs.warnOnClose", false);')
             sfile.write('user_pref("plugin.state.flash", 2);')
-            sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);')
-
-        # rhein: do we really need this? 
-        #os.system('rm -rf ' + chromepath + '/cache2')
-
+            sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
+                        'stylesheets", true);')
 
     def delete(self, button):
-        a = iconview.get_selected_items()
-        b = liststore.get_iter(a[0])
-        c = liststore.get_value(b, 1)
-        liststore.remove(b)
+        self.a = self.iconview.get_selected_items()
+        self.b = self.liststore.get_iter(self.a[0])
+        self.c = self.liststore.get_value(self.b, 1)
+        self.liststore.remove(self.b)
 
-        semiformatted = ""
-        array = filter(str.isalpha, c)
+        self.semiformatted = ""
+        self.array = filter(str.isalpha, self.c)
 
-        for obj in array:
-            semiformatted = semiformatted + obj
+        for obj in self.array:
+            self.semiformatted = self.semiformatted + obj
 
-        formatted = semiformatted.lower()
-        appfile = "{0}/{1}.desktop".format(_APPS_DIR, formatted)
+        self.formatted = self.semiformatted.lower()
+        self.appfile = "{0}/{1}.desktop".format(_APPS_DIR, self.formatted)
 
-        appfileopen = open(appfile, 'r')
-        appfilelines = appfileopen.readlines()
-        appfileopen.close()
+        self.appfileopen = open(self.appfile, 'r')
+        self.appfilelines = self.appfileopen.readlines()
+        self.appfileopen.close()
 
-        for line in appfilelines:
+        for line in self.appfilelines:
             if "IceFirefox=" in line:
-                profile = str.replace(line, 'IceFirefox=', '')
-                os.system("rm -rf {0}/{1}".format(_FF_PROFILES_DIR, profile))
+                self.profile = str.replace(line, 'IceFirefox=', '')
+                self.profile = str.replace(line, '\\n', '')
+                os.rmdir("{0}/{1}".format(_FF_PROFILES_DIR, self.profile))
 
             if "X-ICE-SSB-Profile=" in line:
-                profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
-                os.system("rm -rf {0}/{1}".format(_PROFILES_DIR, profile))
+                self.profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
+                self.profile = str.replace(line, '\\n', '')
+                os.rmdir("{0}/{1}".format(_PROFILES_DIR, self.profile))
 
-        os.system("rm {0}".format(appfile))
-
+        os.remove(self.appfile)
 
     def clean_orphaned_profiles(self, known_apps):
-        known_profiles = []
+        self.known_profiles = []
         for app in known_apps:
-            a = "{0}/{1}".format(_FF_PROFILES_DIR, app['profile'])
+            self.a = "{0}/{1}".format(_FF_PROFILES_DIR, app['profile'])
             if app['profile'] != "":
                 # make sure firefox apps have profiles available
-                if app['is_firefox'] is True and not os.path.isdir(a):
-                    self.init_firefox_profile(a)
-                known_profiles.append(app['profile'])
+                if app['is_firefox'] is True and not os.path.isdir(self.a):
+                    self.init_firefox_profile(self.a)
+                self.known_profiles.append(app['profile'])
 
-        for p_type in ['profiles','firefox']:
+        for p_type in ['profiles', 'firefox']:
             for fl in os.listdir("{0}/{1}/".format(_ICE_DIR, p_type)):
-                a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
-                if not os.path.isdir(a) or fl not in known_profiles:
-                    os.system("rm -rf {0}".format(a))
+                self.a = "{0}/{1}/{2}".format(_ICE_DIR, p_type, fl)
+                if not os.path.isdir(self.a) or fl not in self.known_profiles:
+                    shutil.rmtree(self.a)
 
 
 if __name__ == '__main__':
