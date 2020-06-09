@@ -661,9 +661,9 @@ class Ice(Gtk.Window):
 
             GLib.idle_add(self.apply_icon, True)
         elif self.page is None:
-            GLib.idle_add(apply_icon, False)
+            GLib.idle_add(self.apply_icon, False)
         else:
-            GLib.idle_add(apply_icon, None)
+            GLib.idle_add(self.apply_icon, None)
 
     def apply_icon(self, done):
         if done is True:
