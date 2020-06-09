@@ -67,17 +67,13 @@ class IconSel(Gtk.FileChooserDialog):
     def __init__(self):
 
         self.filew = Gtk.FileChooserDialog(
-            _("Please choose an icon."),
-            None,
-            Gtk.FileChooserAction.OPEN,
-            (
-                Gtk.STOCK_CANCEL,
-                Gtk.ResponseType.CANCEL,
-                Gtk.STOCK_OPEN,
-                Gtk.ResponseType.OK
-            )
+            title = _("Please choose an icon."),
+            parent = None,
+            action = Gtk.FileChooserAction.OPEN,
         )
         self.filew.set_filename(_ICE_ICON)
+        self.filew.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
 
         self.filter1 = Gtk.FileFilter()
         self.filter1.set_name("Icons")
@@ -99,9 +95,9 @@ class IconSel(Gtk.FileChooserDialog):
         if self.response == Gtk.ResponseType.OK:
             self.iconpath = self.filew.get_filename()
             self.new_icon = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
-            self.icon.set_from_pixbuf(self.new_icon)
+            window.icon.set_from_pixbuf(self.new_icon)
             self.filew.destroy()
-        elif response == Gtk.ResponseType.CANCEL:
+        elif self.response == Gtk.ResponseType.CANCEL:
             self.filew.destroy()
 
     def update_image(self, dialog):
@@ -113,7 +109,7 @@ class IconSel(Gtk.FileChooserDialog):
         except GLib.Error:
             self.valid_preview = False
 
-        self.dialog.set_preview_widget_active(self.valid_preview)
+        dialog.set_preview_widget_active(self.valid_preview)
 
 
 class ErrorDialog(Gtk.Window):
