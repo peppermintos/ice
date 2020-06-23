@@ -73,7 +73,7 @@ class IconSel(Gtk.FileChooserDialog):
         )
         self.filew.set_filename(_ICE_ICON)
         self.filew.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                         Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+                               Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
 
         self.filter1 = Gtk.FileFilter()
         self.filter1.set_name("Icons")
@@ -139,12 +139,12 @@ class ErrorDialog(Gtk.Window):
         self.box.pack_start(self.void, True, True, 0)
         self.box.pack_start(self.close_button, False, False, 0)
 
-        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_vbox.pack_start(self.main_lab, False, False, 5)
-        self.main_vbox.pack_start(self.text_lab, True, True, 10)
-        self.main_vbox.pack_start(self.box, False, False, 0)
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_box.pack_start(self.main_lab, False, False, 5)
+        self.main_box.pack_start(self.text_lab, True, True, 10)
+        self.main_box.pack_start(self.box, False, False, 0)
 
-        self.add(self.main_vbox)
+        self.add(self.main_box)
         self.show_all()
 
 
@@ -201,14 +201,12 @@ class DuplicateError(Gtk.Window):
         self.box.pack_start(okay, False, False, 10)
         self.box.pack_start(cancel, False, False, 0)
 
-        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_vbox.pack_start(main_lab, False, False, 10)
-        self.main_vbox.pack_start(text_lab, True, True, 0)
-        self.main_vbox.pack_start(box, False, False, 10)
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_box.pack_start(main_lab, False, False, 10)
+        self.main_box.pack_start(text_lab, True, True, 0)
+        self.main_box.pack_start(box, False, False, 10)
 
-        # self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        # self.main_hbox.pack_start(self.main_vbox, True, True, 10)
-        self.add(main_vbox)
+        self.add(main_box)
         self.show_all()
 
 
@@ -249,14 +247,12 @@ class AddressError(Gtk.Window):
         self.box.pack_start(okay, False, False, 10)
         self.box.pack_start(cancel, False, False, 0)
 
-        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_vbox.pack_start(main_lab, False, False, 10)
-        self.main_vbox.pack_start(text_lab, False, False, 0)
-        self.main_vbox.pack_start(box, False, False, 10)
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.main_box.pack_start(main_lab, False, False, 10)
+        self.main_box.pack_start(text_lab, False, False, 0)
+        self.main_box.pack_start(box, False, False, 10)
 
-        self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.main_hbox.pack_start(main_vbox, True, True, 10)
-        self.add(main_hbox)
+        self.add(main_box)
         self.show_all()
 
 
@@ -265,12 +261,27 @@ class Ice(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
-        self.set_size_request(460, 350)
+        #self.set_size_request(460, 350)
         self.set_icon_from_file(_ICE_ICON)
+        self.set_border_width(5)
+
+        self.header = Gtk.HeaderBar()
+        self.header.set_show_close_button(True)
+        self.set_titlebar(self.header)
+
+        self.main_stack = Gtk.Stack()
+        self.stack_switcher = Gtk.StackSwitcher()
+        self.stack_switcher.set_stack(self.main_stack)
+        self.header.set_custom_title(self.stack_switcher)
 
         ######################
         #   'Create' page.   #
         ######################
+
+        self.create_grid = Gtk.Grid()
+        self.create_grid.set_column_homogeneous(True)
+        self.create_grid.set_row_spacing(5)
+        self.create_grid.set_column_spacing(5)
 
         self.welcome = Gtk.Label()
         self.welcome.set_markup(_(
@@ -293,11 +304,11 @@ class Ice(Gtk.Window):
             self.where.append_text(entry)
         self.where.set_active(3)
 
-        self.where_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.where_void = Gtk.Label()
-        self.where_box.pack_start(self.where_lab, False, False, 0)
-        self.where_box.pack_start(self.where_void, False, False, 10)
-        self.where_box.pack_start(self.where, True, True, 0)
+        # self.where_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        # self.where_void = Gtk.Label()
+        # self.where_box.pack_start(self.where_lab, False, False, 0)
+        # self.where_box.pack_start(self.where_void, False, False, 10)
+        # self.where_box.pack_start(self.where, True, True, 0)
 
         self.iconpath = _ICE_ICON
         self.icon_pixbuf = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
@@ -305,26 +316,24 @@ class Ice(Gtk.Window):
         self.icon.set_from_pixbuf(self.icon_pixbuf)
 
         self.icon_void = Gtk.Label()
-        self.icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.icon_box.pack_start(self.icon, False, False, 10)
-        self.icon_box.pack_start(self.icon_void, False, False, 10)
+        # self.icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        # self.icon_box.pack_start(self.icon, False, False, 10)
+        # self.icon_box.pack_start(self.icon_void, False, False, 10)
 
         self.choose_icon = Gtk.Button(label=_("Select an icon"))
         self.choose_icon.connect("clicked", self.icon_select)
         self.download_icon = Gtk.Button(label=_("Use site favicon"))
         self.download_icon.connect("clicked", self.thread_icon_download)
 
-        self.icon_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.icon_vbox.pack_start(self.choose_icon, True, True, 5)
-        self.icon_vbox.pack_start(self.download_icon, True, True, 5)
-        self.icon_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.icon_hbox.pack_start(self.icon_box, False, False, 10)
-        self.icon_hbox.pack_start(self.icon_vbox, True, True, 0)
+        # self.icon_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # self.icon_vbox.pack_start(self.choose_icon, True, True, 5)
+        # self.icon_vbox.pack_start(self.download_icon, True, True, 5)
+        # self.icon_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        # self.icon_hbox.pack_start(self.icon_box, False, False, 10)
+        # self.icon_hbox.pack_start(self.icon_vbox, True, True, 0)
 
-        self.firefox = Gtk.RadioButton.new_with_label_from_widget(
-            None,
-            " Firefox"
-        )
+        self.firefox = Gtk.RadioButton.new_with_label_from_widget(None, 
+                                                                  "Firefox")
 
         if not os.path.exists(_FIREFOX_BIN):
             self.firefox.set_sensitive(False)
@@ -389,40 +398,58 @@ class Ice(Gtk.Window):
             self.chromium.set_active(True)
 
         self.isolate_profile = False
-        self.isolate_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.isolate_button = Gtk.CheckButton(
-            label=_(" Create the SSB with an isolated browser profile"
-                    "(Note: Firefox SSB's are always isolated)")
-            )
+        # self.isolate_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.isolate_button = Gtk.CheckButton()
+        self.isolate_lab = Gtk.Label(label=_(" Isolate the SSB"))
+        self.isolate_button.add(self.isolate_lab)
+        # self.isolate_button.set_line_wrap(True)
         self.isolate_button.connect("toggled", self.isolate_clicked)
-        self.isolate_box.add(self.isolate_button)
+        # self.isolate_box.add(self.isolate_button)
 
         self.apply_button = Gtk.Button(label=_("Apply"))
         self.apply_button.connect("clicked", self.thread_apply_clicked)
         self.close_button = Gtk.Button(label=_("Close"))
         self.close_button.connect("clicked", self.destroy)
         self.button_void = Gtk.Label()
-        self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.button_box.pack_start(self.brave, False, False, 10)
-        self.button_box.pack_start(self.chrome, False, False, 10)
-        self.button_box.pack_start(self.chromium, False, False, 0)
-        self.button_box.pack_start(self.vivaldi, False, False, 10)
-        self.button_box.pack_start(self.firefox, False, False, 0)
-        self.button_box.pack_start(self.button_void, True, True, 0)
-        self.button_box.pack_start(self.close_button, False, False, 20)
-        self.button_box.pack_start(self.apply_button, False, False, 0)
+        # self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        # self.button_box.pack_start(self.brave, False, False, 10)
+        # self.button_box.pack_start(self.chrome, False, False, 10)
+        # self.button_box.pack_start(self.chromium, False, False, 0)
+        # self.button_box.pack_start(self.vivaldi, False, False, 10)
+        # self.button_box.pack_start(self.firefox, False, False, 0)
+        # self.button_box.pack_start(self.button_void, True, True, 0)
+        # self.button_box.pack_start(self.close_button, False, False, 20)
+        # self.button_box.pack_start(self.apply_button, False, False, 0)
 
-        self.create_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.create_vbox.pack_start(self.welcome, False, False, 15)
-        self.create_vbox.pack_start(self.name, False, False, 0)
-        self.create_vbox.pack_start(self.url, False, False, 10)
-        self.create_vbox.pack_start(self.where_box, False, False, 10)
-        self.create_vbox.pack_start(self.icon_hbox, False, False, 10)
-        self.create_vbox.pack_start(self.isolate_box, False, False, 10)
-        self.create_vbox.pack_start(self.button_box, False, False, 0)
+        # self.create_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # self.create_vbox.pack_start(self.welcome, False, False, 15)
+        # self.create_vbox.pack_start(self.name, False, False, 0)
+        # self.create_vbox.pack_start(self.url, False, False, 10)
+        # self.create_vbox.pack_start(self.where_box, False, False, 10)
+        # self.create_vbox.pack_start(self.icon_hbox, False, False, 10)
+        # self.create_vbox.pack_start(self.isolate_box, False, False, 10)
+        # self.create_vbox.pack_start(self.button_box, False, False, 0)
+        self.browser_box = Gtk.FlowBox()
+        self.browser_box.set_row_spacing(0)
+        self.browser_box.set_column_spacing(0)
+        self.browser_box.add(self.brave)
+        self.browser_box.add(self.chrome)
+        self.browser_box.add(self.chromium)
+        self.browser_box.add(self.firefox)
+        self.browser_box.add(self.vivaldi)
+        # self.browser_grid.attach(self.epiphany, 3, 2, 1, 1)
 
-        self.create_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.create_hbox.pack_start(self.create_vbox, True, True, 20)
+        self.create_grid.attach(self.name, 1, 2, 2, 1)
+        self.create_grid.attach(self.url, 1, 3, 2, 1)
+        self.create_grid.attach(self.where_lab, 1, 4, 1, 1)
+        self.create_grid.attach(self.where, 2, 4, 1, 1)
+        self.create_grid.attach(self.icon, 1, 5, 1, 2)
+        self.create_grid.attach(self.choose_icon, 2, 5, 1, 1)
+        self.create_grid.attach(self.download_icon, 2, 6, 1, 1)
+        self.create_grid.attach(self.browser_box, 1, 8, 2, 3)
+        self.create_grid.attach(self.isolate_button, 1, 11, 1, 1)
+        self.create_grid.attach(self.apply_button, 2, 11, 1, 1)
+
         self.create_lab = Gtk.Label(label=_("Create"))
 
         ######################
@@ -448,41 +475,32 @@ class Ice(Gtk.Window):
         self.iconview.set_pixbuf_column(0)
         self.iconview.set_text_column(1)
         self.iconview.set_selection_mode(1)
+        self.iconview.connect("item-activated", delete)
 
-        self.scroll = Gtk.ScrolledWindow()
-        self.scroll.add(self.iconview)
+        self.remove_scroll = Gtk.ScrolledWindow()
+        self.remove_scroll.add(self.iconview)
 
-        self.remove = Gtk.Button(label=_("Remove"))
-        self.remove.connect("clicked", self.delete)
-        self.close = Gtk.Button(label=_("Close"))
-        self.close.connect("clicked", self.destroy)
-        self.void = Gtk.Label()
-        self.buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.buttons.pack_start(self.void, True, True, 0)
-        self.buttons.pack_start(self.close, False, False, 20)
-        self.buttons.pack_start(self.remove, False, False, 0)
+        # self.remove = Gtk.Button(label=_("Remove"))
+        # self.remove.connect("clicked", self.delete)
+        # self.void = Gtk.Label()
+        # self.buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        # self.buttons.pack_start(self.void, True, True, 0)
+        # self.buttons.pack_start(self.remove, False, False, 0)
 
-        self.remove_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.remove_vbox.pack_start(self.scroll, True, True, 10)
-        self.remove_vbox.pack_start(self.buttons, False, False, 0)
+        # self.remove_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        # self.remove_box.pack_start(self.scroll, True, True, 0)
+        # self.remove_box.pack_start(self.buttons, False, False, 0)
 
-        self.remove_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.remove_hbox.pack_start(self.remove_vbox, True, True, 20)
-        self.remove_lab = Gtk.Label(label=_("Remove"))
+        # self.remove_lab = Gtk.Label(label=_("Remove"))
 
         ##########################
         #   Main window stuff.   #
         ##########################
 
-        self.notebook = Gtk.Notebook()
-        self.notebook.append_page(self.create_hbox, self.create_lab)
-        self.notebook.append_page(self.remove_hbox, self.remove_lab)
+        self.main_stack.add_titled(self.create_grid, "create", "Create")
+        self.main_stack.add_titled(self.remove_scroll, "remove", "Remove")
 
-        self.main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_vbox.pack_start(self.notebook, True, True, 10)
-        self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.main_hbox.pack_start(self.main_vbox, True, True, 10)
-        self.add(self.main_hbox)
+        self.add(self.main_stack)
         self.show_all()
 
         if not os.path.exists(_CHROME_BIN) and not \
@@ -531,7 +549,7 @@ class Ice(Gtk.Window):
 
     def isolate_clicked(self, button):
         self.isolate_profile = False
-        if self.button.get_active() is True:
+        if button.get_active() is True:
             self.isolate_profile = True
 
     def get_details(self, app):
