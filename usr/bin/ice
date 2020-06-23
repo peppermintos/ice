@@ -475,7 +475,7 @@ class Ice(Gtk.Window):
         self.iconview.set_pixbuf_column(0)
         self.iconview.set_text_column(1)
         self.iconview.set_selection_mode(1)
-        self.iconview.connect("item-activated", delete)
+        self.iconview.connect("item-activated", self.delete)
 
         self.remove_scroll = Gtk.ScrolledWindow()
         self.remove_scroll.add(self.iconview)
