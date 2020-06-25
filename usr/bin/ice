@@ -67,9 +67,9 @@ class IconSel(Gtk.FileChooserDialog):
     def __init__(self):
 
         self.filew = Gtk.FileChooserDialog(
-            title = _("Please choose an icon."),
-            parent = None,
-            action = Gtk.FileChooserAction.OPEN,
+            title=_("Please choose an icon."),
+            parent=None,
+            action=Gtk.FileChooserAction.OPEN,
         )
         self.filew.set_filename(_ICE_ICON)
         self.filew.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -197,9 +197,9 @@ class DuplicateError(Gtk.Window):
         self.cancel.connect("clicked", self.destroy)
         self.void = Gtk.Label()
         self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.box.pack_start(void, True, True, 5)
-        self.box.pack_start(okay, False, False, 10)
-        self.box.pack_start(cancel, False, False, 0)
+        self.box.pack_start(self.void, True, True, 5)
+        self.box.pack_start(self.okay, False, False, 10)
+        self.box.pack_start(self.cancel, False, False, 0)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.main_box.pack_start(main_lab, False, False, 10)
@@ -261,7 +261,7 @@ class Ice(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
-        #self.set_size_request(460, 350)
+        # self.set_size_request(460, 350)
         self.set_icon_from_file(_ICE_ICON)
         self.set_border_width(5)
 
@@ -341,7 +341,7 @@ class Ice(Gtk.Window):
         self.isolate_button.connect("toggled", self.isolate_clicked)
         # self.isolate_box.add(self.isolate_button)
 
-        self.firefox = Gtk.RadioButton.new_with_label_from_widget(None, 
+        self.firefox = Gtk.RadioButton.new_with_label_from_widget(None,
                                                                   "Firefox")
 
         if not os.path.exists(_FIREFOX_BIN):
@@ -353,7 +353,7 @@ class Ice(Gtk.Window):
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_FIREFOX_BIN):
             self.firefox.set_active(True)
-            
+
         self.firefox.connect("clicked", self.browser_button)
 
         self.brave = Gtk.RadioButton.new_from_widget(self.firefox)
@@ -361,7 +361,7 @@ class Ice(Gtk.Window):
 
         if not os.path.exists(_BRAVE_BIN):
             self.brave.set_sensitive(False)
- 
+
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_CHROME_BIN) and not \
@@ -416,7 +416,7 @@ class Ice(Gtk.Window):
 
         self.chromium.connect("clicked", self.browser_button)
 
-        if self.firefox.get_active() == True:
+        if self.firefox.get_active() is True:
             self.isolate_button.set_label(_("Firefox is always Isolated"))
             self.isolate_button.set_sensitive(False)
 
@@ -536,14 +536,14 @@ class Ice(Gtk.Window):
     def icon_select(self, button):
         IconSel()
 
-    def thread_apply_clicked():
+    def thread_apply_clicked(self, button):
         button.set_label(_("Applying"))
         applythread = threading.Thread(target=self.apply_clicked)
         applythread.daemon = True
         applythread.start()
         button.set_label(_("Apply"))
 
-    def apply_clicked(self, button):
+    def apply_clicked(self):
         if self.errortest(self.normalize(self.url.get_text())) is not None:
             self.applicate()
         elif self.errortest(self.normalize(self.url.get_text())) is None:
@@ -644,7 +644,6 @@ class Ice(Gtk.Window):
         self.appurl = self.normalize(self.url.get_text())
         self.iconformats = ["apple-touch-icon", "shortcut icon",
                             "icon", "msapplication-TileImage"]
-
         self.icon_link = None
         self.page = self.errortest(self.appurl)
 
@@ -687,11 +686,15 @@ class Ice(Gtk.Window):
                 except ConnectionError:
                     pass
 
-            self.icondl = urllib.request.urlopen(self.icon_link)
-            with open(_ICE_DIR + "/favicon.ico", "wb") as f:
-                f.write(self.icondl.read())
+            try: # A temp fix for ValueError
+                self.icondl = urllib.request.urlopen(self.icon_link)
+                with open(_ICE_DIR + "/favicon.ico", "wb") as f:
+                    f.write(self.icondl.read())
+            except ValueError:
+                GLib.idle_add(self.apply_icon, None)
+            else:
+                GLib.idle_add(self.apply_icon, True)
 
-            GLib.idle_add(self.apply_icon, True)
         elif self.page is None:
             GLib.idle_add(self.apply_icon, False)
         else:
@@ -705,12 +708,12 @@ class Ice(Gtk.Window):
             self.icon.set_from_pixbuf(self.new_icon)
         elif done is False:
             ErrorDialog(
-                "Address Error",
-                "Error: HTTP or URL Error",
-                "An error with the web address has been detected.\n"
-                "This is possibly the site being down or"
-                "unavailable right now.\n"
-                "Please check the URL",
+                _("Address Error"),
+                _("Error: HTTP or URL Error"),
+                _("An error with the web address has been detected.\n"
+                  "This is possibly the site being down or"
+                  " unavailable right now.\n"
+                  "Please check the URL"),
             )
             self.iconpath = _ICE_ICON
             self.new_icon = Pixbuf.new_from_file_at_size(_ICE_ICON, 32, 32)
@@ -803,8 +806,8 @@ class Ice(Gtk.Window):
                                                              formatted)
                 self.appfile1.write("Exec=" + self.browser +
                                     " --class ICE-SSB-" + formatted +
-                                    " --profile" + self.firefox_profile_path +
-                                    " --no-remote address\n")
+                                    " --profile " + self.firefox_profile_path +
+                                    " --no-remote" + address + "\n")
 
                 self.appfile1.write("IceFirefox={0}\n".format(formatted))
                 self.init_firefox_profile(self.firefox_profile_path)
@@ -894,7 +897,7 @@ class Ice(Gtk.Window):
             sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
                         'stylesheets", true);')
 
-    def delete(self, button):
+    def delete(self, button, item):
         self.a = self.iconview.get_selected_items()
         self.b = self.liststore.get_iter(self.a[0])
         self.c = self.liststore.get_value(self.b, 1)
@@ -915,14 +918,14 @@ class Ice(Gtk.Window):
 
         for line in self.appfilelines:
             if "IceFirefox=" in line:
-                self.profile = str.replace(line, 'IceFirefox=', '')
-                self.profile = str.replace(line, '\\n', '')
-                os.rmdir("{0}/{1}".format(_FF_PROFILES_DIR, self.profile))
+                self.profile = line.replace('IceFirefox=', '')
+                self.profile = self.profile.rstrip('\n')
+                shutil.rmtree("{0}/{1}".format(_FF_PROFILES_DIR, self.profile))
 
             if "X-ICE-SSB-Profile=" in line:
-                self.profile = str.replace(line, 'X-ICE-SSB-Profile=', '')
-                self.profile = str.replace(line, '\\n', '')
-                os.rmdir("{0}/{1}".format(_PROFILES_DIR, self.profile))
+                self.profile = line.replace('X-ICE-SSB-Profile=', '')
+                self.profile = self.profile.rstrip('\n')
+                shutil.rmtree("{0}/{1}".format(_PROFILES_DIR, self.profile))
 
         os.remove(self.appfile)
 
