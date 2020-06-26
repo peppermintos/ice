@@ -41,6 +41,7 @@ _PROFILES_DIR = "{0}/profiles".format(_ICE_DIR)
 _FF_PROFILES_DIR = "{0}/firefox".format(_ICE_DIR)
 _EPIPHANY_PROFILES_DIR = "{0}/epiphany".format(_ICE_DIR)
 _ICE_ICON = "/usr/share/pixmaps/ice.png"
+_ICON_DIR = "{0}/icons".format(_ICE_DIR)
 _BRAVE_BIN = "/usr/bin/brave-browser"
 _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
@@ -52,12 +53,12 @@ gettext.bindtextdomain(
     'messages',
     os.path.dirname(__file__) + '/../share/ice/locale/'
     )
-
+6
 gettext.textdomain('messages')
 _ = gettext.gettext
 
 # Requisite dirs
-for directory in [_ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR]:
+for directory in [_ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR, _ICON_DIR]:
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -120,7 +121,6 @@ class ErrorDialog(Gtk.Window):
         Gtk.Window.__init__(self, title=_(name))
         self.set_border_width(10)
         self.set_icon_from_file(_ICE_ICON)
-        self.set_resizable(False)
 
         self.main_lab = Gtk.Label()
         self.main_lab.set_markup(_("<b>" + main + "</b>"))
@@ -146,69 +146,6 @@ class ErrorDialog(Gtk.Window):
 
         self.add(self.main_box)
         self.show_all()
-
-
-class DuplicateError(Gtk.Window):
-
-    def destroy(self, button):
-        self.close()
-
-    def okay_clicked(self, button, title,
-                     formatted, address, iconext, location):
-
-        for item in window.liststore:
-            self.itemiter = item.iter
-            self.semiformatted = ""
-            self.array = filter(str.isalpha, self.item[1])
-
-            for obj in self.array:
-                self.semiformatted = self.semiformatted + self.obj
-
-            self.forma = self.semiformatted.lower()
-
-            if self.forma == formatted:
-                self.window.liststore.remove(self.itemiter)
-
-        self.window.writefile(title, formatted, address, iconext, location)
-        self.close()
-
-    def __init__(self, title, formatted, address, iconext, location):
-        Gtk.Window.__init__(self, title=_("Duplication Error"))
-        self.set_icon_from_file(_ICE_ICON)
-        self.set_border_width(10)
-
-        self.main_lab = Gtk.Label()
-        self.main_lab.set_markup(_("<b>Warning: File Duplication Error</b>"))
-
-        self.text_lab = Gtk.Label(
-            label=_("The name of the SSB will cause an existing SSB "
-                    "to be overwritten.\nTo prevent this, "
-                    "change a letter in the name.\nContinue anyway?\n"),
-
-            justify=Gtk.Justification.CENTER
-        )
-
-        self.text_lab.set_line_wrap(True)
-
-        self.okay = Gtk.Button(label=_("OK"))
-        self.okay.connect("clicked", self.okay_clicked, title,
-                          formatted, address, iconext, location)
-        self.cancel = Gtk.Button(label=_("Cancel"))
-        self.cancel.connect("clicked", self.destroy)
-        self.void = Gtk.Label()
-        self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.box.pack_start(self.void, True, True, 5)
-        self.box.pack_start(self.okay, False, False, 10)
-        self.box.pack_start(self.cancel, False, False, 0)
-
-        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_box.pack_start(main_lab, False, False, 10)
-        self.main_box.pack_start(text_lab, True, True, 0)
-        self.main_box.pack_start(box, False, False, 10)
-
-        self.add(main_box)
-        self.show_all()
-
 
 class AddressError(Gtk.Window):
 
@@ -642,6 +579,7 @@ class Ice(Gtk.Window):
 
     def icon_download(self):
         self.appurl = self.normalize(self.url.get_text())
+        self.parsed_uri = urllib.parse.urlparse(self.appurl)
         self.iconformats = ["apple-touch-icon", "shortcut icon",
                             "icon", "msapplication-TileImage"]
         self.icon_link = None
@@ -653,12 +591,11 @@ class Ice(Gtk.Window):
             for iconformat in self.iconformats:
                 self.icon_link = self.soup.find("link", {"rel": iconformat})
                 if self.icon_link is not None:
-                    self.icon_link = self.icon_link["href"]
-                    break
+                    self.icon_link = (self.parsed_uri.scheme + "://" +
+                                      self.parsed_uri.netloc + 
+                                      self.icon_link["href"])
 
             if self.icon_link is None:
-                self.parsed_uri = urllib.parse.urlparse(self.appurl)
-
                 self.iconrequest = requests.get(
                     self.parsed_uri.scheme + "://" +
                     self.parsed_uri.netloc + "/favicon.ico"
@@ -688,8 +625,11 @@ class Ice(Gtk.Window):
 
             try: # A temp fix for ValueError
                 self.icondl = urllib.request.urlopen(self.icon_link)
-                with open(_ICE_DIR + "/favicon.ico", "wb") as f:
+                self.icon_name = self.icon_link.replace("/", " ").split()[-1]
+                self.icon_ext = self.icon_name.replace(".", " ").split()[-1]
+                with open(_ICON_DIR + "/favicon." + self.icon_ext, "wb") as f:
                     f.write(self.icondl.read())
+                self.iconpath = _ICON_DIR + "/favicon." + self.icon_ext
             except ValueError:
                 GLib.idle_add(self.apply_icon, None)
             else:
@@ -703,7 +643,7 @@ class Ice(Gtk.Window):
     def apply_icon(self, done):
         if done is True:
             self.new_icon = Pixbuf.new_from_file_at_size(
-                _ICE_DIR + "/favicon.ico", 32, 32
+                _ICON_DIR + "/favicon." + self.icon_ext, 32, 32
             )
             self.icon.set_from_pixbuf(self.new_icon)
         elif done is False:
@@ -762,21 +702,17 @@ class Ice(Gtk.Window):
         self.iconext = self.iconname.replace(".", " ").split()[-1]
 
         if os.path.exists("{0}/{1}.desktop".format(_APPS_DIR, self.formatted)):
-            DuplicateError(self.title, self.formatted, self.address,
-                           self.iconext, self.location)
+            GLib.idle_add(self.applicate_error, "Duplicate")
         elif len(self.title) == 0:
-            ErrorDialog(
-                "Empty Name Error",
-                "Error: No Application Name Entered.",
-                "Please enter an application name to continue.",
-            )
+            GLib.idle_add(self.applicate_error, "Name")
         else:
             self.writefile(self.title, self.formatted, self.address,
                            self.iconext, self.location)
+            
 
     def writefile(self, title, formatted, address, iconext, location):
         shutil.copyfile(self.iconpath,
-                        "{0}/{1}.{2}".format(_ICE_DIR, formatted, iconext))
+                        "{0}/{1}.{2}".format(_ICON_DIR, formatted, iconext))
         self.appfile = os.path.expanduser("{0}/{1}.desktop".format(_APPS_DIR,
                                                                    formatted))
         if self.chrome.get_active() is True:
@@ -807,7 +743,7 @@ class Ice(Gtk.Window):
                 self.appfile1.write("Exec=" + self.browser +
                                     " --class ICE-SSB-" + formatted +
                                     " --profile " + self.firefox_profile_path +
-                                    " --no-remote" + address + "\n")
+                                    " --no-remote " + address + "\n")
 
                 self.appfile1.write("IceFirefox={0}\n".format(formatted))
                 self.init_firefox_profile(self.firefox_profile_path)
@@ -824,7 +760,7 @@ class Ice(Gtk.Window):
                     self.appfile1.write("X-ICE-SSB-Profile=" +
                                         formatted + "\n")
                 else:
-                    self.appfile1.write("Exec=" + browser +
+                    self.appfile1.write("Exec=" + self.browser +
                                         " --app=" + address +
                                         " --class=ICE-SSB-" + formatted +
                                         "\n")
@@ -832,7 +768,7 @@ class Ice(Gtk.Window):
             self.appfile1.write("Terminal=false\n")
             self.appfile1.write("X-MultipleArgs=false\n")
             self.appfile1.write("Type=Application\n")
-            self.appfile1.write("Icon={0}/{1}.{2}\n".format(_ICE_DIR,
+            self.appfile1.write("Icon={0}/{1}.{2}\n".format(_ICON_DIR,
                                                             formatted,
                                                             iconext))
 
@@ -845,6 +781,9 @@ class Ice(Gtk.Window):
             )
             self.appfile1.write("StartupNotify=true\n")
 
+        GLib.idle_add(self.ice_update)
+    
+    def ice_update(self):
         self.name.set_text("")
         self.url.set_text("")
         self.iconpath = _ICE_ICON
@@ -867,6 +806,7 @@ class Ice(Gtk.Window):
                             path + '/search.json.mozlz4')
         except FileNotFoundError:
             print("Error: search.json.mozlz4 not found")
+            
         try:
             shutil.copyfile('/usr/lib/peppermint/ice/places.sqlite',
                             path + '/places.sqlite')
@@ -928,6 +868,21 @@ class Ice(Gtk.Window):
                 shutil.rmtree("{0}/{1}".format(_PROFILES_DIR, self.profile))
 
         os.remove(self.appfile)
+
+    def applicate_error(self, error):
+        if error == "Duplicate": 
+            ErrorDialog(
+                "Duplication Error",
+                "Warning: File Duplication Error",
+                "The name of the SSB matches the name of an another SSB.\n"
+                "Please remove the duplicate SSB\n or change the SSB name.",
+            )
+        if error == "Name":
+            ErrorDialog(
+                "Empty Name Error",
+                "Error: No Application Name Entered.",
+                "Please enter an application name to continue.",
+            )
 
     def clean_orphaned_profiles(self, known_apps):
         self.known_profiles = []
