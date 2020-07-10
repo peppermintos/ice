@@ -5,6 +5,7 @@
 # modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
 # with much appreciated code contributions by rhein
 # internationalization (i18n)/gettext support by Kiyohito AOKI
+# Code Rewrite, Redesign, Extensions, and new browsers by PizzaLovingNerd
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
 # Chrome specifically intended to integrate with the LXDE menu system.
@@ -58,7 +59,8 @@ gettext.textdomain('messages')
 _ = gettext.gettext
 
 # Requisite dirs
-for directory in [_ICE_DIR, _APPS_DIR, _PROFILES_DIR, _FF_PROFILES_DIR, _ICON_DIR]:
+for directory in [_ICE_DIR, _APPS_DIR, _PROFILES_DIR,
+                  _FF_PROFILES_DIR, _ICON_DIR, _EPIPHANY_PROFILES_DIR]:
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -146,6 +148,7 @@ class ErrorDialog(Gtk.Window):
 
         self.add(self.main_box)
         self.show_all()
+
 
 class AddressError(Gtk.Window):
 
@@ -287,6 +290,7 @@ class Ice(Gtk.Window):
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_CHROME_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
+                os.path.exists(_EPIPHANY_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_FIREFOX_BIN):
             self.firefox.set_active(True)
@@ -302,6 +306,7 @@ class Ice(Gtk.Window):
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_CHROME_BIN) and not \
+                os.path.exists(_EPIPHANY_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_BRAVE_BIN):
             self.brave.set_active(True)
@@ -317,6 +322,7 @@ class Ice(Gtk.Window):
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
+                os.path.exists(_EPIPHANY_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROME_BIN):
             self.chrome.set_active(True)
@@ -332,6 +338,7 @@ class Ice(Gtk.Window):
         if not os.path.exists(_CHROMIUM_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
+                os.path.exists(_EPIPHANY_BIN) and not \
                 os.path.exists(_CHROME_BIN) and \
                 os.path.exists(_VIVALDI_BIN):
             vivaldi.set_active(True)
@@ -347,11 +354,26 @@ class Ice(Gtk.Window):
         if not os.path.exists(_CHROME_BIN) and not \
                 os.path.exists(_FIREFOX_BIN) and not \
                 os.path.exists(_BRAVE_BIN) and not \
+                os.path.exists(_EPIPHANY_BIN) and not \
                 os.path.exists(_VIVALDI_BIN) and \
                 os.path.exists(_CHROMIUM_BIN):
             self.chromium.set_active(True)
 
         self.chromium.connect("clicked", self.browser_button)
+
+        self.epiphany = Gtk.RadioButton.new_from_widget(self.chromium)
+        self.epiphany.set_label("GNOME Web")
+
+        if not os.path.exists(_EPIPHANY_BIN):
+            self.epiphany.set_sensitive(False)
+
+        if not os.path.exists(_CHROME_BIN) and not \
+                os.path.exists(_FIREFOX_BIN) and not \
+                os.path.exists(_BRAVE_BIN) and not \
+                os.path.exists(_VIVALDI_BIN) and not \
+                os.path.exists(_CHROMIUM_BIN) and \
+                os.path.exists(_EPIPHANY_BIN):
+            self.epiphany.set_active(True)
 
         if self.firefox.get_active() is True:
             self.isolate_button.set_label(_("Firefox is always Isolated"))
@@ -362,24 +384,7 @@ class Ice(Gtk.Window):
         self.close_button = Gtk.Button(label=_("Close"))
         self.close_button.connect("clicked", self.destroy)
         self.button_void = Gtk.Label()
-        # self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        # self.button_box.pack_start(self.brave, False, False, 10)
-        # self.button_box.pack_start(self.chrome, False, False, 10)
-        # self.button_box.pack_start(self.chromium, False, False, 0)
-        # self.button_box.pack_start(self.vivaldi, False, False, 10)
-        # self.button_box.pack_start(self.firefox, False, False, 0)
-        # self.button_box.pack_start(self.button_void, True, True, 0)
-        # self.button_box.pack_start(self.close_button, False, False, 20)
-        # self.button_box.pack_start(self.apply_button, False, False, 0)
 
-        # self.create_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        # self.create_vbox.pack_start(self.welcome, False, False, 15)
-        # self.create_vbox.pack_start(self.name, False, False, 0)
-        # self.create_vbox.pack_start(self.url, False, False, 10)
-        # self.create_vbox.pack_start(self.where_box, False, False, 10)
-        # self.create_vbox.pack_start(self.icon_hbox, False, False, 10)
-        # self.create_vbox.pack_start(self.isolate_box, False, False, 10)
-        # self.create_vbox.pack_start(self.button_box, False, False, 0)
         self.browser_box = Gtk.FlowBox()
         self.browser_box.set_row_spacing(0)
         self.browser_box.set_column_spacing(0)
@@ -388,7 +393,7 @@ class Ice(Gtk.Window):
         self.browser_box.add(self.chromium)
         self.browser_box.add(self.firefox)
         self.browser_box.add(self.vivaldi)
-        # self.browser_grid.attach(self.epiphany, 3, 2, 1, 1)
+        self.browser_box.add(self.epiphany)
 
         self.create_grid.attach(self.name, 1, 2, 2, 1)
         self.create_grid.attach(self.url, 1, 3, 2, 1)
@@ -430,23 +435,6 @@ class Ice(Gtk.Window):
 
         self.remove_scroll = Gtk.ScrolledWindow()
         self.remove_scroll.add(self.iconview)
-
-        # self.remove = Gtk.Button(label=_("Remove"))
-        # self.remove.connect("clicked", self.delete)
-        # self.void = Gtk.Label()
-        # self.buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        # self.buttons.pack_start(self.void, True, True, 0)
-        # self.buttons.pack_start(self.remove, False, False, 0)
-
-        # self.remove_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        # self.remove_box.pack_start(self.scroll, True, True, 0)
-        # self.remove_box.pack_start(self.buttons, False, False, 0)
-
-        # self.remove_lab = Gtk.Label(label=_("Remove"))
-
-        ##########################
-        #   Main window stuff.   #
-        ##########################
 
         self.main_stack.add_titled(self.create_grid, "create", "Create")
         self.main_stack.add_titled(self.remove_scroll, "remove", "Remove")
@@ -592,7 +580,7 @@ class Ice(Gtk.Window):
                 self.icon_link = self.soup.find("link", {"rel": iconformat})
                 if self.icon_link is not None:
                     self.icon_link = (self.parsed_uri.scheme + "://" +
-                                      self.parsed_uri.netloc + 
+                                      self.parsed_uri.netloc +
                                       self.icon_link["href"])
 
             if self.icon_link is None:
@@ -623,7 +611,8 @@ class Ice(Gtk.Window):
                 except ConnectionError:
                     pass
 
-            try: # A temp fix for ValueError
+            # Catches ValueError (if the Favicon detector gets an invalid URL)
+            try:
                 self.icondl = urllib.request.urlopen(self.icon_link)
                 self.icon_name = self.icon_link.replace("/", " ").split()[-1]
                 self.icon_ext = self.icon_name.replace(".", " ").split()[-1]
@@ -708,7 +697,6 @@ class Ice(Gtk.Window):
         else:
             self.writefile(self.title, self.formatted, self.address,
                            self.iconext, self.location)
-            
 
     def writefile(self, title, formatted, address, iconext, location):
         shutil.copyfile(self.iconpath,
@@ -725,6 +713,8 @@ class Ice(Gtk.Window):
             self.browser = "vivaldi"
         elif self.firefox.get_active() is True:
             self.browser = "firefox"
+        elif self.epiphany.get_active() is True:
+            self.browser = "epiphany"
         else:
             print(_("ERROR: An unknown browser selection error has occurred."))
             sys.exit(1)
@@ -747,6 +737,17 @@ class Ice(Gtk.Window):
 
                 self.appfile1.write("IceFirefox={0}\n".format(formatted))
                 self.init_firefox_profile(self.firefox_profile_path)
+            elif self.browser == "epiphany":
+                self.epiphany_profile_path = "{0}/{1}".format(
+                    _EPIPHANY_PROFILES_DIR, "epiphany-" + formatted
+                )
+                self.appfile1.write(
+                    "Exec={0} --application-mode --profile=\""
+                    "{2}\" {1}\n".format(
+                        self.browser, address, self.epiphany_profile_path
+                    )
+                )
+                self.appfile1.write("IceEpiphany={0}\n".format(formatted))
             else:
                 if self.isolate_profile is True:
                     self.profile_path = "{0}/{1}".format(_PROFILES_DIR,
@@ -768,9 +769,18 @@ class Ice(Gtk.Window):
             self.appfile1.write("Terminal=false\n")
             self.appfile1.write("X-MultipleArgs=false\n")
             self.appfile1.write("Type=Application\n")
-            self.appfile1.write("Icon={0}/{1}.{2}\n".format(_ICON_DIR,
-                                                            formatted,
-                                                            iconext))
+            if self.browser == "epiphany":
+                self.appfile1.write("Icon={0}/app-icon.{2}\n".format(
+                    self.epiphany_profile_path,
+                    formatted,
+                    iconext
+                ))
+            else:
+                self.appfile1.write("Icon={0}/{1}.{2}\n".format(
+                    _ICON_DIR,
+                    formatted,
+                    iconext
+                ))
 
             self.appfile1.write("Categories=GTK;{0}\n".format(location))
             self.appfile1.write("MimeType=text/html;text/xml;"
@@ -781,8 +791,14 @@ class Ice(Gtk.Window):
             )
             self.appfile1.write("StartupNotify=true\n")
 
+            if self.browser == "epiphany":
+                self.init_epiphany_profile(
+                    self.epiphany_profile_path,
+                    formatted, iconext, self.appfile
+                )
+
         GLib.idle_add(self.ice_update)
-    
+
     def ice_update(self):
         self.name.set_text("")
         self.url.set_text("")
@@ -806,18 +822,17 @@ class Ice(Gtk.Window):
                             path + '/search.json.mozlz4')
         except FileNotFoundError:
             print("Error: search.json.mozlz4 not found")
-            
+
         try:
             shutil.copyfile('/usr/lib/peppermint/ice/places.sqlite',
                             path + '/places.sqlite')
         except FileNotFoundError:
             print("Error: places.sqlite not found")
-        # os.system("touch {0}".format(self.cssfile))
+
         with open(self.cssfile, 'w') as cfile:
             cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, "
                         "#TabsToolbar { visibility: collapse !important; }")
 
-        # os.system("touch {0}".format(self.settingsfile))
         with open(self.settingsfile, 'w') as sfile:
             sfile.write('user_pref("browser.cache.disk.enable",'
                         ' false);')
@@ -836,6 +851,14 @@ class Ice(Gtk.Window):
             sfile.write('user_pref("plugin.state.flash", 2);')
             sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
                         'stylesheets", true);')
+
+    def init_epiphany_profile(self, path, formatted, iconext, appfile):
+        os.makedirs(path)
+        shutil.copyfile("{0}/{1}.{2}".format(_ICON_DIR, formatted, iconext),
+                        "{0}/app-icon.{1}".format(path, iconext))
+        # subprocess.run(["touch", path + "/.app"])
+        os.replace(appfile, "{0}/epiphany-{1}.desktop".format(path, formatted))
+        os.symlink("{0}/epiphany-{1}.desktop".format(path, formatted), appfile)
 
     def delete(self, button, item):
         self.a = self.iconview.get_selected_items()
@@ -862,6 +885,12 @@ class Ice(Gtk.Window):
                 self.profile = self.profile.rstrip('\n')
                 shutil.rmtree("{0}/{1}".format(_FF_PROFILES_DIR, self.profile))
 
+            if "IceEpiphany=" in line:
+                self.profile = str.replace(line, 'IceEpiphany=', '')
+                self.profile = str.replace(self.profile, "\n", '')
+                shutil.rmtree("{0}/epiphany-{1}".format(_EPIPHANY_PROFILES_DIR,
+                                                        self.profile))
+
             if "X-ICE-SSB-Profile=" in line:
                 self.profile = line.replace('X-ICE-SSB-Profile=', '')
                 self.profile = self.profile.rstrip('\n')
@@ -870,7 +899,7 @@ class Ice(Gtk.Window):
         os.remove(self.appfile)
 
     def applicate_error(self, error):
-        if error == "Duplicate": 
+        if error == "Duplicate":
             ErrorDialog(
                 "Duplication Error",
                 "Warning: File Duplication Error",
