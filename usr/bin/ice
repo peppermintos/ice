@@ -5,7 +5,7 @@
 # modified by Mark Greaves (PCNetSpec) <mark@peppermintos.com>
 # with much appreciated code contributions by rhein
 # internationalization (i18n)/gettext support by Kiyohito AOKI
-# Code Rewrite, Redesign, Extensions, and new browsers by PizzaLovingNerd
+# Code Rewrite, Redesign, and new GNOME Web support by PizzaLovingNerd
 #
 # Ice is a simple Site Specific Browser (SSB) manager for Chromium and
 # Chrome specifically intended to integrate with the LXDE menu system.
@@ -201,7 +201,6 @@ class Ice(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
-        # self.set_size_request(460, 350)
         self.set_icon_from_file(_ICE_ICON)
         self.set_border_width(5)
 
@@ -244,42 +243,23 @@ class Ice(Gtk.Window):
             self.where.append_text(entry)
         self.where.set_active(3)
 
-        # self.where_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        # self.where_void = Gtk.Label()
-        # self.where_box.pack_start(self.where_lab, False, False, 0)
-        # self.where_box.pack_start(self.where_void, False, False, 10)
-        # self.where_box.pack_start(self.where, True, True, 0)
-
         self.iconpath = _ICE_ICON
         self.icon_pixbuf = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
         self.icon = Gtk.Image()
         self.icon.set_from_pixbuf(self.icon_pixbuf)
 
         self.icon_void = Gtk.Label()
-        # self.icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        # self.icon_box.pack_start(self.icon, False, False, 10)
-        # self.icon_box.pack_start(self.icon_void, False, False, 10)
 
         self.choose_icon = Gtk.Button(label=_("Select an icon"))
         self.choose_icon.connect("clicked", self.icon_select)
         self.download_icon = Gtk.Button(label=_("Use site favicon"))
         self.download_icon.connect("clicked", self.thread_icon_download)
 
-        # self.icon_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        # self.icon_vbox.pack_start(self.choose_icon, True, True, 5)
-        # self.icon_vbox.pack_start(self.download_icon, True, True, 5)
-        # self.icon_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        # self.icon_hbox.pack_start(self.icon_box, False, False, 10)
-        # self.icon_hbox.pack_start(self.icon_vbox, True, True, 0)
-
         self.isolate_profile = False
-        # self.isolate_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.isolate_button = Gtk.CheckButton()
-        self.isolate_lab = Gtk.Label(label=_(" Isolate the SSB"))
+        self.isolate_lab = Gtk.Label(label=_("Isolate the SSB"))
         self.isolate_button.add(self.isolate_lab)
-        # self.isolate_button.set_line_wrap(True)
         self.isolate_button.connect("toggled", self.isolate_clicked)
-        # self.isolate_box.add(self.isolate_button)
 
         self.firefox = Gtk.RadioButton.new_with_label_from_widget(None,
                                                                   "Firefox")
@@ -399,6 +379,11 @@ class Ice(Gtk.Window):
         self.browser_box.add(self.firefox)
         self.browser_box.add(self.vivaldi)
         self.browser_box.add(self.epiphany)
+        
+        self.option_box = Gtk.FlowBox()
+        self.option_box.set_row_spacing(0)
+        self.option_box.set_column_spacing(0)
+        self.option_box.add(self.isolate_button)
 
         self.create_grid.attach(self.name, 1, 2, 2, 1)
         self.create_grid.attach(self.url, 1, 3, 2, 1)
@@ -408,8 +393,8 @@ class Ice(Gtk.Window):
         self.create_grid.attach(self.choose_icon, 2, 5, 1, 1)
         self.create_grid.attach(self.download_icon, 2, 6, 1, 1)
         self.create_grid.attach(self.browser_box, 1, 8, 2, 2)
-        self.create_grid.attach(self.isolate_button, 1, 11, 2, 1)
-        self.create_grid.attach(self.apply_button, 2, 12, 1, 1)
+        self.create_grid.attach(self.option_box, 1, 11, 2, 2)
+        self.create_grid.attach(self.apply_button, 2, 13, 1, 1)
 
         self.create_lab = Gtk.Label(label=_("Create"))
 
