@@ -374,9 +374,14 @@ class Ice(Gtk.Window):
                 os.path.exists(_CHROMIUM_BIN) and \
                 os.path.exists(_EPIPHANY_BIN):
             self.epiphany.set_active(True)
+        
+        self.epiphany.connect("clicked", self.browser_button)
 
         if self.firefox.get_active() is True:
             self.isolate_button.set_label(_("Firefox is always Isolated"))
+            self.isolate_button.set_sensitive(False)
+        elif self.epiphany.get_active() is True:
+            self.isolate_button.set_label(_("Epiphany is always Isolated"))
             self.isolate_button.set_sensitive(False)
 
         self.apply_button = Gtk.Button(label=_("Apply"))
@@ -402,9 +407,9 @@ class Ice(Gtk.Window):
         self.create_grid.attach(self.icon, 1, 5, 1, 2)
         self.create_grid.attach(self.choose_icon, 2, 5, 1, 1)
         self.create_grid.attach(self.download_icon, 2, 6, 1, 1)
-        self.create_grid.attach(self.browser_box, 1, 8, 2, 3)
-        self.create_grid.attach(self.isolate_button, 1, 11, 1, 1)
-        self.create_grid.attach(self.apply_button, 2, 11, 1, 1)
+        self.create_grid.attach(self.browser_box, 1, 8, 2, 2)
+        self.create_grid.attach(self.isolate_button, 1, 11, 2, 1)
+        self.create_grid.attach(self.apply_button, 2, 12, 1, 1)
 
         self.create_lab = Gtk.Label(label=_("Create"))
 
@@ -846,7 +851,7 @@ class Ice(Gtk.Window):
             sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max"'
                         ', false);')
 
-            sfile.write('user_pref("browser.ctrlTab.previews", true);')
+            sfile.write('user_pref("browser.ctrlTab.previews", true);') 
             sfile.write('user_pref("browser.tabs.warnOnClose", false);')
             sfile.write('user_pref("plugin.state.flash", 2);')
             sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
@@ -932,6 +937,9 @@ class Ice(Gtk.Window):
     def browser_button(self, button):
         if button.get_label() == "Firefox":
             self.isolate_button.set_label(_("Firefox is always Isolated"))
+            self.isolate_button.set_sensitive(False)
+        elif button.get_label() == "GNOME Web":
+            self.isolate_button.set_label(_("GNOME Web is always Isolated"))
             self.isolate_button.set_sensitive(False)
         else:
             self.isolate_button.set_label(_("Isolate the SSB"))
