@@ -8,60 +8,45 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-16 18:55+0100\n"
-"PO-Revision-Date: 2019-06-16 21:39+0100\n"
+"PO-Revision-Date: 2020-08-04 10:26-0700\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Language: zh_CN\n"
 
-#: ../../../bin/ice:136
-#, python-brace-format
-msgid "Unable to parse URL, {0}"
-msgstr "无法解析 URL，{0}"
-
-#: ../../../bin/ice:141
-#, python-brace-format
-msgid "Unable to find favicon for, {0}"
-msgstr "无法找到图标，{0}"
-
-#: ../../../bin/ice:196
-#, python-brace-format
-msgid "Unable to find URL. Is it valid? {0}"
-msgstr "无法找到 URL。URL 有效吗？{0}"
-
-#: ../../../bin/ice:224 ../../../bin/ice:659
+#: ../../../bin/ice:233 ../../../bin/ice:660
 msgid "Accessories"
 msgstr "附件"
 
-#: ../../../bin/ice:226 ../../../bin/ice:659
+#: ../../../bin/ice:233 ../../../bin/ice:662
 msgid "Games"
-msgstr "游戏"
+msgstr "ERROR：发生了一个未知错误."
 
-#: ../../../bin/ice:228 ../../../bin/ice:659
+#: ../../../bin/ice:234 ../../../bin/ice:664
 msgid "Graphics"
 msgstr "图形"
 
-#: ../../../bin/ice:230 ../../../bin/ice:659
+#: ../../../bin/ice:234 ../../../bin/ice:666
 msgid "Internet"
 msgstr "互联网"
 
-#: ../../../bin/ice:232 ../../../bin/ice:660
+#: ../../../bin/ice:235 ../../../bin/ice:669
 msgid "Office"
 msgstr "办公"
 
-#: ../../../bin/ice:234 ../../../bin/ice:660
+#: ../../../bin/ice:235 ../../../bin/ice:670
 msgid "Programming"
 msgstr "开发"
 
-#: ../../../bin/ice:236 ../../../bin/ice:660
+#: ../../../bin/ice:236 ../../../bin/ice:672
 msgid "Multimedia"
 msgstr "多媒体"
 
-#: ../../../bin/ice:238 ../../../bin/ice:660
+#: ../../../bin/ice:236 ../../../bin/ice:674
 msgid "System"
 msgstr "系统"
 
@@ -69,17 +54,13 @@ msgstr "系统"
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "ERROR：发生了一个未知浏览器选择错误."
 
-#: ../../../bin/ice:403
+#: ../../../bin/ice:73
 msgid "Please choose an icon."
 msgstr "请选择一个图标."
 
 #: ../../../bin/ice:442
 msgid "Browser Error"
 msgstr "浏览器错误"
-
-#: ../../../bin/ice:446
-msgid "test"
-msgstr "测试"
 
 #: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
@@ -95,17 +76,7 @@ msgstr ""
 "为避免覆盖发生，请修改一下名字。\n"
 "仍要继续吗？"
 
-#: ../../../bin/ice:451
-msgid ""
-"Ice requires a system installation of either Google\n"
-"Chrome or Chromium in order to function. Please\n"
-"install at least one in order to create SSBs."
-msgstr ""
-"Ice 需要系统内已安装 Google Chrome 或\n"
-"Chromium 或 Vivaldi 或 Firefox，\n"
-"安装至少其中一个以创建 SSB."
-
-#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
+#: ../../../bin/ice:137
 msgid "Close"
 msgstr "关"
 
@@ -117,27 +88,50 @@ msgstr "重名错误"
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>警告：文件重名错误</b>"
 
-#: ../../../bin/ice:503 ../../../bin/ice:542
+#: ../../../bin/ice:179
 msgid "OK"
 msgstr "好的"
 
-#: ../../../bin/ice:505 ../../../bin/ice:544
+#: ../../../bin/ice:181
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../../bin/ice:534
+#: ../../../bin/ice:627
 msgid "Address Error"
 msgstr "地址错误"
 
-#: ../../../bin/ice:539
+#: ../../../bin/ice:628
+msgid "Error: HTTP or URL Error"
+msgstr ""
+
+#: ../../../bin/ice:629
+msgid ""
+"An error with the web address has been detected.\n"
+"This is possibly the site being down or unavailable right now.\n"
+"Please check the URL"
+msgstr ""
+
+#: ../../../bin/ice:639
+msgid "Error Applying SSB"
+msgstr ""
+
+#: ../../../bin/ice:640
+msgid "Error: Unknown Error"
+msgstr ""
+
+#: ../../../bin/ice:6
+msgid "An unknown error has occurred. :("
+msgstr ""
+
+#: ../../../bin/ice:167
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>警告：HTTP 或者 URL 错误</b>"
 
-#: ../../../bin/ice:540
+#: ../../../bin/ice:172
 msgid ""
 "An error with the web address has been detected.\n"
-"This is possibly the site being down or unavailable\n"
-"right now. Continue anyway?"
+"This is possibly the site being down or unavailable right now.\n"
+"Continue anyway?"
 msgstr ""
 "检测到网址错误。\n"
 "站点可能故障或不存在。\n"
@@ -163,44 +157,54 @@ msgstr "ERROR：发生了一个地址错误."
 msgid "ERROR: An unknown error has occurred."
 msgstr "ERROR：发生了一个未知错误."
 
-#: ../../../bin/ice:651
-msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
-msgstr "<b>欢迎使用 Ice，一个简洁的 SSB 管理程序</b>"
-
-#: ../../../bin/ice:654
+#: ../../../bin/ice:229
 msgid "Name the application"
 msgstr "为应用程序命名"
 
-#: ../../../bin/ice:657
+#: ../../../bin/ice:231
 msgid "Enter web address"
 msgstr "输入网址"
 
-#: ../../../bin/ice:661
+#: ../../../bin/ice:238
 msgid "Where in the menu?"
 msgstr "菜单中的什么位置？"
 
-#: ../../../bin/ice:687
+#: ../../../bin/ice:252
 msgid "Select an icon"
 msgstr "选择一个图标"
 
-#: ../../../bin/ice:689
+#: ../../../bin/ice:254 ../../../bin/ice:646
 msgid "Use site favicon"
 msgstr "使用网站的图标"
 
-#: ../../../bin/ice:753
-msgid ""
-" Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
-"always isolated)"
-msgstr " 使用单独的浏览器配置文件创建SSB（注意：Firefox SSB始终被隔离）"
+#: ../../../bin/ice:550
+msgid "Downloading favicon"
+msgstr ""
 
-#: ../../../bin/ice:757
+#: ../../../bin/ice:366 ../../../bin/ice:456
 msgid "Apply"
 msgstr "应用"
 
-#: ../../../bin/ice:782
+#: ../../../bin/ice:452
+msgid "Applying"
+msgstr ""
+
+#: ../../../bin/ice:396 ../../../bin/ice:426
 msgid "Create"
 msgstr "创建"
 
-#: ../../../bin/ice:812 ../../../bin/ice:828
+#: ../../../bin/ice:427
 msgid "Remove"
 msgstr "移除"
+
+#. ./../../bin/ice:259 ../../../bin/ice:921
+msgid "Isolate the SSB"
+msgstr ""
+
+#. ./../../bin/ice:360 ../../../bin/ice:924
+msgid "Firefox is always isolated"
+msgstr ""
+
+#. ./../../bin/ice:363 ../../../bin/ice:927
+msgid "GNOME Web is always isolated"
+msgstr ""
