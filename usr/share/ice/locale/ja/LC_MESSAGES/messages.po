@@ -8,60 +8,44 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-16 18:55+0100\n"
-"PO-Revision-Date: 2019-06-16 19:34+0100\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2020-08-04 10:12-0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Last-Translator: \n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language-Team: \n"
 "Language: ja\n"
 
-#: ../../../bin/ice:136
-#, python-brace-format
-msgid "Unable to parse URL, {0}"
-msgstr "{0}というURLを解釈できません"
-
-#: ../../../bin/ice:141
-#, python-brace-format
-msgid "Unable to find favicon for, {0}"
-msgstr "{0}のfaviconが見つかりません"
-
-#: ../../../bin/ice:196
-#, python-brace-format
-msgid "Unable to find URL. Is it valid? {0}"
-msgstr "{0}というURLが見つかりません。URLが正しいですか?"
-
-#: ../../../bin/ice:224 ../../../bin/ice:659
+#: ../../../bin/ice:233 ../../../bin/ice:660
 msgid "Accessories"
 msgstr "アクセサリ"
 
-#: ../../../bin/ice:226 ../../../bin/ice:659
+#: ../../../bin/ice:233 ../../../bin/ice:662
 msgid "Games"
 msgstr "ゲーム"
 
-#: ../../../bin/ice:228 ../../../bin/ice:659
+#: ../../../bin/ice:234 ../../../bin/ice:664
 msgid "Graphics"
 msgstr "グラフィックス"
 
-#: ../../../bin/ice:230 ../../../bin/ice:659
+#: ../../../bin/ice:234 ../../../bin/ice:666
 msgid "Internet"
 msgstr "インターネット"
 
-#: ../../../bin/ice:232 ../../../bin/ice:660
+#: ../../../bin/ice:235 ../../../bin/ice:669
 msgid "Office"
 msgstr "オフィス"
 
-#: ../../../bin/ice:234 ../../../bin/ice:660
+#: ../../../bin/ice:235 ../../../bin/ice:670
 msgid "Programming"
 msgstr "プログラミング"
 
-#: ../../../bin/ice:236 ../../../bin/ice:660
+#: ../../../bin/ice:236 ../../../bin/ice:672
 msgid "Multimedia"
 msgstr "マルチメディア"
 
-#: ../../../bin/ice:238 ../../../bin/ice:660
+#: ../../../bin/ice:236 ../../../bin/ice:674
 msgid "System"
 msgstr "システム"
 
@@ -69,7 +53,7 @@ msgstr "システム"
 msgid "ERROR: An unknown browser selection error has occurred."
 msgstr "エラー:不明なブラウザが選択された."
 
-#: ../../../bin/ice:403
+#: ../../../bin/ice:73
 msgid "Please choose an icon."
 msgstr "アイコンを選択."
 
@@ -77,13 +61,9 @@ msgstr "アイコンを選択."
 msgid "Browser Error"
 msgstr "ブラウザエラー"
 
-#: ../../../bin/ice:446
-msgid "test"
-msgstr "test"
-
 #: ../../../bin/ice:449
 msgid "<b>Warning: No Suitable Browser Detected</b>"
-msgstr "<b>警告:適合するブラウザが見つからない</b>"
+msgstr "<b>ICE SSBマネージャーへようこそ</b>"
 
 #: ../../../bin/ice:450 ../../../bin/ice:501
 msgid ""
@@ -95,16 +75,7 @@ msgstr ""
 "これを防止するには、名前を変更してください。\n"
 "上書きしますか？"
 
-#: ../../../bin/ice:451
-msgid ""
-"Ice requires a system installation of either Google\n"
-"Chrome or Chromium in order to function. Please\n"
-"install at least one in order to create SSBs."
-msgstr ""
-"Iceの機能を使うにはGoogle ChromeかChromiumのインストールが必要です。\n"
-"SSBを作成するには、少なくともどちらかをインストールしてください。"
-
-#: ../../../bin/ice:453 ../../../bin/ice:759 ../../../bin/ice:814
+#: ../../../bin/ice:137
 msgid "Close"
 msgstr "終了"
 
@@ -116,30 +87,56 @@ msgstr "重複エラー"
 msgid "<b>Warning: File Duplication Error</b>"
 msgstr "<b>警告:ファイル重複エラー</b>"
 
-#: ../../../bin/ice:503 ../../../bin/ice:542
+#: ../../../bin/ice:179
 msgid "OK"
 msgstr "OK"
 
-#: ../../../bin/ice:505 ../../../bin/ice:544
+#: ../../../bin/ice:181
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: ../../../bin/ice:534
+#: ../../../bin/ice:627
 msgid "Address Error"
 msgstr "アドレスエラー"
 
-#: ../../../bin/ice:539
+#: ../../../bin/ice:628
+msgid "Error: HTTP or URL Error"
+msgstr ""
+
+#: ../../../bin/ice:629
+msgid ""
+"An error with the web address has been detected.\n"
+"This is possibly the site being down or unavailable right "
+"now.\n"
+"Please check the URL"
+msgstr ""
+
+#: ../../../bin/ice:639
+msgid "Error Applying SSB"
+msgstr ""
+
+#: ../../../bin/ice:640
+msgid "Error: Unknown Error"
+msgstr ""
+
+#: ../../../bin/ice:6
+msgid "An unknown error has occurred. :("
+msgstr ""
+
+#: ../../../bin/ice:167
 msgid "<b>Warning: HTTP or URL Error</b>"
 msgstr "<b>警告:HTTPもしくはURLのエラー</b>"
 
-#: ../../../bin/ice:540
+#: ../../../bin/ice:172
 msgid ""
 "An error with the web address has been detected.\n"
-"This is possibly the site being down or unavailable\n"
-"right now. Continue anyway?"
+"This is possibly the site being down or unavailable right "
+"now.\n"
+"Continue anyway?"
 msgstr ""
 "Webアドレスのエラーが発生しました。\n"
-"サイトがダウンしているか、現在利用できなくなっている可能性があります。\n"
+"サイトがダウンしているか、現在利用できなくなっている可能性が"
+"あります。\n"
 "それでも続行しますか?"
 
 #: ../../../bin/ice:572
@@ -162,46 +159,54 @@ msgstr "エラー:アドレスエラーが発生した."
 msgid "ERROR: An unknown error has occurred."
 msgstr "エラー:不明なエラーが発生した."
 
-#: ../../../bin/ice:651
-msgid "<b>Welcome to Ice, a simple SSB manager.</b>"
-msgstr "<b>ICE SSBマネージャーへようこそ</b>"
-
-#: ../../../bin/ice:654
+#: ../../../bin/ice:229
 msgid "Name the application"
 msgstr "アプリケーション名"
 
-#: ../../../bin/ice:657
+#: ../../../bin/ice:231
 msgid "Enter web address"
-msgstr "Webアドレス"
+msgstr ""
 
-#: ../../../bin/ice:661
+#: ../../../bin/ice:238
 msgid "Where in the menu?"
-msgstr "メニュー内の場所."
+msgstr ""
 
-#: ../../../bin/ice:687
+#: ../../../bin/ice:252
 msgid "Select an icon"
-msgstr "アイコンを選択"
+msgstr "アイコンを"
 
-#: ../../../bin/ice:689
+#: ../../../bin/ice:254 ../../../bin/ice:646
 msgid "Use site favicon"
 msgstr "サイトのfaviconを使用"
 
-#: ../../../bin/ice:753
-msgid ""
-" Create the SSB with an isolated browser profile (Note: Firefox SSB's are "
-"always isolated)"
+#: ../../../bin/ice:550
+msgid "Downloading favicon"
 msgstr ""
-" ブラウザのプロファイルを独立させてSSBを作成する (Firefox SSBは常に独立し"
-"たプロファイルを使用)"
 
-#: ../../../bin/ice:757
+#: ../../../bin/ice:366 ../../../bin/ice:456
 msgid "Apply"
 msgstr "適用"
 
-#: ../../../bin/ice:782
+#: ../../../bin/ice:452
+msgid "Applying"
+msgstr ""
+
+#: ../../../bin/ice:396 ../../../bin/ice:426
 msgid "Create"
 msgstr "追加"
 
-#: ../../../bin/ice:812 ../../../bin/ice:828
+#: ../../../bin/ice:427
 msgid "Remove"
 msgstr "削除"
+
+#. ./../../bin/ice:259 ../../../bin/ice:921
+msgid "Isolate the SSB"
+msgstr ""
+
+#. ./../../bin/ice:360 ../../../bin/ice:924
+msgid "Firefox is always isolated"
+msgstr ""
+
+#. ./../../bin/ice:363 ../../../bin/ice:927
+msgid "GNOME Web is always isolated"
+msgstr ""
