@@ -918,10 +918,10 @@ class Ice(Gtk.Window):
 
     def browser_button(self, button):
         if button.get_label() == "Firefox":
-            self.isolate_button.set_label(_("Firefox is always Isolated"))
+            self.isolate_button.set_label(_("Firefox is always isolated"))
             self.isolate_button.set_sensitive(False)
         elif button.get_label() == "GNOME Web":
-            self.isolate_button.set_label(_("GNOME Web is always Isolated"))
+            self.isolate_button.set_label(_("GNOME Web is always isolated"))
             self.isolate_button.set_sensitive(False)
         else:
             self.isolate_button.set_label(_("Isolate the SSB"))
