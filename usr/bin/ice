@@ -563,12 +563,22 @@ class Ice(Gtk.Window):
         if self.page is not None:
             self.soup = bs4.BeautifulSoup(self.page.read(), "html.parser")
 
-            for iconformat in self.iconformats:
-                self.icon_link = self.soup.find("link", {"rel": iconformat})
-                if self.icon_link is not None:
+            og_image = self.soup.find("meta", {"property": "og:image"})
+            if og_image is not None:
+                og_image = og_image["content"]
+                if ("://") in og_image:
+                    self.icon_link = og_image
+                else:
                     self.icon_link = (self.parsed_uri.scheme + "://" +
                                       self.parsed_uri.netloc +
-                                      self.icon_link["href"])
+                                      og_image["content"])
+            else:
+                for iconformat in self.iconformats:
+                    self.icon_link = self.soup.find("link", {"rel": iconformat})
+                    if self.icon_link is not None:
+                        self.icon_link = (self.parsed_uri.scheme + "://" +
+                                          self.parsed_uri.netloc +
+                                          self.icon_link["href"])
 
             if self.icon_link is None:
                 self.iconrequest = requests.get(
