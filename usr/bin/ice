@@ -182,16 +182,16 @@ class AddressError(Gtk.Window):
         self.cancel.connect("clicked", self.destroy)
         self.void = Gtk.Label()
         self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.box.pack_start(void, True, True, 0)
-        self.box.pack_start(okay, False, False, 10)
-        self.box.pack_start(cancel, False, False, 0)
+        self.box.pack_start(self.void, True, True, 0)
+        self.box.pack_start(self.okay, False, False, 10)
+        self.box.pack_start(self.cancel, False, False, 0)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_box.pack_start(main_lab, False, False, 10)
-        self.main_box.pack_start(text_lab, False, False, 0)
-        self.main_box.pack_start(box, False, False, 10)
+        self.main_box.pack_start(self.main_lab, False, False, 10)
+        self.main_box.pack_start(self.text_lab, False, False, 0)
+        self.main_box.pack_start(self.box, False, False, 10)
 
-        self.add(main_box)
+        self.add(self.main_box)
         self.show_all()
 
 
@@ -320,7 +320,7 @@ class Ice(Gtk.Window):
                 os.path.exists(_EPIPHANY_BIN) and not \
                 os.path.exists(_CHROME_BIN) and \
                 os.path.exists(_VIVALDI_BIN):
-            vivaldi.set_active(True)
+            self.vivaldi.set_active(True)
 
         self.vivaldi.connect("clicked", self.browser_button)
 
@@ -563,12 +563,22 @@ class Ice(Gtk.Window):
         if self.page is not None:
             self.soup = bs4.BeautifulSoup(self.page.read(), "html.parser")
 
-            for iconformat in self.iconformats:
-                self.icon_link = self.soup.find("link", {"rel": iconformat})
-                if self.icon_link is not None:
+            og_image = self.soup.find("meta", {"property": "og:image"})
+            if og_image is not None:
+                og_image = og_image["content"]
+                if ("://") in og_image:
+                    self.icon_link = og_image
+                else:
                     self.icon_link = (self.parsed_uri.scheme + "://" +
                                       self.parsed_uri.netloc +
-                                      self.icon_link["href"])
+                                      og_image["content"])
+            else:
+                for iconformat in self.iconformats:
+                    self.icon_link = self.soup.find("link", {"rel": iconformat})
+                    if self.icon_link is not None:
+                        self.icon_link = (self.parsed_uri.scheme + "://" +
+                                          self.parsed_uri.netloc +
+                                          self.icon_link["href"])
 
             if self.icon_link is None:
                 self.iconrequest = requests.get(
@@ -757,13 +767,15 @@ class Ice(Gtk.Window):
             self.appfile1.write("X-MultipleArgs=false\n")
             self.appfile1.write("Type=Application\n")
             if self.browser == "epiphany":
-                self.appfile1.write("Icon={0}/app-icon.{2}\n".format(
+                self.appfile1.write(
+                    "Icon={0}/app-icon.{2}\n".format(
                     self.epiphany_profile_path,
                     formatted,
                     iconext
                 ))
             else:
-                self.appfile1.write("Icon={0}/{1}.{2}\n".format(
+                self.appfile1.write(
+                    "Icon={0}/{1}.{2}\n".format(
                     _ICON_DIR,
                     formatted,
                     iconext
@@ -833,7 +845,7 @@ class Ice(Gtk.Window):
             sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max"'
                         ', false);')
 
-            sfile.write('user_pref("browser.ctrlTab.previews", true);') 
+            sfile.write('user_pref("browser.ctrlTab.previews", true);')
             sfile.write('user_pref("browser.tabs.warnOnClose", false);')
             sfile.write('user_pref("plugin.state.flash", 2);')
             sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
