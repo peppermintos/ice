@@ -48,7 +48,7 @@ _CHROME_BIN = "/usr/bin/google-chrome"
 _CHROMIUM_BIN = "/usr/bin/chromium-browser"
 _VIVALDI_BIN = "/usr/bin/vivaldi-stable"
 _FIREFOX_BIN = "/usr/bin/firefox"
-_EPIPHANY_BIN = "/usr/bin/epiphany-browser"
+_EPIPHANY_BIN = "/usr/bin/epiphany"
 
 gettext.bindtextdomain(
     'messages',
@@ -136,7 +136,6 @@ class ErrorDialog(Gtk.Window):
 
         self.close_button = Gtk.Button(label=_("Close"))
         self.close_button.connect("clicked", self.destroy)
-        self.void = Gtk.Label()
         self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.box.pack_end(self.close_button, False, False, 0)
 
@@ -180,18 +179,15 @@ class AddressError(Gtk.Window):
         self.okay.connect("clicked", self.okay_clicked)
         self.cancel = Gtk.Button(label=_("Cancel"))
         self.cancel.connect("clicked", self.destroy)
-        self.void = Gtk.Label()
-        self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.box.pack_start(self.void, True, True, 0)
-        self.box.pack_start(self.okay, False, False, 10)
-        self.box.pack_start(self.cancel, False, False, 0)
+        self.box.pack_end(okay, False, False, 10)
+        self.box.pack_end(cancel, False, False, 0)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_box.pack_start(self.main_lab, False, False, 10)
-        self.main_box.pack_start(self.text_lab, False, False, 0)
-        self.main_box.pack_start(self.box, False, False, 10)
+        self.main_box.pack_start(main_lab, False, False, 10)
+        self.main_box.pack_start(text_lab, False, False, 0)
+        self.main_box.pack_start(box, False, False, 10)
 
-        self.add(self.main_box)
+        self.add(main_box)
         self.show_all()
 
 
@@ -200,7 +196,8 @@ class Ice(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Ice")
         self.current_directory = os.path.realpath(_APPS_DIR)
-        self.set_icon_from_file(_ICE_ICON)
+
+        self.set_icon_name("ice")
         self.set_border_width(5)
 
         self.header = Gtk.HeaderBar()
@@ -243,11 +240,9 @@ class Ice(Gtk.Window):
         self.where.set_active(3)
 
         self.iconpath = _ICE_ICON
-        self.icon_pixbuf = Pixbuf.new_from_file_at_size(self.iconpath, 32, 32)
-        self.icon = Gtk.Image()
-        self.icon.set_from_pixbuf(self.icon_pixbuf)
-
-        self.icon_void = Gtk.Label()
+        self.icon = Gtk.Image.new_from_icon_name("ice", 6)
+        # self.icon = Gtk.Image()
+        # self.icon.set_from_pixbuf(self.icon_pixbuf)
 
         self.choose_icon = Gtk.Button(label=_("Select an icon"))
         self.choose_icon.connect("clicked", self.icon_select)
@@ -365,7 +360,6 @@ class Ice(Gtk.Window):
 
         self.apply_button = Gtk.Button(label=_("Apply"))
         self.apply_button.connect("clicked", self.thread_apply_clicked)
-        self.button_void = Gtk.Label()
 
         self.browser_box = Gtk.FlowBox()
         self.browser_box.set_row_spacing(0)
@@ -502,8 +496,10 @@ class Ice(Gtk.Window):
                     self.pixbuf = Pixbuf.new_from_file_at_size(self.iconline,
                                                                16, 16)
                 except GLib.Error:
-                    self.pixbuf = Pixbuf.new_from_file_at_size(_ICE_ICON,
-                                                               16, 16)
+                    self.pixbuf = Gtk.Image.new_from_icon_name(
+                        "ice",
+                        6
+                    ).get_pixbuf(),
             elif "StartupWMClass=Chromium" in line:
                 # for legacy apps
                 self.is_ice = True
@@ -767,15 +763,13 @@ class Ice(Gtk.Window):
             self.appfile1.write("X-MultipleArgs=false\n")
             self.appfile1.write("Type=Application\n")
             if self.browser == "epiphany":
-                self.appfile1.write(
-                    "Icon={0}/app-icon.{2}\n".format(
+                self.appfile1.write("Icon={0}/app-icon.{2}\n".format(
                     self.epiphany_profile_path,
                     formatted,
                     iconext
                 ))
             else:
-                self.appfile1.write(
-                    "Icon={0}/{1}.{2}\n".format(
+                self.appfile1.write("Icon={0}/{1}.{2}\n".format(
                     _ICON_DIR,
                     formatted,
                     iconext
@@ -844,9 +838,11 @@ class Ice(Gtk.Window):
                         ' false);')
             sfile.write('user_pref("browser.cache.disk.smart_size.use_old_max"'
                         ', false);')
-
             sfile.write('user_pref("browser.ctrlTab.previews", true);')
+            sfile.write('user_pref("browser.tabs.drawInTitlebar", false);')
             sfile.write('user_pref("browser.tabs.warnOnClose", false);')
+            sfile.write('user_pref("browser.toolbars.bookmarks.visibility"'
+                        ', false);')
             sfile.write('user_pref("plugin.state.flash", 2);')
             sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
                         'stylesheets", true);')
