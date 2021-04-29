@@ -1,6 +1,6 @@
 # ICE - SSB Manager
 ## Copyright
-(C) 2010 - 2021 -- Mark Greaves <mark@peppermintos.com>
+(C) 2010 - 2021 -- Mark Greaves
 
 Released under GNU General Public License version 2
 
@@ -46,5 +46,5 @@ and GTK+3.
 
 ## Contact details
 Thank you for your interest in Ice. If you wish to contact
-me for any reason, please do so via email using the address
-listed at the beginning of this document.
+us for any reason, please do so via the Peppermint Linux OS
+Forum: https://forum.peppermintos.com/
