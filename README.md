@@ -1,6 +1,6 @@
 # ICE - SSB Manager
 ## Copyright
-(C) 2010 - 2019 -- Mark Greaves <mark@peppermintos.com>
+(C) 2010 - 2021 -- Mark Greaves <mark@peppermintos.com>
 
 Released under GNU General Public License version 2
 
