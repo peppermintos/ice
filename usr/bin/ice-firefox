@@ -15,7 +15,7 @@ path = os.path.dirname(chromepath)
 execute = 'firefox -profile ' + path + ' -no-remote -new-instance' + ' ' + sys.argv[1]
 
 os.system('mkdir -p ' + chromepath)
-os.system('echo "#nav-bar, #identity-box, #tabbrowser-tabs, #TabsToolbar { visibility: collapse !important; }" > ' + chromepath + '/userChrome.css')
+os.system('echo "#nav-bar, #identity-box, #tabbrowser-tabs { visibility: collapse !important; }" > ' + chromepath + '/userChrome.css')
 os.system('echo "user_pref(\\"browser.cache.disk.enable\\", false);" > ' + profilepath + '/user.js')
 os.system('echo "user_pref(\\"browser.cache.disk.capacity\\", 0);" >> ' + profilepath + '/user.js')
 os.system('echo "user_pref(\\"browser.cache.disk.filesystem_reported\\", 1);" >> ' + profilepath + '/user.js')

@@ -823,8 +823,8 @@ class Ice(Gtk.Window):
             print("Error: places.sqlite not found")
 
         with open(self.cssfile, 'w') as cfile:
-            cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs, "
-                        "#TabsToolbar { visibility: collapse !important; }")
+            cfile.write("#nav-bar, #identity-box, #tabbrowser-tabs "
+                        " { visibility: collapse !important; }")
 
         with open(self.settingsfile, 'w') as sfile:
             sfile.write('user_pref("browser.cache.disk.enable",'
