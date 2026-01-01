@@ -47,4 +47,4 @@ and GTK+3.
 ## Contact details
 Thank you for your interest in Ice. If you wish to contact
 us for any reason, please do so via the Peppermint Linux OS
-Forum: https://forum.peppermintos.com/
+Forum: https://peppermintos.com/
