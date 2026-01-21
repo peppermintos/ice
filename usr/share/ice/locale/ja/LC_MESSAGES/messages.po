@@ -101,7 +101,7 @@ msgstr "アドレスエラー"
 
 #: ../../../bin/ice:628
 msgid "Error: HTTP or URL Error"
-msgstr ""
+msgstr "エラー:HTTPかURLのエラー"
 
 #: ../../../bin/ice:629
 msgid ""
@@ -110,18 +110,21 @@ msgid ""
 "now.\n"
 "Please check the URL"
 msgstr ""
+"Webアドレスのエラーが発生しました。\n"
+"サイトがダウンしているか、現在利用できなくなっている可能性があります。\n"
+"URLを確認してください。"
 
 #: ../../../bin/ice:639
 msgid "Error Applying SSB"
-msgstr ""
+msgstr "SSBの適用エラー"
 
 #: ../../../bin/ice:640
 msgid "Error: Unknown Error"
-msgstr ""
+msgstr "エラー: 不明なエラー"
 
 #: ../../../bin/ice:6
 msgid "An unknown error has occurred. :("
-msgstr ""
+msgstr "不明なエラーが発生しました。 :("
 
 #: ../../../bin/ice:167
 msgid "<b>Warning: HTTP or URL Error</b>"
@@ -165,15 +168,15 @@ msgstr "アプリケーション名"
 
 #: ../../../bin/ice:231
 msgid "Enter web address"
-msgstr ""
+msgstr "Webアドレス"
 
 #: ../../../bin/ice:238
 msgid "Where in the menu?"
-msgstr ""
+msgstr "メニュー内の場所"
 
 #: ../../../bin/ice:252
 msgid "Select an icon"
-msgstr "アイコンを"
+msgstr "アイコンを選択"
 
 #: ../../../bin/ice:254 ../../../bin/ice:646
 msgid "Use site favicon"
@@ -181,7 +184,7 @@ msgstr "サイトのfaviconを使用"
 
 #: ../../../bin/ice:550
 msgid "Downloading favicon"
-msgstr ""
+msgstr "faviconをダウンロードしています"
 
 #: ../../../bin/ice:366 ../../../bin/ice:456
 msgid "Apply"
@@ -189,7 +192,7 @@ msgstr "適用"
 
 #: ../../../bin/ice:452
 msgid "Applying"
-msgstr ""
+msgstr "適用しています"
 
 #: ../../../bin/ice:396 ../../../bin/ice:426
 msgid "Create"
@@ -201,12 +204,12 @@ msgstr "削除"
 
 #. ./../../bin/ice:259 ../../../bin/ice:921
 msgid "Isolate the SSB"
-msgstr ""
+msgstr "SSBは独立したプロファイルを使用"
 
 #. ./../../bin/ice:360 ../../../bin/ice:924
 msgid "Firefox is always isolated"
-msgstr ""
+msgstr "Firefoxでは常に独立したプロファイルを使用"
 
 #. ./../../bin/ice:363 ../../../bin/ice:927
 msgid "GNOME Web is always isolated"
-msgstr ""
+msgstr "GNOME Webでは常に独立したプロファイルを使用"
