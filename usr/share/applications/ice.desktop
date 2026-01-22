@@ -3,6 +3,7 @@ Version=1.0
 Encoding=UTF-8
 Name=Ice
 Comment=Desktop integration for webapps
+Comment[tr]=Web uygulamaları için masaüstü tümleştirmesi
 GenericName=Ice
 Exec=ice
 Icon=ice
