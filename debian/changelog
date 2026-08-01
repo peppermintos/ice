@@ -1,3 +1,21 @@
+ice (6.0.9) unstable; urgency=low
+
+  * Fixed the AddressError dialog crashing with a NameError/AttributeError
+    when an unreachable URL was entered.
+  * Removed a stray literal and unused imports from /usr/bin/ice.
+  * Fixed the GNOME Web (Epiphany) icon path format string.
+  * Fixed the favicon fallback to use the retrieved icon URL and to derive
+    the icon file extension robustly; caught the correct requests exceptions.
+  * Replaced deprecated Gtk.STOCK_* buttons in the icon chooser.
+  * Reworked /usr/bin/ice-firefox to use native Python file handling and
+    subprocess instead of building shell commands with os.system.
+  * Removed obsolete Flash (plugin.state.flash) preferences.
+  * Modernised Debian packaging: debhelper compat 13, Standards-Version 4.6.2,
+    added the gir1.2-gtk-3.0 runtime dependency, and fixed a maintainer typo.
+  * Added a flake8 continuous-integration workflow.
+
+ -- Derik <derikatwork@gmail.com>  Sat, 01 Aug 2026 00:00:00 +0000
+
 ice (6.0.8) bionic; urgency=low
 
   * Updated search.json.mozlz4 for Firefox 71.

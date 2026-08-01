@@ -17,12 +17,10 @@
 
 import bs4
 import gettext
-import locale
 import os
 import os.path
 import requests
 import shutil
-import string
 import sys
 import threading
 import urllib.error
@@ -54,7 +52,6 @@ gettext.bindtextdomain(
     'messages',
     os.path.dirname(__file__) + '/../share/ice/locale/'
     )
-6
 gettext.textdomain('messages')
 _ = gettext.gettext
 
@@ -75,8 +72,8 @@ class IconSel(Gtk.FileChooserDialog):
             action=Gtk.FileChooserAction.OPEN,
         )
         self.filew.set_filename(_ICE_ICON)
-        self.filew.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                               Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+        self.filew.add_buttons(_("Cancel"), Gtk.ResponseType.CANCEL,
+                               _("Open"), Gtk.ResponseType.OK)
 
         self.filter1 = Gtk.FileFilter()
         self.filter1.set_name("Icons")
@@ -179,15 +176,17 @@ class AddressError(Gtk.Window):
         self.okay.connect("clicked", self.okay_clicked)
         self.cancel = Gtk.Button(label=_("Cancel"))
         self.cancel.connect("clicked", self.destroy)
-        self.box.pack_end(okay, False, False, 10)
-        self.box.pack_end(cancel, False, False, 0)
+
+        self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.pack_end(self.okay, False, False, 10)
+        self.box.pack_end(self.cancel, False, False, 0)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_box.pack_start(main_lab, False, False, 10)
-        self.main_box.pack_start(text_lab, False, False, 0)
-        self.main_box.pack_start(box, False, False, 10)
+        self.main_box.pack_start(self.main_lab, False, False, 10)
+        self.main_box.pack_start(self.text_lab, False, False, 0)
+        self.main_box.pack_start(self.box, False, False, 10)
 
-        self.add(main_box)
+        self.add(self.main_box)
         self.show_all()
 
 
@@ -348,7 +347,7 @@ class Ice(Gtk.Window):
                 os.path.exists(_CHROMIUM_BIN) and \
                 os.path.exists(_EPIPHANY_BIN):
             self.epiphany.set_active(True)
-        
+
         self.epiphany.connect("clicked", self.browser_button)
 
         if self.firefox.get_active() is True:
@@ -370,7 +369,7 @@ class Ice(Gtk.Window):
         self.browser_box.add(self.firefox)
         self.browser_box.add(self.vivaldi)
         self.browser_box.add(self.epiphany)
-        
+
         self.option_box = Gtk.FlowBox()
         self.option_box.set_row_spacing(0)
         self.option_box.set_column_spacing(0)
@@ -570,45 +569,43 @@ class Ice(Gtk.Window):
                                       og_image["content"])
             else:
                 for iconformat in self.iconformats:
-                    self.icon_link = self.soup.find("link", {"rel": iconformat})
+                    self.icon_link = self.soup.find(
+                        "link", {"rel": iconformat})
                     if self.icon_link is not None:
                         self.icon_link = (self.parsed_uri.scheme + "://" +
                                           self.parsed_uri.netloc +
                                           self.icon_link["href"])
 
             if self.icon_link is None:
-                self.iconrequest = requests.get(
+                self.favicon_url = (
                     self.parsed_uri.scheme + "://" +
                     self.parsed_uri.netloc + "/favicon.ico"
                 )
-
                 try:
+                    self.iconrequest = requests.get(self.favicon_url)
                     if self.iconrequest.status_code == 200:
-                        self.icon_link = (
-                            self.parsed_uri.scheme + "://" +
-                            self.parsed_uri.netloc + "/favicon.ico"
-                        )
-                except ConnectionError:
+                        self.icon_link = self.favicon_url
+                except requests.exceptions.RequestException:
                     pass
 
             if self.icon_link is None:
-                self.iconrequest = requests.get(
-                    'https://www.google.com/s2/favicons?domain=' + self.appurl
+                self.google_favicon_url = (
+                    'https://www.google.com/s2/favicons?sz=64&domain=' +
+                    self.parsed_uri.netloc
                 )
                 try:
+                    self.iconrequest = requests.get(self.google_favicon_url)
                     if self.iconrequest.status_code == 200:
-                        self.icon_link = (
-                            self.parsed_uri.scheme + "://" +
-                            self.parsed_uri.netloc + "/favicon.ico"
-                        )
-                except ConnectionError:
+                        self.icon_link = self.google_favicon_url
+                except requests.exceptions.RequestException:
                     pass
 
             # Catches ValueError (if the Favicon detector gets an invalid URL)
             try:
                 self.icondl = urllib.request.urlopen(self.icon_link)
-                self.icon_name = self.icon_link.replace("/", " ").split()[-1]
-                self.icon_ext = self.icon_name.replace(".", " ").split()[-1]
+                self.icon_ext = os.path.splitext(
+                    urllib.parse.urlparse(self.icon_link).path
+                )[1].lstrip(".").lower() or "png"
                 with open(_ICON_DIR + "/favicon." + self.icon_ext, "wb") as f:
                     f.write(self.icondl.read())
                 self.iconpath = _ICON_DIR + "/favicon." + self.icon_ext
@@ -763,9 +760,8 @@ class Ice(Gtk.Window):
             self.appfile1.write("X-MultipleArgs=false\n")
             self.appfile1.write("Type=Application\n")
             if self.browser == "epiphany":
-                self.appfile1.write("Icon={0}/app-icon.{2}\n".format(
+                self.appfile1.write("Icon={0}/app-icon.{1}\n".format(
                     self.epiphany_profile_path,
-                    formatted,
                     iconext
                 ))
             else:
@@ -843,7 +839,6 @@ class Ice(Gtk.Window):
             sfile.write('user_pref("browser.tabs.warnOnClose", false);')
             sfile.write('user_pref("browser.toolbars.bookmarks.visibility"'
                         ', false);')
-            sfile.write('user_pref("plugin.state.flash", 2);')
             sfile.write('user_pref("toolkit.legacyUserProfileCustomizations.'
                         'stylesheets", true);')
 

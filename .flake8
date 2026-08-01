@@ -1,0 +1,4 @@
+[flake8]
+# The gi.repository imports must follow gi.require_version(), which
+# legitimately places them after other module-level statements (E402).
+extend-ignore = E402
